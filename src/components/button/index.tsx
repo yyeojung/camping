@@ -14,6 +14,7 @@ const CustomButton = styled.button<IPropsButton>`
   border: 0.1rem solid #6b620d;
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 export default function Button({ className, children }: IPropsButton) {
