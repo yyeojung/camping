@@ -1,33 +1,35 @@
 import { useState } from "react";
 import Select from "react-select";
-import type { SingleValue } from "react-select";
+import type { SingleValue, StylesConfig } from "react-select";
 import { AREA0, regionMapping } from "../../commons/data/subArea";
+import styled from "@emotion/styled";
 // const options = [
 //   { value: "chocolate", label: "Chocolate" },
 //   { value: "strawberry", label: "Strawberry" },
 //   { value: "vanilla", label: "Vanilla" },
 // ];
 
-// const customSelect = { 스타일 주기
-//   control: (provided: any) => ({
-//     ...provided,
-//     background: "Red",
-//   }),
-//   option: (provided: any, state: { isSelected: boolean }) => ({
-//     ...provided,
-//     backgroundColor: state.isSelected ? "#000" : "green",
-//   }),
-//   indecatorseparateor: (provided: any) => ({
-//     ...provided,
-//     display: "none",
-//   }),
-// };
-
 // 옵션 타입 정의
 interface Option {
   value: string;
   label: string;
 }
+
+// 옵션 타입 정의
+interface IPropsSelect {
+  gap?: string;
+}
+
+const customSelect: StylesConfig<Option, false> = {
+  control: (provided) => ({
+    ...provided,
+    minWidth: "26rem",
+  }),
+  //   option: (provided, state: { isSelected: boolean }) => ({
+  //     ...provided,
+  //     backgroundColor: state.isSelected ? "#000" : "green",
+  //   }),
+};
 
 // 드롭다운 옵션
 const createOptions = (areas: string[]): Option[] =>
@@ -36,7 +38,12 @@ const createOptions = (areas: string[]): Option[] =>
     label: area,
   }));
 
-export default function DropDown() {
+const RegionSelect = styled.div<IPropsSelect>`
+  display: flex;
+  gap: ${(props) => props.gap ?? "32px"};
+`;
+
+export default function DropDown({ gap }: IPropsSelect) {
   // 광역시
   const [selectedRegion, setSelectedRegion] =
     useState<SingleValue<Option>>(null);
@@ -65,13 +72,13 @@ export default function DropDown() {
   };
 
   return (
-    <>
+    <RegionSelect gap={gap}>
       <Select
         instanceId="main_select"
         options={createOptions(AREA0)}
         onChange={onChangeRegion}
         placeholder="광역시도 선택"
-        // styles={customSelect}
+        styles={customSelect}
       />
       <Select
         instanceId="sub_select"
@@ -80,7 +87,8 @@ export default function DropDown() {
         onChange={onChangeSubRegion}
         placeholder="하위 지역 선택"
         isDisabled={!selectedRegion}
+        styles={customSelect}
       />
-    </>
+    </RegionSelect>
   );
 }
