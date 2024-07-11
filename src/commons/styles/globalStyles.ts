@@ -75,6 +75,7 @@ export const globalStyles = css`
   * {
     font-size: 1.6rem;
     font-family: "NanumGothic", Helvetica, sans-serif;
+    box-sizing: border-box;
   }
   button {
     color: #fff;

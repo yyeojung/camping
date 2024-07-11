@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import Head from "next/head";
 import Button from "../src/components/button";
-import DropDown from "../src/components/dropdown";
+import DropDown from "@/components/dropdown";
 
 // const inter = Inter({ subsets: ['latin'] });
 const Wrap = styled.div`
@@ -68,7 +68,7 @@ export default function Home(): JSX.Element {
           <SearchBox>
             <h2>Dayily camping</h2>
             <div className="search">
-              <DropDown />
+              <DropDown isMain={true} />
               <Button className="search_btn">
                 <span className="sr_only">검색</span>
               </Button>

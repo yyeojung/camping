@@ -17,19 +17,25 @@ interface Option {
 
 // 옵션 타입 정의
 interface IPropsSelect {
-  gap?: string;
+  isMain: boolean;
 }
 
-const customSelect: StylesConfig<Option, false> = {
+const customSelect = (isMain: boolean): StylesConfig<Option, false> => ({
   control: (provided) => ({
     ...provided,
-    minWidth: "26rem",
+    minWidth: isMain ? "26rem" : "20rem",
+    background: "rgba(255, 255, 255, 0.3)",
+    border: isMain ? ".2rem solid #fff" : "#000",
+    boxShadow: "none",
+    "&:hover": {
+      border: isMain ? ".2rem solid #fff" : "#000",
+    },
   }),
-  //   option: (provided, state: { isSelected: boolean }) => ({
-  //     ...provided,
-  //     backgroundColor: state.isSelected ? "#000" : "green",
-  //   }),
-};
+  placeholder: (provided) => ({
+    ...provided,
+    color: "#333",
+  }),
+});
 
 // 드롭다운 옵션
 const createOptions = (areas: string[]): Option[] =>
@@ -40,10 +46,10 @@ const createOptions = (areas: string[]): Option[] =>
 
 const RegionSelect = styled.div<IPropsSelect>`
   display: flex;
-  gap: ${(props) => props.gap ?? "32px"};
+  gap: ${(props) => (props.isMain ? "32px" : "10px")};
 `;
 
-export default function DropDown({ gap }: IPropsSelect) {
+export default function DropDown({ isMain }: IPropsSelect) {
   // 광역시
   const [selectedRegion, setSelectedRegion] =
     useState<SingleValue<Option>>(null);
@@ -71,14 +77,15 @@ export default function DropDown({ gap }: IPropsSelect) {
     setSubRegionReset(selectedOption);
   };
 
+  const customStyle = customSelect(isMain);
   return (
-    <RegionSelect gap={gap}>
+    <RegionSelect isMain={isMain}>
       <Select
         instanceId="main_select"
         options={createOptions(AREA0)}
         onChange={onChangeRegion}
         placeholder="광역시도 선택"
-        styles={customSelect}
+        styles={customStyle}
       />
       <Select
         instanceId="sub_select"
@@ -87,7 +94,7 @@ export default function DropDown({ gap }: IPropsSelect) {
         onChange={onChangeSubRegion}
         placeholder="하위 지역 선택"
         isDisabled={!selectedRegion}
-        styles={customSelect}
+        styles={customStyle}
       />
     </RegionSelect>
   );
