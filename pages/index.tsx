@@ -2,8 +2,9 @@ import styled from "@emotion/styled";
 import Head from "next/head";
 import Button from "../src/components/button";
 import DropDown from "@/components/dropdown";
+import { responsive } from "./../src/commons/styles/globalStyles";
+import { useRouter } from "next/router";
 
-// const inter = Inter({ subsets: ['latin'] });
 const Wrap = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -28,6 +29,10 @@ const MainWrap = styled.div`
     right: 0;
     top: -56px;
   }
+
+  @media ${responsive.tablet} {
+    width: calc(100% - 2.4rem);
+  }
 `;
 
 const SearchBox = styled.div`
@@ -43,6 +48,11 @@ const SearchBox = styled.div`
     margin: 8rem auto 0;
     max-width: 67.2rem;
     justify-content: center;
+
+    @media ${responsive.mobile} {
+      flex-direction: column;
+      gap: 1rem;
+    }
   }
   .search_btn {
     background-image: url(/image/icon/ico_search.svg);
@@ -50,10 +60,28 @@ const SearchBox = styled.div`
     background-position: center;
     background-size: 2.4rem;
     width: 8rem;
+    .mobile {
+      width: 100%;
+      display: none;
+      text-align: center;
+    }
+
+    @media ${responsive.mobile} {
+      width: 100%;
+      background-image: none;
+      .mobile {
+        display: block;
+      }
+    }
   }
 `;
 
 export default function Home(): JSX.Element {
+  const router = useRouter();
+
+  const onClickList = async (): Promise<void> => {
+    await router.push("/campingList");
+  };
   return (
     <>
       <Head>
@@ -69,7 +97,8 @@ export default function Home(): JSX.Element {
             <h2>Dayily camping</h2>
             <div className="search">
               <DropDown isMain={true} />
-              <Button className="search_btn">
+              <Button onClick={onClickList} className="search_btn">
+                <span className="mobile">검색하기</span>
                 <span className="sr_only">검색</span>
               </Button>
             </div>

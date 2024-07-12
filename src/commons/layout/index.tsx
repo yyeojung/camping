@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import LayoutHeader from "../header";
+import styled from "@emotion/styled";
 
 const HIDDEN_HEADERS = ["/"];
 
@@ -7,6 +8,10 @@ interface ILayoutProps {
   children: JSX.Element;
 }
 
+const Guide = styled.div`
+  max-width: 120rem;
+  margin: auto;
+`;
 export default function Layout(props: ILayoutProps): JSX.Element {
   const router = useRouter();
 
@@ -14,7 +19,11 @@ export default function Layout(props: ILayoutProps): JSX.Element {
   return (
     <>
       {!isHiddenHeader && <LayoutHeader />}
-      <div>{props.children}</div>
+      {!isHiddenHeader ? (
+        <Guide>{props.children}</Guide>
+      ) : (
+        <>{props.children}</>
+      )}
     </>
   );
 }

@@ -77,6 +77,22 @@ export const globalStyles = css`
     font-family: "NanumGothic", Helvetica, sans-serif;
     box-sizing: border-box;
   }
+
+  ::-webkit-scrollbar {
+    width: 1rem;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    width: 0.5rem;
+    background-color: #ccc;
+    border-radius: 1rem;
+    border: 0.3rem solid transparent;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
   button {
     color: #fff;
     border: none;
@@ -97,7 +113,18 @@ export const globalStyles = css`
     border-color: #007bff;
     outline: none;
   }
-
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+  ul,
+  ol,
+  li {
+    list-style-type: none;
+  }
+  table {
+    border-spacing: 0;
+  }
   .sr_only {
     overflow: hidden;
     position: absolute;
@@ -109,3 +136,8 @@ export const globalStyles = css`
     clip: rect(0, 0, 0, 0);
   }
 `;
+
+export const responsive = {
+  tablet: "(max-width: 1024px)",
+  mobile: "(max-width: 767px)",
+};
