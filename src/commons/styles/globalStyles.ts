@@ -94,16 +94,17 @@ export const globalStyles = css`
     background-color: transparent;
   }
   button {
-    color: #fff;
+    background: #fff;
+    cursor: pointer;
     border: none;
-    border-radius: 8px;
+    border-radius: 0.8rem;
     transition: background-color 0.3s ease;
   }
   input,
   textarea {
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    padding: 0.8rem;
+    border-radius: 0.4rem;
+    border: 0.1rem solid #ccc;
     font-size: 1rem;
     transition: border-color 0.3s ease;
   }
@@ -128,9 +129,9 @@ export const globalStyles = css`
   .sr_only {
     overflow: hidden;
     position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
+    width: 0.1rem;
+    height: 0.1rem;
+    margin: -0.1rem;
     padding: 0;
     border: 0;
     clip: rect(0, 0, 0, 0);

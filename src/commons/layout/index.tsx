@@ -11,6 +11,9 @@ interface ILayoutProps {
 const Guide = styled.div`
   max-width: 120rem;
   margin: auto;
+  @media (max-width: 1200px) {
+    padding: 0 1.6rem;
+  }
 `;
 export default function Layout(props: ILayoutProps): JSX.Element {
   const router = useRouter();

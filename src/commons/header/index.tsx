@@ -4,10 +4,10 @@ import Link from "next/link";
 const Header = styled.header`
   width: 100%;
   height: 8rem;
-  border-bottom: 0.1rem solid #4a4a4a;
+  border-bottom: 0.1rem solid #dbdbdb;
 
   .header_wrap {
-    width: 120rem;
+    max-width: 120rem;
     margin: auto;
     height: 100%;
     display: flex;
@@ -23,7 +23,39 @@ const Logo = styled.a`
   background: url(/image/logo.svg);
 `;
 
-const Menu = styled.div``;
+const Menu = styled.ul`
+  li {
+    width: 12rem;
+    text-align: center;
+    display: inline-block;
+    font-weight: 700;
+
+    a {
+      display: inline-block;
+      position: relative;
+      padding: 1rem 0;
+
+      &::before {
+        display: block;
+        content: "";
+        clear: both;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 0.2rem;
+        width: 0;
+        background: #67794a;
+        border-radius: 1rem;
+        transition: all 0.3s;
+      }
+
+      &:hover::before {
+        width: 100%;
+      }
+    }
+  }
+`;
 
 export default function LayoutHeader() {
   return (
@@ -36,8 +68,12 @@ export default function LayoutHeader() {
             </Logo>
           </Link>
           <Menu>
-            <Link href="/review">요즘 캠핑 후기</Link>
-            <Link href="/board">내 캠핑장</Link>
+            <li>
+              <Link href="/review">요즘 캠핑 후기</Link>
+            </li>
+            <li>
+              <Link href="/board">내 캠핑장</Link>
+            </li>
           </Menu>
         </div>
       </Header>

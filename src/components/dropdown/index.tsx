@@ -25,6 +25,7 @@ const customSelect = (isMain: boolean): StylesConfig<Option, false> => ({
   control: (base, state) => ({
     ...base,
     width: isMain ? "26rem" : "20rem",
+    height: "4rem",
     borderRadius: "1rem",
     background: state.isDisabled ? "#f6f6f6" : "rgba(255, 255, 255, 0.3)",
     boxShadow: "none",
@@ -65,7 +66,7 @@ const customSelect = (isMain: boolean): StylesConfig<Option, false> => ({
   option: (base, state) => ({
     ...base,
     minHeight: "3.6rem",
-    width: "24.4rem",
+    width: isMain ? "24.4rem" : "18.4rem",
     background: state.isSelected
       ? "#67794A"
       : state.isFocused
@@ -91,7 +92,6 @@ const createOptions = (areas: string[]): Option[] =>
 
 const RegionSelect = styled.div<IPropsSelect>`
   display: flex;
-  width: 100%;
   gap: ${(props) => (props.isMain ? "3.2rem" : "1.0rem")};
 
   @media ${responsive.mobile} {

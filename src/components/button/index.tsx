@@ -15,6 +15,7 @@ const CustomButton = styled.button`
   border: 0.1rem solid #6b620d;
   display: flex;
   align-items: center;
+  text-align: center;
   cursor: pointer;
 
   &:hover {
