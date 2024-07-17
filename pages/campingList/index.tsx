@@ -21,7 +21,7 @@ const SearchWrap = styled.div`
 const CardWrap = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-top: 4rem;
+  padding: 4rem 0;
   gap: 4rem 0rem;
   justify-content: space-between;
 

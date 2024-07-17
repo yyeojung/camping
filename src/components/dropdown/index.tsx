@@ -28,10 +28,10 @@ const customSelect = (isMain: boolean): StylesConfig<Option, false> => ({
     height: "4rem",
     borderRadius: "1rem",
     background: state.isDisabled ? "#f6f6f6" : "rgba(255, 255, 255, 0.3)",
-    boxShadow: "none",
     borderWidth: ".2rem",
     borderStyle: "solid",
     borderColor: state.isDisabled ? "#d9d9d9" : isMain ? "#fff" : "#000",
+    boxShadow: ".3rem .3rem .4rem 0 rgba(0, 0, 0, 0.1)",
     color: isMain ? "#fff" : "#000",
     "&:hover": {
       borderColor: isMain ? "#fff" : "#000",

@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import LikeBtn from "../likeBtn";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { LocationIcon } from "../locationIcon";
 
 const CardWrap = styled.div`
   background: #f8f8f8;
@@ -60,6 +61,10 @@ const IConWrap = styled.ul`
 
   li {
     flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
   li ~ li {
     border-left: 0.1rem solid #a9a9a9;
@@ -78,6 +83,7 @@ interface ICampingList {
   themaEnvrnCl?: string;
   tel: string;
   contentId: number;
+  lctCl?: string;
 }
 
 interface IApiResponse {
@@ -96,14 +102,16 @@ interface IPropsList {
 export default function CampingCard({ className }: IPropsList) {
   const [list, setList] = useState<ICampingList[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+
   const SERVICE_KEY = process.env.NEXT_PUBLIC_SERVICE_KEY;
 
+  // 데이터 불러오기
   useEffect(() => {
     async function fetchData(): Promise<void> {
       setLoading(true);
       try {
         const response = await axios.get<IApiResponse>(
-          `http://apis.data.go.kr/B551011/GoCamping/basedList?serviceKey=${SERVICE_KEY}&numOfRows=10&pageNo=1&MobileOS=AND&MobileApp=appName&_type=json`,
+          `http://apis.data.go.kr/B551011/GoCamping/basedList?serviceKey=${SERVICE_KEY}&numOfRows=8&pageNo=1&MobileOS=AND&MobileApp=appName&_type=json`,
         );
         setList(response.data.response.body.items.item);
       } catch (e) {
@@ -124,35 +132,40 @@ export default function CampingCard({ className }: IPropsList) {
 
   return (
     <>
-      {list.map((item: ICampingList) => (
-        <CardWrap key={item.contentId} className={className}>
-          <CardInner>
-            <ImgBox>
-              <LikeBtn className="like" />
-              <img src={item.firstImageUrl} alt={item.facltNm} />
-            </ImgBox>
-            <CardInfo>
-              <li>
-                <strong>{item.facltNm}</strong>
-              </li>
-              <li>{item.lineIntro ? item.lineIntro : item.themaEnvrnCl}</li>
-              <li className="address">{item.addr1}</li>
-              <li>{item.tel}</li>
-            </CardInfo>
-          </CardInner>
-          <IConWrap>
-            <li>
-              <i>icon</i>
-            </li>
-            <li>
-              <i>icon</i>
-            </li>
-            <li>
-              <i>icon</i>
-            </li>
-          </IConWrap>
-        </CardWrap>
-      ))}
+      {list.map((item: ICampingList) => {
+        // 입지 구분 아이콘 리스트
+        const icons = item.lctCl ? item.lctCl.split(",") : [];
+        const iconList = icons
+          .slice(0, 3)
+          .concat(
+            Array(3 - icons.length > 0 ? 3 - icons.length : 0).fill("없음"),
+          );
+        return (
+          <CardWrap key={item.contentId} className={className}>
+            <CardInner>
+              <ImgBox>
+                <LikeBtn className="like" />
+                <img src={item.firstImageUrl} alt={item.facltNm} />
+              </ImgBox>
+              <CardInfo>
+                <li>
+                  <strong>{item.facltNm}</strong>
+                </li>
+                <li>{item.lineIntro ? item.lineIntro : item.themaEnvrnCl}</li>
+                <li className="address">{item.addr1}</li>
+                <li>{item.tel ? item.tel : "-"}</li>
+              </CardInfo>
+            </CardInner>
+            <IConWrap>
+              {iconList.map((icon, index) => (
+                <li key={index}>
+                  <LocationIcon type={icon} />
+                </li>
+              ))}
+            </IConWrap>
+          </CardWrap>
+        );
+      })}
     </>
   );
 }

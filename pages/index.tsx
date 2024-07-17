@@ -17,6 +17,7 @@ const Wrap = styled.div`
 const MainWrap = styled.div`
   position: relative;
   width: calc(100% - 36rem);
+  max-width: 108rem;
   padding: 6rem 2rem;
   background: rgba(255, 255, 255, 0.15);
   border: 0.1rem solid #d3d3d3;

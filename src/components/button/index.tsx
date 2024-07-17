@@ -12,6 +12,7 @@ const CustomButton = styled.button`
   height: 4rem;
   padding: 1.2rem 2rem;
   background-color: #67794a;
+  color: #fff;
   border: 0.1rem solid #6b620d;
   display: flex;
   align-items: center;
