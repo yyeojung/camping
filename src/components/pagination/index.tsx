@@ -9,13 +9,16 @@ const PageWrap = styled.ul`
     height: 20px;
     cursor: pointer;
   }
+  li.select {
+    background: red;
+  }
 `;
 interface IPropsPage {
   totalItems: number;
   itemCountPerPage: number;
   pageCount: number;
   currentPage: number;
-  onClick: (event: React.MouseEvent<HTMLLIElement>, selected: number) => void;
+  onClick: (selected: number) => void;
 }
 
 export default function Pagination({
@@ -48,8 +51,9 @@ export default function Pagination({
         return (
           pageNumber <= totalPages && (
             <li
-              onClick={(event) => {
-                onClick(event, pageNumber);
+              className={`${currentPage === pageNumber + 1 ? "select" : ""}`}
+              onClick={() => {
+                onClick(pageNumber);
               }}
               key={pageNumber}
             >

@@ -163,11 +163,7 @@ export default function CampingCard({ className }: IPropsList) {
   }
 
   const pageCount = Math.ceil(totalCount / PER_PAGE); // 전체 페이지 수 계산
-  const onClickPage = (
-    event: React.MouseEvent<HTMLLIElement>,
-    selected: number,
-  ) => {
-    console.log(event);
+  const onClickPage = (selected: number) => {
     setCurrentPage(selected);
   };
   return (
