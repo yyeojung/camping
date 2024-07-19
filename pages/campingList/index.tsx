@@ -46,9 +46,8 @@ export default function CampingList() {
           <Button className="search_btn">검색</Button>
         </SearchWrap>
       </Title>
-      <CardWrap>
-        <CampingCard className="card" />
-      </CardWrap>
+      <CampingCard className="card" />
+      <CardWrap></CardWrap>
     </>
   );
 }
