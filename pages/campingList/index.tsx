@@ -2,7 +2,6 @@ import Button from "@/components/button";
 import DropDown from "@/components/dropdown";
 import styled from "@emotion/styled";
 import CampingCard from "./../../src/components/campingCard/index";
-import { responsive } from "@/commons/styles/globalStyles";
 
 const Title = styled.div`
   margin-top: 6.4rem;
@@ -18,24 +17,6 @@ const SearchWrap = styled.div`
   gap: 2rem;
 `;
 
-const CardWrap = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  padding: 4rem 0;
-  gap: 4rem 0rem;
-  justify-content: space-between;
-
-  .card {
-    width: calc((100% - 12rem) / 4);
-    @media ${responsive.tablet} {
-      width: calc((100% - 4rem) / 3);
-    }
-    @media ${responsive.mobile} {
-      width: 100%;
-    }
-  }
-`;
-
 export default function CampingList() {
   return (
     <>
@@ -47,7 +28,6 @@ export default function CampingList() {
         </SearchWrap>
       </Title>
       <CampingCard className="card" />
-      <CardWrap></CardWrap>
     </>
   );
 }

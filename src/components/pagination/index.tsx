@@ -1,16 +1,26 @@
 import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 const PageWrap = styled.ul`
   display: flex;
+  justify-content: center;
+  text-align: center;
 
   li {
-    width: 20px;
-    height: 20px;
+    line-height: 2.8rem;
+    min-width: 2.8rem;
+    height: 2.8rem;
     cursor: pointer;
-  }
-  li.select {
-    background: red;
+
+    &.disabled svg {
+      stroke: #ccc;
+    }
+    &.select {
+      background: #67794a;
+      color: #fff;
+      border-radius: 50%;
+    }
   }
 `;
 interface IPropsPage {
@@ -43,15 +53,31 @@ export default function Pagination({
     }
   }, [currentPage, pageCount, totalPages, start]);
 
+  const handlePrevClick = () => {
+    if (!noPrev) {
+      onClick(currentPage - 1);
+    }
+  };
+
+  const handleNextClick = () => {
+    if (!noNext) {
+      onClick(currentPage + 1);
+    }
+  };
   return (
     <PageWrap>
-      <li className={`prev ${noPrev}&& 'invisible`}>이전</li>
+      <li
+        onClick={handlePrevClick}
+        className={`prev ${noPrev ? "disabled" : ""}`}
+      >
+        <FiChevronLeft style={{ verticalAlign: "text-top" }} />
+      </li>
       {[...Array(pageCount)].map((_, i) => {
         const pageNumber = start + i;
         return (
           pageNumber <= totalPages && (
             <li
-              className={`${currentPage === pageNumber + 1 ? "select" : ""}`}
+              className={`${currentPage === pageNumber ? "select" : ""}`}
               onClick={() => {
                 onClick(pageNumber);
               }}
@@ -62,7 +88,12 @@ export default function Pagination({
           )
         );
       })}
-      <li className={`next ${noNext}&& 'invisible`}>다음</li>
+      <li
+        onClick={handleNextClick}
+        className={`next ${noNext ? "disabled" : ""}`}
+      >
+        <FiChevronRight style={{ verticalAlign: "text-top" }} />
+      </li>
     </PageWrap>
   );
 }

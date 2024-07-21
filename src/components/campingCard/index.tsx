@@ -220,7 +220,7 @@ export default function CampingCard({ className }: IPropsList) {
           totalItems={totalCount}
           onClick={onClickPage}
           currentPage={currentPage}
-          pageCount={10}
+          pageCount={5}
           itemCountPerPage={PER_PAGE}
         />
       )}
