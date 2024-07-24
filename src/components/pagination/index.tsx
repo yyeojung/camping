@@ -45,10 +45,12 @@ export default function Pagination({
 
   useEffect(() => {
     if (currentPage >= start + pageCount) {
+      // 페이지 카운트 다음 페이지로 갈떄
       setStart((prev) =>
         Math.min(prev + pageCount, totalPages - pageCount + 1),
       );
     } else if (currentPage < start) {
+      // 페이지 카운트 이전 페이지로 갈 떄
       setStart((prev) => Math.max(prev - pageCount, 1));
     }
   }, [currentPage, pageCount, totalPages, start]);

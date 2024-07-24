@@ -1,7 +1,7 @@
 import Button from "@/components/button";
+import CampingCardList from "@/components/campingCardList";
 import DropDown from "@/components/dropdown";
 import styled from "@emotion/styled";
-import CampingCard from "./../../src/components/campingCard/index";
 
 const Title = styled.div`
   margin-top: 6.4rem;
@@ -17,6 +17,10 @@ const SearchWrap = styled.div`
   gap: 2rem;
 `;
 
+const CardWrap = styled.div`
+  padding-bottom: 6rem;
+`;
+
 export default function CampingList() {
   return (
     <>
@@ -27,7 +31,9 @@ export default function CampingList() {
           <Button className="search_btn">검색</Button>
         </SearchWrap>
       </Title>
-      <CampingCard className="card" />
+      <CardWrap>
+        <CampingCardList className="card" />
+      </CardWrap>
     </>
   );
 }
