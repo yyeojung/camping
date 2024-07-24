@@ -4,6 +4,7 @@ import Button from "../src/components/button";
 import DropDown from "@/components/dropdown";
 import { responsive } from "./../src/commons/styles/globalStyles";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 const Wrap = styled.div`
   width: 100%;
@@ -78,10 +79,28 @@ const SearchBox = styled.div`
 `;
 
 export default function Home(): JSX.Element {
+  const [region, setRegion] = useState<string>("");
+  const [subRegion, setSubRegion] = useState<string | null>(null);
   const router = useRouter();
 
+  const onChangeSearch = (region: string, subRegion: string | null) => {
+    setRegion(region);
+    setSubRegion(subRegion);
+  };
+
   const onClickList = async (): Promise<void> => {
-    await router.push("/campingList");
+    if ((region !== null && subRegion !== null) || region === "전체") {
+      await router
+        .push({
+          pathname: "/campingList",
+          query: { region, subRegion },
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      alert("지역을 선택해주세요!");
+    }
   };
   return (
     <>
@@ -97,7 +116,7 @@ export default function Home(): JSX.Element {
           <SearchBox>
             <h2>Dayily camping</h2>
             <div className="search">
-              <DropDown isMain={true} />
+              <DropDown isMain={true} onChangeSearch={onChangeSearch} />
               <Button onClick={onClickList} className="search_btn">
                 <span className="mobile">검색하기</span>
                 <span className="sr_only">검색</span>

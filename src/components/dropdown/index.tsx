@@ -19,6 +19,7 @@ interface Option {
 // 옵션 타입 정의
 interface IPropsSelect {
   isMain: boolean;
+  onChangeSearch?: (region: string, subRegion: string | null) => void;
 }
 
 const customSelect = (isMain: boolean): StylesConfig<Option, false> => ({
@@ -100,26 +101,30 @@ const RegionSelect = styled.div<IPropsSelect>`
   }
 `;
 
-export default function DropDown({ isMain }: IPropsSelect) {
+export default function DropDown({ isMain, onChangeSearch }: IPropsSelect) {
   // 광역시
   const [selectedRegion, setSelectedRegion] =
     useState<SingleValue<Option>>(null);
-  // 행정구역
+  // 하위지역
   const [subRegions, setSubRegions] = useState<Option[]>([]);
-  // 광역시 선택시 행정구역 리셋
+  // 광역시 선택시 하위지역 리셋
   const [subRegionReset, setSubRegionReset] =
     useState<SingleValue<Option>>(null);
-  // 행정구역 disabled
+  // 하위지역 disabled
   const [subDisabled, setSubDisabled] = useState(true);
 
   // 광역시도 onChange
   const onChangeRegion = (selectedOption: SingleValue<Option>) => {
     setSelectedRegion(selectedOption);
-    setSubRegionReset(null);
+    setSubRegionReset(null); // 광역시가 선택되면 서브는 리셋
     if (selectedOption) {
+      onChangeSearch?.(selectedOption.value, null); // 지역 검색 값 저장
+
       if (selectedOption.value === "전체") {
+        // 전체일 떄는 서브드롭박스를 disabled
         setSubDisabled(true);
       } else {
+        // 전체가 아닐 때 서브 드롭박스에 광역시에 맞는 지역으로 매핑
         const subAreas =
           regionMapping[selectedOption.value as keyof typeof regionMapping];
         setSubRegions(createOptions(subAreas));
@@ -130,9 +135,14 @@ export default function DropDown({ isMain }: IPropsSelect) {
     }
   };
 
-  // 행정구역 onChange
+  // 하위지역 onChange
   const onChangeSubRegion = (selectedOption: SingleValue<Option>) => {
     setSubRegionReset(selectedOption);
+    onChangeSearch?.(
+      // 지역 검색 값 저장
+      selectedRegion?.value ?? "",
+      selectedOption?.value ?? null,
+    );
   };
 
   const customStyle = customSelect(isMain);

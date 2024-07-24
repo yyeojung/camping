@@ -4,13 +4,13 @@ import axios from "axios";
 import Pagination from "../pagination";
 import { responsive } from "@/commons/styles/globalStyles";
 import CampingCard from "../campingCard";
+import { useRouter } from "next/router";
 
 const Wrap = styled.div`
   display: flex;
   flex-wrap: wrap;
   padding: 4rem 0;
-  gap: 4rem 0rem;
-  justify-content: space-between;
+  gap: 4rem;
 
   .card {
     width: calc((100% - 12rem) / 4);
@@ -36,6 +36,8 @@ interface ICampingList {
   tel: string;
   contentId: number;
   lctCl?: string;
+  doNm: string;
+  sigunguNm: string;
 }
 
 interface IApiResponse {
@@ -53,13 +55,13 @@ interface IPropsList {
   className?: string;
 }
 
-const PER_PAGE = 8; // 한 페이지에 보여줄 아이템 수
-
 export default function CampingCardList({ className }: IPropsList) {
   const [list, setList] = useState<ICampingList[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 번호
   const [totalCount, setTotalCount] = useState<number>(0); // 전체 캠핑 아이템 수
+  const router = useRouter();
+  const { region, subRegion } = router.query;
 
   const SERVICE_KEY = process.env.NEXT_PUBLIC_SERVICE_KEY;
 
@@ -69,10 +71,38 @@ export default function CampingCardList({ className }: IPropsList) {
       setLoading(true);
       try {
         const response = await axios.get<IApiResponse>(
-          `http://apis.data.go.kr/B551011/GoCamping/basedList?serviceKey=${SERVICE_KEY}&numOfRows=${PER_PAGE}&pageNo=${currentPage}&MobileOS=AND&MobileApp=appName&_type=json`,
+          `http://apis.data.go.kr/B551011/GoCamping/basedList?serviceKey=${SERVICE_KEY}&numOfRows=4000&pageNo=${currentPage}&MobileOS=AND&MobileApp=appName&_type=json`,
         );
-        setList(response.data.response.body.items.item);
-        setTotalCount(response.data.response.body.totalCount);
+
+        const items = response.data.response.body.items.item;
+        // 지역 필터
+        const filteredItems = items.filter((item) => {
+          // 전체 지역일 경우
+          if (region === "전체") {
+            return true;
+          }
+          // 도는 선택 시는 전체
+          if (region !== "전체" && subRegion === "전체") {
+            return item.doNm === region;
+          }
+          // 도 선택 && 시 선택
+          if (region !== "전체" && subRegion !== "전체") {
+            return item.doNm === region && item.sigunguNm === subRegion;
+          }
+          return false;
+        });
+        setTotalCount(filteredItems.length);
+        const paginatedItems = filteredItems.slice(
+          (currentPage - 1) * PER_PAGE,
+          currentPage * PER_PAGE,
+        );
+
+        // 데이터 없을 때
+        if (paginatedItems.length === 0) {
+          setList([]);
+        } else {
+          setList(paginatedItems);
+        }
       } catch (e) {
         console.error(e);
       }
@@ -89,6 +119,7 @@ export default function CampingCardList({ className }: IPropsList) {
     return null;
   }
 
+  const PER_PAGE = 8; // 한 페이지에 보여줄 아이템 수
   const pageCount = Math.ceil(totalCount / PER_PAGE); // 전체 페이지 수 계산
   const onClickPage = (selected: number) => {
     setCurrentPage(selected);
@@ -96,7 +127,11 @@ export default function CampingCardList({ className }: IPropsList) {
   return (
     <>
       <Wrap>
-        <CampingCard className="card" list={list} />
+        {list.length > 0 ? (
+          <CampingCard className="card" list={list} />
+        ) : (
+          <div>노데이타</div>
+        )}
       </Wrap>
       {/* 페이지네이션 */}
       {pageCount > 0 && (
