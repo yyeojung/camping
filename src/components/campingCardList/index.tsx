@@ -78,7 +78,7 @@ export default function CampingCardList({ className }: IPropsList) {
           MobileOS=AND&MobileApp=appName&_type=json`,
         );
 
-        const items = response.data.response.body.items.item;
+        const items = response.data.response?.body?.items.item || []; // 데이터 없을 경우 추가 수정
         // 지역 필터
         const filteredItems = items.filter((item) => {
           // 전체 지역일 경우
