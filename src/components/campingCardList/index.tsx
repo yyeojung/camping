@@ -71,11 +71,7 @@ export default function CampingCardList({ className }: IPropsList) {
       setLoading(true);
       try {
         const response = await axios.get<IApiResponse>(
-          `https://apis.data.go.kr/B551011/GoCamping/basedList?
-          serviceKey=${SERVICE_KEY}&
-          numOfRows=100&
-          pageNo=${currentPage}&
-          MobileOS=AND&MobileApp=appName&_type=json`,
+          `https://apis.data.go.kr/B551011/GoCamping/basedList?serviceKey=${SERVICE_KEY}&numOfRows=100&pageNo=${currentPage}&MobileOS=AND&MobileApp=appName&_type=json`,
         );
 
         const items = response.data.response?.body?.items.item || []; // 데이터 없을 경우 추가 수정
