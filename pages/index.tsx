@@ -3,8 +3,7 @@ import Head from "next/head";
 import Button from "../src/components/button";
 import DropDown from "@/components/dropdown";
 import { responsive } from "./../src/commons/styles/globalStyles";
-import { useRouter } from "next/router";
-import { useState } from "react";
+import { useSearch } from "@/hooks/useSearch";
 
 const Wrap = styled.div`
   width: 100%;
@@ -79,29 +78,12 @@ const SearchBox = styled.div`
 `;
 
 export default function Home(): JSX.Element {
-  const [region, setRegion] = useState<string>("");
-  const [subRegion, setSubRegion] = useState<string | null>(null);
-  const router = useRouter();
+  const { onChangeSearch, onClickSearch } = useSearch(); // 코드 중복으로 useSearch 커스텀 훅으로 수정
 
-  const onChangeSearch = (region: string, subRegion: string | null) => {
-    setRegion(region);
-    setSubRegion(subRegion);
+  const onClickReview = () => {
+    alert("준비중입니다!");
   };
 
-  const onClickList = async (): Promise<void> => {
-    if ((region !== null && subRegion !== null) || region === "전체") {
-      await router
-        .push({
-          pathname: "/campingList",
-          query: { region, subRegion },
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      alert("지역을 선택해주세요!");
-    }
-  };
   return (
     <>
       <Head>
@@ -112,12 +94,14 @@ export default function Home(): JSX.Element {
       </Head>
       <Wrap>
         <MainWrap>
-          <Button className="review">요즘 캠핑 후기 보기</Button>
+          <Button onClick={onClickReview} className="review">
+            요즘 캠핑 후기 보기
+          </Button>
           <SearchBox>
             <h2>Dayily camping</h2>
             <div className="search">
               <DropDown isMain={true} onChangeSearch={onChangeSearch} />
-              <Button onClick={onClickList} className="search_btn">
+              <Button onClick={onClickSearch} className="search_btn">
                 <span className="mobile">검색하기</span>
                 <span className="sr_only">검색</span>
               </Button>

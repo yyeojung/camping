@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "react-select";
 import type { SingleValue, StylesConfig } from "react-select";
 import { AREA0, regionMapping } from "../../commons/data/subArea";
 import styled from "@emotion/styled";
 import { responsive } from "@/commons/styles/globalStyles";
+import { useRouter } from "next/router";
 // const options = [
 //   { value: "chocolate", label: "Chocolate" },
 //   { value: "strawberry", label: "Strawberry" },
@@ -62,12 +63,17 @@ const customSelect = (isMain: boolean): StylesConfig<Option, false> => ({
   menu: (base) => ({
     ...base,
     borderRadius: "1rem",
-    padding: ".6rem 0 .8rem .6rem",
+    padding: ".6rem 0 .6rem .6rem",
+  }),
+  menuList: (provided) => ({
+    ...provided,
+    // 드롭다운 리스트의 최대 높이 설정
+    maxHeight: "26rem",
   }),
   option: (base, state) => ({
     ...base,
     minHeight: "3.6rem",
-    width: isMain ? "24.4rem" : "18.4rem",
+    width: "calc(100% - .6rem)",
     background: state.isSelected
       ? "#67794A"
       : state.isFocused
@@ -112,6 +118,7 @@ export default function DropDown({ isMain, onChangeSearch }: IPropsSelect) {
     useState<SingleValue<Option>>(null);
   // 하위지역 disabled
   const [subDisabled, setSubDisabled] = useState(true);
+  const { query } = useRouter();
 
   // 광역시도 onChange
   const onChangeRegion = (selectedOption: SingleValue<Option>) => {
@@ -144,6 +151,35 @@ export default function DropDown({ isMain, onChangeSearch }: IPropsSelect) {
       selectedOption?.value ?? null,
     );
   };
+
+  // query가 있을 때는 셀렉트박스에 값 넣어주기
+  useEffect(() => {
+    const initialRegion = query.region ? (query.region as string) : "";
+    const initialSubRegion = query.subRegion
+      ? (query.subRegion as string)
+      : null;
+
+    const initialRegionOption = createOptions(AREA0).find(
+      (option) => option.value === initialRegion,
+    );
+    console.log(initialRegion);
+    setSelectedRegion(initialRegionOption ?? null);
+
+    if (initialRegion !== "전체" && initialRegionOption) {
+      const subAreas =
+        regionMapping[initialRegion as keyof typeof regionMapping];
+      setSubRegions(createOptions(subAreas));
+      setSubDisabled(false);
+
+      if (initialSubRegion) {
+        const initialSubRegionOption = createOptions(subAreas).find(
+          (option) => option.value === initialSubRegion,
+        );
+        // 하위지역 셀렉트박스에 값 넣어주기
+        setSubRegionReset(initialSubRegionOption ?? null);
+      }
+    }
+  }, [query]);
 
   const customStyle = customSelect(isMain);
   return (

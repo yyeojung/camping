@@ -1,8 +1,14 @@
 import styled from "@emotion/styled";
 import { useState, useEffect } from "react";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiChevronsLeft,
+  FiChevronsRight,
+} from "react-icons/fi";
 
 const PageWrap = styled.ul`
+  width: 100%;
   display: flex;
   justify-content: center;
   text-align: center;
@@ -10,9 +16,13 @@ const PageWrap = styled.ul`
   li {
     line-height: 2.8rem;
     min-width: 2.8rem;
+    padding: 0 0.6rem;
     height: 2.8rem;
     cursor: pointer;
 
+    svg {
+      vertical-align: text-top;
+    }
     &.disabled svg {
       stroke: #ccc;
     }
@@ -40,8 +50,8 @@ export default function Pagination({
 }: IPropsPage) {
   const totalPages = Math.ceil(totalItems / itemCountPerPage); // 총 페이지 개수
   const [start, setStart] = useState<number>(1); // 시작 페이지
-  const noPrev = start === 1; // 이전 페이지가 없는 경우
-  const noNext = start + pageCount - 1 >= totalPages; // 다음 페이지가 없는 경우
+  const noPrev = currentPage === 1; // 이전 페이지가 없는 경우
+  const noNext = currentPage === totalPages; // 다음 페이지가 없는 경우
 
   useEffect(() => {
     if (currentPage >= start + pageCount) {
@@ -55,24 +65,46 @@ export default function Pagination({
     }
   }, [currentPage, pageCount, totalPages, start]);
 
-  const handlePrevClick = () => {
-    if (!noPrev) {
+  // 페이지 이동 버튼
+  const onCickMovePage = (type: "first" | "prev" | "next" | "last"): void => {
+    if (type === "first" && !noPrev) {
+      onClick(1);
+    } else if (type === "prev" && !noPrev) {
       onClick(currentPage - 1);
-    }
-  };
-
-  const handleNextClick = () => {
-    if (!noNext) {
+    } else if (type === "next" && !noNext) {
       onClick(currentPage + 1);
+    } else if (type === "last" && !noNext) {
+      onClick(totalPages);
     }
   };
+  //   const onClickPrev = () => {
+  //     if (!noPrev) {
+  //       onClick(currentPage - 1);
+  //     }
+  //   };
+
+  //   const onClickNext = () => {
+  //     if (!noNext) {
+  //       onClick(currentPage + 1);
+  //     }
+  //   };
   return (
     <PageWrap>
       <li
-        onClick={handlePrevClick}
+        onClick={() => {
+          onCickMovePage("first");
+        }}
+        className={`first ${noPrev ? "disabled" : ""}`}
+      >
+        <FiChevronsLeft />
+      </li>
+      <li
+        onClick={() => {
+          onCickMovePage("prev");
+        }}
         className={`prev ${noPrev ? "disabled" : ""}`}
       >
-        <FiChevronLeft style={{ verticalAlign: "text-top" }} />
+        <FiChevronLeft />
       </li>
       {[...Array(pageCount)].map((_, i) => {
         const pageNumber = start + i;
@@ -91,10 +123,20 @@ export default function Pagination({
         );
       })}
       <li
-        onClick={handleNextClick}
+        onClick={() => {
+          onCickMovePage("next");
+        }}
         className={`next ${noNext ? "disabled" : ""}`}
       >
-        <FiChevronRight style={{ verticalAlign: "text-top" }} />
+        <FiChevronRight />
+      </li>
+      <li
+        onClick={() => {
+          onCickMovePage("last");
+        }}
+        className={`last ${noNext ? "disabled" : ""}`}
+      >
+        <FiChevronsRight />
       </li>
     </PageWrap>
   );

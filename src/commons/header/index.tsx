@@ -58,6 +58,9 @@ const Menu = styled.ul`
 `;
 
 export default function LayoutHeader() {
+  const onClickAlert = () => {
+    alert("준비중입니다!");
+  };
   return (
     <>
       <Header>
@@ -68,12 +71,8 @@ export default function LayoutHeader() {
             </Logo>
           </Link>
           <Menu>
-            <li>
-              <Link href="/review">요즘 캠핑 후기</Link>
-            </li>
-            <li>
-              <Link href="/board">내 캠핑장</Link>
-            </li>
+            <li onClick={onClickAlert}>요즘 캠핑 후기</li>
+            <li onClick={onClickAlert}>내 캠핑장</li>
           </Menu>
         </div>
       </Header>
