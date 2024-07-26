@@ -24,16 +24,15 @@ const Title = styled.div`
       color: #75c36b;
     }
   }
-
-  .search_btn {
-    width: 7.4rem;
-    padding: 1rem;
-  }
 `;
 
 const SearchWrap = styled.div`
   display: flex;
   gap: 2rem;
+  @media ${responsive.tablet} {
+    flex-direction: column;
+    gap: 1rem;
+  }
 `;
 
 const CardWrap = styled.div`

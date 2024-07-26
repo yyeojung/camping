@@ -24,10 +24,6 @@ interface IPropsSelect {
 }
 
 const customSelect = (isMain: boolean): StylesConfig<Option, false> => ({
-  container: (base) => ({
-    ...base,
-    width: "100%",
-  }),
   control: (base, state) => ({
     ...base,
     width: isMain ? "26rem" : "20rem",
@@ -105,21 +101,10 @@ const RegionSelect = styled.div<IPropsSelect>`
   display: flex;
   gap: ${(props) => (props.isMain ? "3.2rem" : "1.0rem")};
 
-  ${(props) =>
-    props.isMain &&
-    `
-    @media ${responsive.mobile} {
-      flex-direction: column;
-      gap: 1rem;
-    }
-  `}
-  ${(props) =>
-    !props.isMain &&
-    `
-    @media ${responsive.mobile} {
-        width: calc(100% - 9rem);
-    }
-  `}
+  @media ${responsive.mobile} {
+    flex-direction: column;
+    gap: ${(props) => (props.isMain ? "1rem" : "0.6rem")};
+  }
 `;
 
 export default function DropDown({ isMain, onChangeSearch }: IPropsSelect) {
