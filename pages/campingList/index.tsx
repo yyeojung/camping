@@ -29,7 +29,7 @@ const Title = styled.div`
 const SearchWrap = styled.div`
   display: flex;
   gap: 2rem;
-  @media ${responsive.tablet} {
+  @media ${responsive.mobile} {
     flex-direction: column;
     gap: 1rem;
   }
