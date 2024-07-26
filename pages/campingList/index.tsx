@@ -1,3 +1,4 @@
+import { responsive } from "@/commons/styles/globalStyles";
 import Button from "@/components/button";
 import CampingCardList from "@/components/campingCardList";
 import DropDown from "@/components/dropdown";
@@ -9,13 +10,24 @@ const Title = styled.div`
   margin-top: 6.4rem;
   display: flex;
   justify-content: space-between;
+
+  @media ${responsive.tablet} {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
   h2 {
     font-size: 2.4rem;
 
     span {
       font-size: 2.4rem;
-      color: #00a66c;
+      color: #75c36b;
     }
+  }
+
+  .search_btn {
+    width: 7.4rem;
+    padding: 1rem;
   }
 `;
 

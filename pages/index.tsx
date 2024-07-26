@@ -4,6 +4,8 @@ import Button from "../src/components/button";
 import DropDown from "@/components/dropdown";
 import { responsive } from "./../src/commons/styles/globalStyles";
 import { useSearch } from "@/hooks/useSearch";
+import { Modal } from "./../src/components/modal/index";
+import { useModal } from "@/hooks/useModal";
 
 const Wrap = styled.div`
   width: 100%;
@@ -77,12 +79,10 @@ const SearchBox = styled.div`
   }
 `;
 
-export default function Home(): JSX.Element {
-  const { onChangeSearch, onClickSearch } = useSearch(); // 코드 중복으로 useSearch 커스텀 훅으로 수정
-
-  const onClickReview = () => {
-    alert("준비중입니다!");
-  };
+export default function Home() {
+  const { showAlert, onCloseSearchAlret, onChangeSearch, onClickSearch } =
+    useSearch(); // 코드 중복으로 useSearch 커스텀 훅으로 수정
+  const { isShowing, modalToggle } = useModal();
 
   return (
     <>
@@ -94,9 +94,20 @@ export default function Home(): JSX.Element {
       </Head>
       <Wrap>
         <MainWrap>
-          <Button onClick={onClickReview} className="review">
+          <Button
+            onClick={() => {
+              modalToggle();
+            }}
+            className="review"
+          >
             요즘 캠핑 후기 보기
           </Button>
+          {/* 캠핑 후기 준비중 alert */}
+          <Modal
+            isShowing={isShowing}
+            hide={modalToggle}
+            message="준비 중입니다!"
+          />
           <SearchBox>
             <h2>Dayily camping</h2>
             <div className="search">
@@ -107,6 +118,14 @@ export default function Home(): JSX.Element {
               </Button>
             </div>
           </SearchBox>
+          {/* 지역 미선택시 alert */}
+          {showAlert && (
+            <Modal
+              isShowing={showAlert}
+              hide={onCloseSearchAlret}
+              message="지역을 선택해주세요!"
+            />
+          )}
         </MainWrap>
       </Wrap>
     </>

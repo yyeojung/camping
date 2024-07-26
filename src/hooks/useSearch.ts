@@ -5,6 +5,7 @@ export function useSearch() {
   const [region, setRegion] = useState<string>("");
   const [subRegion, setSubRegion] = useState<string | null>(null);
   const router = useRouter();
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
   const onChangeSearch = (region: string, subRegion: string | null) => {
     setRegion(region);
@@ -22,9 +23,19 @@ export function useSearch() {
           console.log(error);
         });
     } else {
-      alert("지역을 선택해주세요!");
+      setShowAlert(true);
     }
   };
 
-  return { region, subRegion, onChangeSearch, onClickSearch };
+  const onCloseSearchAlret = () => {
+    setShowAlert(false); // 모달 닫기
+  };
+  return {
+    showAlert,
+    region,
+    subRegion,
+    onCloseSearchAlret,
+    onChangeSearch,
+    onClickSearch,
+  };
 }

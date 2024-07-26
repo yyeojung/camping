@@ -1,3 +1,5 @@
+import { Modal } from "@/components/modal";
+import { useModal } from "@/hooks/useModal";
 import styled from "@emotion/styled";
 import Link from "next/link";
 
@@ -8,6 +10,7 @@ const Header = styled.header`
 
   .header_wrap {
     max-width: 120rem;
+    padding-left: 1rem;
     margin: auto;
     height: 100%;
     display: flex;
@@ -29,7 +32,7 @@ const Menu = styled.ul`
     text-align: center;
     display: inline-block;
     font-weight: 700;
-
+    cursor: pointer;
     a {
       display: inline-block;
       position: relative;
@@ -58,8 +61,9 @@ const Menu = styled.ul`
 `;
 
 export default function LayoutHeader() {
+  const { isShowing, modalToggle } = useModal();
   const onClickAlert = () => {
-    alert("준비중입니다!");
+    modalToggle();
   };
   return (
     <>
@@ -74,6 +78,12 @@ export default function LayoutHeader() {
             <li onClick={onClickAlert}>요즘 캠핑 후기</li>
             <li onClick={onClickAlert}>내 캠핑장</li>
           </Menu>
+          {/* 후기, 내 캠핑장 alert */}
+          <Modal
+            isShowing={isShowing}
+            hide={modalToggle}
+            message="준비 중입니다!"
+          />
         </div>
       </Header>
     </>

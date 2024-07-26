@@ -10,8 +10,10 @@ import NoData from "../noData";
 
 const Wrap = styled.div`
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
-  padding: 4rem 0;
+  min-height: 60rem;
+  padding-top: 4rem;
   gap: 4rem;
 
   .card {

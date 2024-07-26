@@ -10,7 +10,7 @@ const Wrap = styled.div`
 const LoadingIcon = styled(AiOutlineLoading3Quarters)`
   width: 10rem;
   height: 10rem;
-  fill: #b3e2b5;
+  fill: #75c36b;
   animation: loading 1s linear infinite;
 
   @keyframes loading {
