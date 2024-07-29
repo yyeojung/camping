@@ -55,6 +55,7 @@ const SearchBox = styled.div`
     @media ${responsive.mobile} {
       flex-direction: column;
       gap: 1rem;
+      margin-top: 4rem;
     }
   }
   .search_btn {
