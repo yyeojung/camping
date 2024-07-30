@@ -2,11 +2,19 @@ import styled from "@emotion/styled";
 import LikeBtn from "../likeBtn";
 import { LocationIcon } from "../locationIcon";
 import { BsImage } from "react-icons/bs";
+import { type ICampingList } from "@/contexts/campingContext";
 
 const CardWrap = styled.div`
+  cursor: pointer;
   background: #f8f8f8;
   border-radius: 1.5rem;
   box-shadow: 0 1rem 2rem 0 rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    transition: 0.3s all;
+    transform: translate(-0.6rem, -0.6rem);
+    box-shadow: 0 1rem 2rem 0 rgba(0, 0, 0, 0.2);
+  }
 `;
 const CardInner = styled.div`
   background: #fff;
@@ -75,23 +83,17 @@ const IConWrap = styled.ul`
   }
 `;
 
-interface ICampingList {
-  facltNm: string;
-  lineIntro?: string;
-  addr1: string;
-  firstImageUrl?: string;
-  themaEnvrnCl?: string;
-  tel: string;
-  contentId: number;
-  lctCl?: string;
-}
-
 interface IPropsCampingList {
   list: ICampingList[];
   className?: string;
+  onClick: (item: ICampingList) => void;
 }
 
-export default function CampingCard({ list, className }: IPropsCampingList) {
+export default function CampingCard({
+  list,
+  className,
+  onClick,
+}: IPropsCampingList) {
   return (
     <>
       {list.map((item: ICampingList) => {
@@ -103,7 +105,13 @@ export default function CampingCard({ list, className }: IPropsCampingList) {
             Array(3 - icons.length > 0 ? 3 - icons.length : 0).fill("없음"),
           );
         return (
-          <CardWrap key={item.contentId} className={className}>
+          <CardWrap
+            key={item.contentId}
+            className={className}
+            onClick={() => {
+              onClick(item);
+            }}
+          >
             <CardInner>
               <ImgBox>
                 <LikeBtn className="like" />

@@ -7,6 +7,7 @@ import CampingCard from "../campingCard";
 import { useRouter } from "next/router";
 import Loading from "../Loading";
 import NoData from "../noData";
+import { type ICampingList } from "@/contexts/campingContext";
 
 const Wrap = styled.div`
   display: flex;
@@ -27,18 +28,18 @@ const Wrap = styled.div`
   }
 `;
 
-interface ICampingList {
-  facltNm: string;
-  lineIntro?: string;
-  addr1: string;
-  firstImageUrl?: string;
-  themaEnvrnCl?: string;
-  tel: string;
-  contentId: number;
-  lctCl?: string;
-  doNm: string;
-  sigunguNm: string;
-}
+// interface ICampingList {
+//   facltNm: string;
+//   lineIntro?: string;
+//   addr1: string;
+//   firstImageUrl?: string;
+//   themaEnvrnCl?: string;
+//   tel: string;
+//   contentId: number;
+//   lctCl?: string;
+//   doNm: string;
+//   sigunguNm: string;
+// }
 
 interface IApiResponse {
   response: {
@@ -60,7 +61,9 @@ export default function CampingCardList({ className }: IPropsList) {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 번호
   const [totalCount, setTotalCount] = useState<number>(0); // 전체 캠핑 아이템 수
-  const { query } = useRouter();
+  const router = useRouter();
+  const { query } = router;
+  //   const { setCampingData } = useCamping();
 
   const SERVICE_KEY = process.env.NEXT_PUBLIC_SERVICE_KEY;
 
@@ -72,7 +75,7 @@ export default function CampingCardList({ className }: IPropsList) {
       setLoading(true);
       try {
         const response = await axios.get<IApiResponse>(
-          `https://apis.data.go.kr/B551011/GoCamping/basedList?serviceKey=${SERVICE_KEY}&numOfRows=4000&pageNo=1&MobileOS=AND&MobileApp=appName&_type=json`,
+          `https://apis.data.go.kr/B551011/GoCamping/basedList?serviceKey=${SERVICE_KEY}&numOfRows=4000&pageNo=1&MobileOS=AND&MobileApp=dayCamping&_type=json`,
         );
 
         const items = response.data.response?.body?.items.item || []; // 데이터 없을 경우 추가 수정
@@ -119,6 +122,22 @@ export default function CampingCardList({ className }: IPropsList) {
   const onClickPage = (selected: number) => {
     setCurrentPage(selected);
   };
+
+  const onClickCard = (item: ICampingList) => {
+    // setCampingData(item);
+    const { contentId } = item;
+    void router.push(`/campingDetail?contentId=${contentId}`);
+  };
+  //   const onClickCard = async (contentId: number) => {
+  //     await router
+  //       .push({
+  //         pathname: "/campingDetail",
+  //         query: { contentId },
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   };
   return (
     <>
       <Wrap>
@@ -126,7 +145,7 @@ export default function CampingCardList({ className }: IPropsList) {
           <Loading />
         ) : list.length > 0 ? (
           <>
-            <CampingCard className="card" list={list} />
+            <CampingCard className="card" list={list} onClick={onClickCard} />
             {pageCount > 0 && (
               <Pagination
                 totalItems={totalCount}

@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import Button from "../button";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import { responsive } from "@/commons/styles/globalStyles";
+import { type ReactNode } from "react";
 
 const Wrap = styled.div`
   position: fixed;
@@ -48,10 +49,11 @@ const AlertIcon = styled(IoAlertCircleOutline)`
 interface IPropsModal {
   isShowing: boolean;
   hide: () => void;
-  message: string;
+  message?: string;
+  children?: ReactNode;
 }
 
-export function Modal({ isShowing, hide, message }: IPropsModal) {
+export function Modal({ isShowing, hide, message, children }: IPropsModal) {
   return isShowing
     ? ReactDOM.createPortal(
         <Wrap onClick={hide}>
@@ -61,10 +63,14 @@ export function Modal({ isShowing, hide, message }: IPropsModal) {
               e.stopPropagation();
             }}
           >
-            <div>
-              <AlertIcon />
-              <p>{message}</p>
-            </div>
+            {message ? (
+              <div>
+                <AlertIcon />
+                <p>{message}</p>
+              </div>
+            ) : (
+              children
+            )}
             <Button onClick={hide}>닫기</Button>
           </ModalInner>
         </Wrap>,

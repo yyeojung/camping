@@ -4,7 +4,7 @@ import Button from "../src/components/button";
 import DropDown from "@/components/dropdown";
 import { responsive } from "./../src/commons/styles/globalStyles";
 import { useSearch } from "@/hooks/useSearch";
-import { Modal } from "./../src/components/modal/index";
+import { Modal } from "../src/components/modal/index";
 import { useModal } from "@/hooks/useModal";
 
 const Wrap = styled.div`
