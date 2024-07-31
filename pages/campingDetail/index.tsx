@@ -1,6 +1,6 @@
 import ImageDetail from "@/components/campingDetail/imageDetail";
+import ImageDetailModal from "@/components/campingList/modal/imageDetailModal";
 import LikeBtn from "@/components/likeBtn";
-import ImageDetailModal from "@/components/modal/imageDetailModal";
 import { useModal } from "@/hooks/useModal";
 import styled from "@emotion/styled";
 import { FaRegCopy, FaLink } from "react-icons/fa6";

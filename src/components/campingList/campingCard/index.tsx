@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import LikeBtn from "../likeBtn";
+import LikeBtn from "../../likeBtn";
 import { LocationIcon } from "../locationIcon";
 import { BsImage } from "react-icons/bs";
 import { type ICampingList } from "@/contexts/campingContext";

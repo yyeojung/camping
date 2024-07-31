@@ -1,13 +1,13 @@
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Pagination from "../pagination";
 import { responsive } from "@/commons/styles/globalStyles";
 import CampingCard from "../campingCard";
 import { useRouter } from "next/router";
-import Loading from "../Loading";
-import NoData from "../noData";
 import { type ICampingList } from "@/contexts/campingContext";
+import Pagination from "./../../pagination/index";
+import Loading from "./../../Loading/index";
+import NoData from "./../../noData/index";
 
 const Wrap = styled.div`
   display: flex;

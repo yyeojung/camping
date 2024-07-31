@@ -4,14 +4,17 @@ import { Global } from "@emotion/react";
 import { globalStyles } from "../src/commons/styles/globalStyles";
 import Layout from "../src/commons/layout";
 import { CampingProvider } from "@/contexts/campingContext";
+import { ImageProvider } from "@/contexts/imageContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <CampingProvider>
-      <Global styles={globalStyles} />
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <ImageProvider>
+        <Global styles={globalStyles} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </ImageProvider>
     </CampingProvider>
   );
 }

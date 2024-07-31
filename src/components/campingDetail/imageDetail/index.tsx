@@ -1,7 +1,8 @@
+import { type IImageList, useImage } from "@/contexts/imageContext";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const ImgWrap = styled.div`
   margin-top: 1rem;
@@ -73,11 +74,6 @@ const ImgWrap = styled.div`
   }
 `;
 
-interface IImageList {
-  serialNum: number;
-  imageUrl: string;
-}
-
 interface IApiResponse {
   response: {
     body: {
@@ -93,7 +89,7 @@ interface IPropsImageDetail {
 }
 
 export default function ImageDetail({ onClick }: IPropsImageDetail) {
-  const [imageUrl, setImageUrl] = useState<IImageList[]>([]);
+  const { imageData, setImageData } = useImage();
   const router = useRouter();
   const contentId = Number(router.query.contentId);
 
@@ -105,45 +101,45 @@ export default function ImageDetail({ onClick }: IPropsImageDetail) {
 
       try {
         const response = await axios.get<IApiResponse>(
-          `http://apis.data.go.kr/B551011/GoCamping/imageList?serviceKey=${SERVICE_KEY}&MobileOS=ETC&MobileApp=dayCamping&contentId=${contentId}&_type=json`,
+          `http://apis.data.go.kr/B551011/GoCamping/imageList?serviceKey=${SERVICE_KEY}&MobileOS=ETC&MobileApp=dayCamping&contentId=${contentId}&numOfRows=30&_type=json`,
         );
-        setImageUrl(response.data.response?.body?.items.item);
+        setImageData(response.data.response?.body?.items.item);
       } catch (e) {
         console.error(e);
       }
     }
     void fetchData();
-  }, [contentId, SERVICE_KEY]);
+  }, [contentId, SERVICE_KEY, setImageData]);
 
-  const campingImage = imageUrl.slice(1, 6); // 1번 이미지는 정보 이미지 같아서 우선 제외
+  const campingImage = imageData.slice(1, 6); // 1번 이미지는 정보 이미지 같아서 우선 제외
   return (
-    <>
-      <ImgWrap onClick={onClick}>
-        <div className="left">
-          <div className="img">
-            <img src={campingImage[0]?.imageUrl} alt="캠핑이미지" />
+    <ImgWrap>
+      <div className="left">
+        <div onClick={onClick} className="img">
+          <img src={campingImage[0]?.imageUrl} alt="캠핑이미지" />
+        </div>
+      </div>
+      <div className="right">
+        <div>
+          <div onClick={onClick} className="img">
+            <img src={campingImage[1]?.imageUrl} alt="캠핑이미지" />
+          </div>
+          <div onClick={onClick} className="img">
+            <img src={campingImage[2]?.imageUrl} alt="캠핑이미지" />
           </div>
         </div>
-        <div className="right">
-          <div>
-            <div className="img">
-              <img src={campingImage[1]?.imageUrl} alt="캠핑이미지" />
-            </div>
-            <div className="img">
-              <img src={campingImage[2]?.imageUrl} alt="캠핑이미지" />
-            </div>
+        <div>
+          <div onClick={onClick} className="img">
+            <img src={campingImage[3]?.imageUrl} alt="캠핑이미지" />
           </div>
-          <div>
-            <div className="img">
-              <img src={campingImage[3]?.imageUrl} alt="캠핑이미지" />
-            </div>
-            <div className="img">
-              <img src={campingImage[4]?.imageUrl} alt="캠핑이미지" />
-            </div>
+          <div onClick={onClick} className="img">
+            <img src={campingImage[4]?.imageUrl} alt="캠핑이미지" />
           </div>
         </div>
-        <button className="all_view">전체 사진 보기</button>
-      </ImgWrap>
-    </>
+      </div>
+      <button onClick={onClick} className="all_view">
+        전체 사진 보기
+      </button>
+    </ImgWrap>
   );
 }
