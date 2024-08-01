@@ -4,7 +4,7 @@ export function useModal() {
   const [isShowing, setIsShowing] = useState(false);
 
   const modalToggle = () => {
-    setIsShowing(!isShowing);
+    setIsShowing((prev) => !prev);
   };
 
   return {

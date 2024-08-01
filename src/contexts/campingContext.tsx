@@ -22,14 +22,14 @@ export interface ICampingList {
 }
 
 interface CampingContextType {
-  campingData: ICampingList | null;
-  setCampingData: (item: ICampingList) => void;
+  campingData: ICampingList[];
+  setCampingData: (item: ICampingList[]) => void;
 }
 
 const CampingContext = createContext<CampingContextType | undefined>(undefined);
 
 export const CampingProvider = ({ children }: { children: ReactNode }) => {
-  const [campingData, setCampingData] = useState<ICampingList | null>(null);
+  const [campingData, setCampingData] = useState<ICampingList[]>([]);
 
   return (
     <CampingContext.Provider value={{ campingData, setCampingData }}>

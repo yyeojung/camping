@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { IoCloseOutline } from "react-icons/io5";
 import { IoIosArrowBack } from "react-icons/io";
 import { responsive } from "@/commons/styles/globalStyles";
+import { useIsMobile } from "@/commons/responsive/useMediaQuery";
 
 const ModalCloseBtn = styled.button`
   background: transparent;
@@ -11,20 +12,8 @@ const ModalCloseBtn = styled.button`
   top: 2rem;
   right: 2rem;
 
-  .pc {
-    display: block;
-  }
-  .mobile {
-    display: none;
-  }
   @media ${responsive.mobile} {
     left: 2rem;
-    .pc {
-      display: none;
-    }
-    .mobile {
-      display: block;
-    }
   }
 
   svg {
@@ -39,10 +28,11 @@ export default function ModalClose({
   className?: string;
   onClick?: () => void;
 }) {
+  const isMobile = useIsMobile();
+
   return (
     <ModalCloseBtn className={className} onClick={onClick}>
-      <IoCloseOutline className="pc" />
-      <IoIosArrowBack className="mobile" />
+      {isMobile ? <IoIosArrowBack /> : <IoCloseOutline />}
       <span className="sr_only">닫기</span>
     </ModalCloseBtn>
   );

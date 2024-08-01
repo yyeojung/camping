@@ -120,13 +120,11 @@ export default function Home() {
             </div>
           </SearchBox>
           {/* 지역 미선택시 alert */}
-          {showAlert && (
-            <Modal
-              isShowing={showAlert}
-              hide={onCloseSearchAlret}
-              message="지역을 선택해주세요!"
-            />
-          )}
+          <Modal
+            isShowing={showAlert}
+            hide={onCloseSearchAlret}
+            message="지역을 선택해주세요!"
+          />
         </MainWrap>
       </Wrap>
     </>

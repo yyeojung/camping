@@ -1,6 +1,8 @@
 import ImageDetail from "@/components/campingDetail/imageDetail";
 import ImageDetailModal from "@/components/campingList/modal/imageDetailModal";
 import LikeBtn from "@/components/likeBtn";
+import { useSelected } from "@/contexts/selectedContext";
+import Link from "next/link";
 import { useModal } from "@/hooks/useModal";
 import styled from "@emotion/styled";
 import { FaRegCopy, FaLink } from "react-icons/fa6";
@@ -92,21 +94,24 @@ const Info = styled.div`
   }
 `;
 export default function CampingDetail() {
+  const { selectedCamping } = useSelected();
+
   const { isShowing, modalToggle } = useModal();
   const onClickImage = () => {
     modalToggle();
   };
+  console.log(selectedCamping);
   return (
     <>
       <Section>
         <Title>
           <ul>
             <li>
-              <strong>(주) 아웃오브파크</strong>
+              <strong>{selectedCamping?.facltNm}</strong>
             </li>
             <li>
               <button>
-                <span>주소주소주소</span>
+                <span>{selectedCamping?.addr1}</span>
                 <FaRegCopy style={{ marginLeft: ".4rem" }} />
               </button>
             </li>
@@ -119,9 +124,8 @@ export default function CampingDetail() {
           </div>
         </Title>
         <ImageDetail onClick={onClickImage} />
-        {isShowing && (
-          <ImageDetailModal isShowing={isShowing} hide={modalToggle} />
-        )}
+        {/* 이미지 전체 모달 */}
+        <ImageDetailModal isShowing={isShowing} hide={modalToggle} />
         <Info>
           <ul className="tag">
             <li>수영장</li>
@@ -132,10 +136,19 @@ export default function CampingDetail() {
             <strong>업종</strong>카라반, 일반 야영장,,
           </p>
           <p>
-            <strong>홈페이지</strong>http:ssss
+            <strong>홈페이지</strong>
+
+            {selectedCamping?.homepage ? (
+              <Link href={selectedCamping?.homepage}>
+                <a target="_blank">{selectedCamping?.homepage}</a>
+              </Link>
+            ) : (
+              "홈페이지 정보 없음"
+            )}
           </p>
           <p>
-            <strong>연락처</strong>1588-1896
+            <strong>연락처</strong>
+            {selectedCamping?.tel ? selectedCamping?.tel : "직접 문의"}
           </p>
           <p className="divider">
             화로대 개별

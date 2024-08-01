@@ -8,6 +8,7 @@ import { type ICampingList } from "@/contexts/campingContext";
 import Pagination from "./../../pagination/index";
 import Loading from "./../../Loading/index";
 import NoData from "./../../noData/index";
+import { useSelected } from "@/contexts/selectedContext";
 
 const Wrap = styled.div`
   display: flex;
@@ -63,7 +64,7 @@ export default function CampingCardList({ className }: IPropsList) {
   const [totalCount, setTotalCount] = useState<number>(0); // 전체 캠핑 아이템 수
   const router = useRouter();
   const { query } = router;
-  //   const { setCampingData } = useCamping();
+  const { setSelectedCamping } = useSelected();
 
   const SERVICE_KEY = process.env.NEXT_PUBLIC_SERVICE_KEY;
 
@@ -124,7 +125,7 @@ export default function CampingCardList({ className }: IPropsList) {
   };
 
   const onClickCard = (item: ICampingList) => {
-    // setCampingData(item);
+    setSelectedCamping(item);
     const { contentId } = item;
     void router.push(`/campingDetail?contentId=${contentId}`);
   };

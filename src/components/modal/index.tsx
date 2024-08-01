@@ -3,8 +3,8 @@ import ReactDOM from "react-dom";
 import Button from "../button";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import { responsive } from "@/commons/styles/globalStyles";
-import { useEffect, type ReactNode } from "react";
 import ModalClose from "../button/modalClose";
+import { useEffect, type ReactNode } from "react";
 
 const Wrap = styled.div`
   position: fixed;
@@ -37,6 +37,7 @@ const ModalInner = styled.div<{
   ${({ customStyle }) => customStyle && { ...customStyle }}
 
   @media ${responsive.mobile} {
+    min-width: 30rem;
     width: calc(100% - 3.2rem);
     ${({ mobileStyle }) => mobileStyle && { ...mobileStyle }}
   }
@@ -71,27 +72,12 @@ export function Modal({
   mobileStyle,
 }: IPropsModal) {
   useEffect(() => {
-    // const closeModal = (event: KeyboardEvent | PopStateEvent) => { esc 눌러도 모달창 닫기, 굳이 필요없을것 같아서 삭제
-    //   if ('key' in event && event.key === "Escape") {
-    //     hide();
-    //   } else if (event instanceof PopStateEvent) {
-    //     hide();
-    //   }
-    // };
-    const closeModal = (event: PopStateEvent) => {
-      hide();
-    };
-
     if (isShowing) {
       document.body.style.overflow = "hidden";
-      history.pushState(null, document.title);
-      //   document.addEventListener("keyup", closeModal);
-      window.addEventListener("popstate", closeModal);
     } else {
       document.body.style.overflow = "auto";
-      window.removeEventListener("popstate", closeModal);
     }
-  }, []);
+  }, [isShowing]);
   return isShowing
     ? ReactDOM.createPortal(
         <Wrap onClick={hide}>

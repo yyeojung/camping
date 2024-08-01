@@ -1,8 +1,10 @@
+import { useIsMobile } from "@/commons/responsive/useMediaQuery";
 import { type IImageList, useImage } from "@/contexts/imageContext";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
+import { FaCampground } from "react-icons/fa";
 
 const ImgWrap = styled.div`
   margin-top: 1rem;
@@ -72,6 +74,31 @@ const ImgWrap = styled.div`
       background: #e0e0e0;
     }
   }
+
+  &.empty_wrap {
+    padding-top: 50%;
+
+    .empty {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #555;
+      gap: 1rem;
+    }
+  }
+`;
+
+const NoDataIcon = styled(FaCampground)`
+  width: 10rem;
+  height: 10rem;
+  fill: #949494;
 `;
 
 interface IApiResponse {
@@ -92,54 +119,95 @@ export default function ImageDetail({ onClick }: IPropsImageDetail) {
   const { imageData, setImageData } = useImage();
   const router = useRouter();
   const contentId = Number(router.query.contentId);
+  const isMobile = useIsMobile();
 
   const SERVICE_KEY = process.env.NEXT_PUBLIC_SERVICE_KEY;
 
-  useEffect(() => {
-    async function fetchData(): Promise<void> {
-      if (!contentId) return;
+  const loadImage = useCallback(async () => {
+    try {
+      const response = await axios.get<IApiResponse>(
+        `http://apis.data.go.kr/B551011/GoCamping/imageList?serviceKey=${SERVICE_KEY}&MobileOS=ETC&MobileApp=dayCamping&contentId=${contentId}&numOfRows=30&_type=json`,
+      );
 
-      try {
-        const response = await axios.get<IApiResponse>(
-          `http://apis.data.go.kr/B551011/GoCamping/imageList?serviceKey=${SERVICE_KEY}&MobileOS=ETC&MobileApp=dayCamping&contentId=${contentId}&numOfRows=30&_type=json`,
-        );
-        setImageData(response.data.response?.body?.items.item);
-      } catch (e) {
-        console.error(e);
-      }
+      const images: IImageList[] = response.data.response.body.items.item;
+      setImageData(images);
+    } catch (error) {
+      console.log(error);
     }
-    void fetchData();
-  }, [contentId, SERVICE_KEY, setImageData]);
+  }, [setImageData, contentId, SERVICE_KEY]);
 
-  const campingImage = imageData.slice(1, 6); // 1번 이미지는 정보 이미지 같아서 우선 제외
+  useEffect(() => {
+    void loadImage();
+  }, [loadImage]);
+  //   useEffect(() => {
+  //     async function fetchData(): Promise<void> {
+  //       if (!contentId) return;
+
+  //       try {
+  //         const response = await axios.get<IApiResponse>(
+  //           `http://apis.data.go.kr/B551011/GoCamping/imageList?serviceKey=${SERVICE_KEY}&MobileOS=ETC&MobileApp=dayCamping&contentId=${contentId}&numOfRows=30&_type=json`,
+  //         );
+  //         setImageData(response.data.response?.body?.items.item);
+  //       } catch (e) {
+  //         console.error(e);
+  //       }
+  //     }
+  //     void fetchData();
+  //   }, [contentId, SERVICE_KEY, setImageData]);
+
+  const campingImage = imageData ? imageData.slice(1, 6) : []; // 1번 이미지는 정보 이미지 같아서 우선 제외
+  const campingImageLength = campingImage.length;
   return (
-    <ImgWrap>
-      <div className="left">
-        <div onClick={onClick} className="img">
-          <img src={campingImage[0]?.imageUrl} alt="캠핑이미지" />
-        </div>
-      </div>
-      <div className="right">
-        <div>
-          <div onClick={onClick} className="img">
-            <img src={campingImage[1]?.imageUrl} alt="캠핑이미지" />
+    <>
+      {/* 이미지 없을 때 */}
+      {campingImageLength === 0 ? (
+        <ImgWrap className="empty_wrap">
+          <div className="empty">
+            <NoDataIcon />
+            <p>캠핑장 이미지가 없습니다.</p>
           </div>
+        </ImgWrap>
+      ) : //   이미지 5개 안되거나 모바일 사이즈일떄
+      campingImageLength < 5 || isMobile ? (
+        <ImgWrap>
           <div onClick={onClick} className="img">
-            <img src={campingImage[2]?.imageUrl} alt="캠핑이미지" />
+            <img src={campingImage[0]?.imageUrl} alt="캠핑이미지" />
           </div>
-        </div>
-        <div>
-          <div onClick={onClick} className="img">
-            <img src={campingImage[3]?.imageUrl} alt="캠핑이미지" />
+          <button onClick={onClick} className="all_view">
+            전체 사진 보기
+          </button>
+        </ImgWrap>
+      ) : (
+        //  이미지 5개 될 떄
+        <ImgWrap className="pc">
+          <div className="left">
+            <div onClick={onClick} className="img">
+              <img src={campingImage[0]?.imageUrl} alt="캠핑이미지" />
+            </div>
           </div>
-          <div onClick={onClick} className="img">
-            <img src={campingImage[4]?.imageUrl} alt="캠핑이미지" />
+          <div className="right">
+            <div>
+              <div onClick={onClick} className="img">
+                <img src={campingImage[1]?.imageUrl} alt="캠핑이미지" />
+              </div>
+              <div onClick={onClick} className="img">
+                <img src={campingImage[2]?.imageUrl} alt="캠핑이미지" />
+              </div>
+            </div>
+            <div>
+              <div onClick={onClick} className="img">
+                <img src={campingImage[3]?.imageUrl} alt="캠핑이미지" />
+              </div>
+              <div onClick={onClick} className="img">
+                <img src={campingImage[4]?.imageUrl} alt="캠핑이미지" />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <button onClick={onClick} className="all_view">
-        전체 사진 보기
-      </button>
-    </ImgWrap>
+          <button onClick={onClick} className="all_view">
+            전체 사진 보기
+          </button>
+        </ImgWrap>
+      )}
+    </>
   );
 }

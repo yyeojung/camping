@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 export function useSearch() {
@@ -6,6 +6,17 @@ export function useSearch() {
   const [subRegion, setSubRegion] = useState<string | null>(null);
   const router = useRouter();
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const { query } = router;
+
+  useEffect(() => {
+    // 검색화면 첫진입에서 검색버튼 눌러도 검색 다시 진행되게 추가
+    if (query.region) {
+      setRegion(query.region as string);
+    }
+    if (query.subRegion) {
+      setSubRegion(query.subRegion as string | null);
+    }
+  }, [query]);
 
   const onChangeSearch = (region: string, subRegion: string | null) => {
     setRegion(region);
