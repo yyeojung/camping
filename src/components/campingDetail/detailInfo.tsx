@@ -46,7 +46,7 @@ export default function DetailInfo() {
   const arrSbrsCl = selectedCamping?.sbrsCl.split(",");
   return (
     <Info>
-      {arrSbrsCl?.length ? (
+      {arrSbrsCl && arrSbrsCl?.length > 1 ? (
         <DragScroll className="tag">
           {arrSbrsCl?.map((item: string, index: number) => (
             <div key={index}>{item}</div>
