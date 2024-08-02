@@ -19,6 +19,7 @@ export interface ICampingList {
   sbrsEtc: string;
   homepage: string;
   animalCmgCl: string;
+  tooltip: string;
 }
 
 interface CampingContextType {

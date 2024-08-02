@@ -8,9 +8,6 @@ const IconWrap = styled.div`
 
   button {
     border: 0.1rem solid #cacaca;
-    &:hover {
-      box-shadow: 0.2rem 0.2rem 0.8rem 0.2rem rgba(0, 0, 0, 0.1);
-    }
   }
   .like {
     box-shadow: none;

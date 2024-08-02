@@ -22,13 +22,13 @@ const MobileMenuList = styled.div<{ menuOpen: boolean }>`
     position: absolute;
     top: 0;
     z-index: 20;
-    width: 40%;
+    width: 60%;
     background: #fff;
     min-height: 100vh;
     border-left: 0.1rem solid #ccc;
     padding: 8rem 1rem 2rem;
     transition: all 0.4s;
-    right: ${(props) => (props.menuOpen ? "0" : "-40%")};
+    right: ${(props) => (props.menuOpen ? "0" : "-60%")};
   }
 
   ul li {

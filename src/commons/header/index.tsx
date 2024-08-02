@@ -82,6 +82,7 @@ const MobileMenu = styled.button`
   svg {
     width: 3.2rem;
     height: 3.2rem;
+    stroke: #333;
   }
 `;
 

@@ -3,7 +3,7 @@ import { type IImageList, useImage } from "@/contexts/imageContext";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaCampground } from "react-icons/fa";
 
 const ImgWrap = styled.div`
@@ -68,6 +68,7 @@ const ImgWrap = styled.div`
     position: absolute;
     right: 2rem;
     bottom: 2rem;
+    color: #000;
     font-size: 1.4rem;
 
     &:hover {
@@ -120,10 +121,12 @@ export default function ImageDetail({ onClick }: IPropsImageDetail) {
   const router = useRouter();
   const contentId = Number(router.query.contentId);
   const isMobile = useIsMobile();
+  const [loading, setLoading] = useState<boolean>(true);
 
   const SERVICE_KEY = process.env.NEXT_PUBLIC_SERVICE_KEY;
 
   const loadImage = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await axios.get<IApiResponse>(
         `https://apis.data.go.kr/B551011/GoCamping/imageList?serviceKey=${SERVICE_KEY}&MobileOS=ETC&MobileApp=dayCamping&contentId=${contentId}&numOfRows=30&_type=json`,
@@ -159,8 +162,8 @@ export default function ImageDetail({ onClick }: IPropsImageDetail) {
   const campingImageLength = campingImage.length;
   return (
     <>
-      {/* 이미지 없을 때 */}
-      {campingImageLength === 0 ? (
+      {/* 이미지가 없거나 로딩중일 때 */}
+      {campingImageLength === 0 ?? loading ? (
         <ImgWrap className="empty_wrap">
           <div className="empty">
             <NoDataIcon />

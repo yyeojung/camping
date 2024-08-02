@@ -6,6 +6,7 @@ import styled from "@emotion/styled";
 import { useSelected } from "@/contexts/selectedContext";
 import { useModal } from "@/hooks/useModal";
 import DetailTitleIcon from "./detailTitleIcon";
+import { responsive } from "@/commons/styles/globalStyles";
 
 const Title = styled.div`
   display: flex;
@@ -28,6 +29,10 @@ const Title = styled.div`
 
     strong {
       font-size: 2.4rem;
+
+      @media ${responsive.mobile} {
+        font-size: 1.8rem;
+      }
     }
   }
   li ~ li {

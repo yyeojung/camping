@@ -19,6 +19,7 @@ const ModalCloseBtn = styled.button`
   svg {
     width: 100%;
     height: 100%;
+    stroke: #333;
   }
 `;
 export default function ModalClose({

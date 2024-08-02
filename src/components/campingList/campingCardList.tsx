@@ -2,12 +2,12 @@ import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { responsive } from "@/commons/styles/globalStyles";
-import CampingCard from "../campingCard";
+import CampingCard from "./campingCard";
 import { useRouter } from "next/router";
 import { type ICampingList } from "@/contexts/campingContext";
-import Pagination from "./../../pagination/index";
-import Loading from "./../../Loading/index";
-import NoData from "./../../noData/index";
+import Pagination from "../pagination/index";
+import Loading from "../Loading/index";
+import NoData from "../noData/index";
 import { useSelected } from "@/contexts/selectedContext";
 
 const Wrap = styled.div`
@@ -65,13 +65,13 @@ export default function CampingCardList({ className }: IPropsList) {
   const router = useRouter();
   const { query } = router;
   const { setSelectedCamping } = useSelected();
-
+  //   const { region, subRegion } = useSearchState();
   const SERVICE_KEY = process.env.NEXT_PUBLIC_SERVICE_KEY;
 
   // 데이터 불러오기
   useEffect(() => {
     async function fetchData(): Promise<void> {
-      if (!query.region) return; // 쿼리 값이 유효할 때만
+      if (!query.region) return; // 지역 값이 유효할 때만
 
       setLoading(true);
       try {

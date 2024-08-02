@@ -6,6 +6,7 @@ import Layout from "../src/commons/layout";
 import { ImageProvider } from "@/contexts/imageContext";
 import { SelectedProvider } from "@/contexts/selectedContext";
 import { useEffect, useState } from "react";
+import { SearchProvider } from "@/contexts/searchContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);
@@ -20,14 +21,16 @@ export default function App({ Component, pageProps }: AppProps) {
   }
   return (
     // <CampingProvider> 캠핑 검색목록에서 클릭하는 1개의 캠핑장 정보만 넘기면 되서 삭제
-    <SelectedProvider>
-      <ImageProvider>
-        <Global styles={globalStyles} />
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </ImageProvider>
-    </SelectedProvider>
+    <SearchProvider>
+      <SelectedProvider>
+        <ImageProvider>
+          <Global styles={globalStyles} />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ImageProvider>
+      </SelectedProvider>
+    </SearchProvider>
     // </CampingProvider>
   );
 }

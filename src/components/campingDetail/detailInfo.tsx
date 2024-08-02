@@ -74,10 +74,12 @@ export default function DetailInfo() {
       </p>
       <p className="divider">
         <strong>화로대</strong>
-        {selectedCamping?.brazierCl}
+        {selectedCamping?.brazierCl ? selectedCamping?.brazierCl : "직접 문의"}
         <span></span>
         <strong>반려동물 출입</strong>
-        {selectedCamping?.animalCmgCl}
+        {selectedCamping?.animalCmgCl
+          ? selectedCamping?.animalCmgCl
+          : "직접 문의"}
       </p>
     </Info>
   );
