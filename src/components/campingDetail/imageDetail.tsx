@@ -126,7 +126,7 @@ export default function ImageDetail({ onClick }: IPropsImageDetail) {
   const loadImage = useCallback(async () => {
     try {
       const response = await axios.get<IApiResponse>(
-        `http://apis.data.go.kr/B551011/GoCamping/imageList?serviceKey=${SERVICE_KEY}&MobileOS=ETC&MobileApp=dayCamping&contentId=${contentId}&numOfRows=30&_type=json`,
+        `https://apis.data.go.kr/B551011/GoCamping/imageList?serviceKey=${SERVICE_KEY}&MobileOS=ETC&MobileApp=dayCamping&contentId=${contentId}&numOfRows=30&_type=json`,
       );
 
       const images: IImageList[] = response.data.response.body.items.item;

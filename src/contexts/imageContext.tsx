@@ -1,7 +1,7 @@
 import { createContext, type ReactNode, useContext, useState } from "react";
 
 export interface IImageList {
-  serialNum: number;
+  serialnum: number;
   imageUrl: string;
 }
 
@@ -14,6 +14,14 @@ const ImageContext = createContext<ImageContextType | undefined>(undefined);
 
 export const ImageProvider = ({ children }: { children: ReactNode }) => {
   const [imageData, setImageData] = useState<IImageList[]>([]);
+
+  //   useEffect(() => {
+  //     const storedImage = localStorage.getItem("imageData");
+  //     if (storedImage) {
+  //       const localImage: IImageList[] = JSON.parse(storedImage);
+  //       setImageData(localImage);
+  //     }
+  //   });
 
   return (
     <ImageContext.Provider value={{ imageData, setImageData }}>

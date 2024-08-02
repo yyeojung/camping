@@ -2,11 +2,25 @@ import { Modal } from "@/components/modal";
 import { useModal } from "@/hooks/useModal";
 import styled from "@emotion/styled";
 import Link from "next/link";
+import { useIsMobile } from "../responsive/useMediaQuery";
+import { IoMenu } from "react-icons/io5";
+import { responsive } from "../styles/globalStyles";
+import MobileMenuModal from "@/components/modal/header/mobileMenuModal";
+import { useState } from "react";
 
 const Header = styled.header`
+  position: relative;
   width: 100%;
   height: 8rem;
   border-bottom: 0.1rem solid #dbdbdb;
+
+  @media ${responsive.mobile} {
+    height: 6rem;
+
+    .header_wrap {
+      padding: 0 1.6rem;
+    }
+  }
 
   .header_wrap {
     max-width: 120rem;
@@ -20,10 +34,14 @@ const Header = styled.header`
 `;
 
 const Logo = styled.a`
-  width: 12.5rem;
+  width: 12rem;
   height: 3.5rem;
   display: block;
-  background: url(/image/logo.svg);
+  background: url(/image/logo.svg) center/ 100% no-repeat;
+
+  @media ${responsive.mobile} {
+    width: 8rem;
+  }
 `;
 
 const Menu = styled.ul`
@@ -60,8 +78,25 @@ const Menu = styled.ul`
   }
 `;
 
+const MobileMenu = styled.button`
+  svg {
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+`;
+
 export default function LayoutHeader() {
   const { isShowing, modalToggle } = useModal();
+  const isMobile = useIsMobile();
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+
+  //  모바일 메뉴 토글 클릭이벤트
+  const onClickMenu = () => {
+    setMenuOpen((prev) => !prev);
+    console.log(menuOpen);
+  };
+
+  // 준비중 alert
   const onClickAlert = () => {
     modalToggle();
   };
@@ -74,10 +109,18 @@ export default function LayoutHeader() {
               <span className="sr_only">요즘캠핑</span>
             </Logo>
           </Link>
-          <Menu>
-            <li onClick={onClickAlert}>요즘 캠핑 후기</li>
-            <li onClick={onClickAlert}>내 캠핑장</li>
-          </Menu>
+          {!isMobile ? (
+            <Menu>
+              <li onClick={onClickAlert}>요즘 캠핑 후기</li>
+              <li onClick={onClickAlert}>내 캠핑장</li>
+            </Menu>
+          ) : (
+            <MobileMenu onClick={onClickMenu}>
+              <IoMenu />
+            </MobileMenu>
+          )}
+          {/* 모바일메뉴 */}
+          <MobileMenuModal menuOpen={menuOpen} onClick={onClickMenu} />
           {/* 후기, 내 캠핑장 alert */}
           <Modal
             isShowing={isShowing}

@@ -133,7 +133,7 @@ export default function ImageDetailModal({ isShowing, hide }: IPropsModal) {
       <SlideWrap>
         <Slider {...settings}>
           {imageData?.map((image) => (
-            <div className="img_slide" key={image.serialNum}>
+            <div className="img_slide" key={image.serialnum}>
               <img src={image.imageUrl} alt="캠핑장 이미지" />
             </div>
           ))}
