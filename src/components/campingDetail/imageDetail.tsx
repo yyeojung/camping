@@ -1,9 +1,8 @@
 import { useIsMobile } from "@/commons/responsive/useMediaQuery";
-import { type IImageList, useImage } from "@/contexts/imageContext";
+import { useImage } from "@/contexts/imageContext";
 import styled from "@emotion/styled";
-import axios from "axios";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FaCampground } from "react-icons/fa";
 
 const ImgWrap = styled.div`
@@ -102,61 +101,40 @@ const NoDataIcon = styled(FaCampground)`
   fill: #949494;
 `;
 
-interface IApiResponse {
-  response: {
-    body: {
-      items: {
-        item: IImageList[];
-      };
-    };
-  };
-}
-
 interface IPropsImageDetail {
   onClick?: () => void;
 }
 
 export default function ImageDetail({ onClick }: IPropsImageDetail) {
-  const { imageData, setImageData } = useImage();
+  const { loading, imageData, fetchImageData } = useImage();
   const router = useRouter();
   const contentId = Number(router.query.contentId);
   const isMobile = useIsMobile();
-  const [loading, setLoading] = useState<boolean>(true);
+  // const [loading, setLoading] = useState<boolean>(true);
 
-  const SERVICE_KEY = process.env.NEXT_PUBLIC_SERVICE_KEY;
-
-  const loadImage = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get<IApiResponse>(
-        `https://apis.data.go.kr/B551011/GoCamping/imageList?serviceKey=${SERVICE_KEY}&MobileOS=ETC&MobileApp=dayCamping&contentId=${contentId}&numOfRows=30&_type=json`,
-      );
-
-      const images: IImageList[] = response.data.response.body.items.item;
-      setImageData(images);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [setImageData, contentId, SERVICE_KEY]);
+  // const SERVICE_KEY = process.env.NEXT_PUBLIC_SERVICE_KEY;
 
   useEffect(() => {
-    void loadImage();
-  }, [loadImage]);
-  //   useEffect(() => {
-  //     async function fetchData(): Promise<void> {
-  //       if (!contentId) return;
+    if (fetchImageData && contentId) {
+      void fetchImageData(contentId);
+    }
+  }, [contentId]);
+  // useEffct(() => {
+  //   setLoading(true);
+  //   async function fetchData(): Promise<void> {
+  //     if (!contentId) return;
 
-  //       try {
-  //         const response = await axios.get<IApiResponse>(
-  //           `http://apis.data.go.kr/B551011/GoCamping/imageList?serviceKey=${SERVICE_KEY}&MobileOS=ETC&MobileApp=dayCamping&contentId=${contentId}&numOfRows=30&_type=json`,
-  //         );
-  //         setImageData(response.data.response?.body?.items.item);
-  //       } catch (e) {
-  //         console.error(e);
-  //       }
+  //     try {
+  //       const response = await axios.get<IApiResponse>(
+  //         `http://apis.data.go.kr/B551011/GoCamping/imageList?serviceKey=${SERVICE_KEY}&MobileOS=ETC&MobileApp=dayCamping&contentId=${contentId}&numOfRows=30&_type=json`,
+  //       );
+  //       setImageData(response.data.response?.body?.items.item);
+  //     } catch (e) {
+  //       console.error(e);e
   //     }
-  //     void fetchData();
-  //   }, [contentId, SERVICE_KEY, setImageData]);
+  //   }
+  //   void fetchData();
+  // }, [contentId, SERVICE_KEY, setImageData]);
 
   const campingImage = imageData ? imageData.slice(1, 6) : []; // 1번 이미지는 정보 이미지 같아서 우선 제외
   const campingImageLength = campingImage.length;

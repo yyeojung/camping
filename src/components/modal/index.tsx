@@ -5,6 +5,7 @@ import { IoAlertCircleOutline } from "react-icons/io5";
 import { responsive } from "@/commons/styles/globalStyles";
 import ModalClose from "../button/modalClose";
 import { useEffect, type ReactNode } from "react";
+// import { createBrowserHistory } from "history";
 
 const Wrap = styled.div`
   position: fixed;
@@ -71,6 +72,9 @@ export function Modal({
   customStyle,
   mobileStyle,
 }: IPropsModal) {
+  // const history = createBrowserHistory();
+  // const currentUrl = history.location.pathname;
+
   useEffect(() => {
     if (isShowing) {
       document.body.style.overflow = "hidden";

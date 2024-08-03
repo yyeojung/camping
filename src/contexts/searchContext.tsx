@@ -1,46 +1,48 @@
-import { createContext, type ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface SearchContextType {
   region: string;
-  setRegion: React.Dispatch<React.SetStateAction<string>>;
   subRegion: string | null;
-  setSubRegion: React.Dispatch<React.SetStateAction<string | null>>;
+  setRegion: (region: string) => void;
+  setSubRegion: (subRegion: string | null) => void;
 }
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 export const SearchProvider = ({ children }: { children: ReactNode }) => {
-  const [region, setRegion] = useState<string>("");
-  const [subRegion, setSubRegion] = useState<string | null>(null);
+  const [searchData, setSearchData] = useState<{
+    region: string;
+    subRegion: string | null;
+  }>({ region: "", subRegion: null });
 
-  //   useEffect(() => {
-  //     const storedRegion = localStorage.getItem("region");
-  //     const storedSubRegion = localStorage.getItem("subRegion");
+  useEffect(() => {
+    const storedSearchData = localStorage.getItem("searchData");
+    if (storedSearchData) {
+      const localSearchData: { region: string; subRegion: string | null } =
+        JSON.parse(storedSearchData);
+      setSearchData(localSearchData);
+    }
+  }, []);
 
-  //     if (storedRegion) {
-  //       const localRegion: string = JSON.parse(storedRegion);
-  //       setRegion(localRegion);
-  //     }
-  //     if (storedSubRegion) {
-  //       const localSubRegion: string | null = JSON.parse(storedSubRegion);
-  //       setSubRegion(localSubRegion);
-  //     }
-  //   }, []);
+  useEffect(() => {
+    localStorage.setItem("searchData", JSON.stringify(searchData));
+  }, [searchData]);
 
-  //   useEffect(() => {
-  //     localStorage.setItem("region", region);
-  //   }, [region]);
+  const setRegion = (region: string) => {
+    setSearchData((prev) => ({ ...prev, region }));
+  };
 
-  //   useEffect(() => {
-  //     if (subRegion !== null) {
-  //       localStorage.setItem("subRegion", subRegion);
-  //     }
-  //   }, [subRegion]);
-
+  const setSubRegion = (subRegion: string | null) => {
+    setSearchData((prev) => ({ ...prev, subRegion }));
+  };
   return (
-    <SearchContext.Provider
-      value={{ region, setRegion, subRegion, setSubRegion }}
-    >
+    <SearchContext.Provider value={{ ...searchData, setRegion, setSubRegion }}>
       {children}
     </SearchContext.Provider>
   );
