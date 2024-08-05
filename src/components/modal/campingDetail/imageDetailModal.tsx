@@ -105,10 +105,10 @@ const ImageNumber = styled.p`
   bottom: 2rem;
 `;
 interface IPropsModal {
-  isShowing: boolean;
+  currentModal: string | null;
   hide: () => void;
 }
-export default function ImageDetailModal({ isShowing, hide }: IPropsModal) {
+export default function ImageDetailModal({ currentModal, hide }: IPropsModal) {
   const { imageData } = useImage();
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -125,7 +125,7 @@ export default function ImageDetailModal({ isShowing, hide }: IPropsModal) {
   };
   return (
     <Modal
-      isShowing={isShowing}
+      currentModal={currentModal}
       hide={hide}
       customStyle={customStyle}
       mobileStyle={mobileStyle}

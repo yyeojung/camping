@@ -20,6 +20,8 @@ export interface ICampingList {
   homepage: string;
   animalCmgCl: string;
   tooltip: string;
+  mapX: string;
+  mapY: string;
 }
 
 interface CampingContextType {

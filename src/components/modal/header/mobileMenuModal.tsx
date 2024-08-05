@@ -70,12 +70,7 @@ export default function MobileMenuModal({
   menuOpen: boolean;
   onClick: () => void;
 }) {
-  const { isShowing, modalToggle } = useModal();
-
-  // 준비중 alert
-  const onClickAlert = () => {
-    modalToggle();
-  };
+  const { currentModal, openModal, closeModal } = useModal();
 
   return (
     <>
@@ -90,11 +85,19 @@ export default function MobileMenuModal({
             <IoCloseOutline />
           </CloseMenuBtn>
           <ul>
-            <li onClick={onClickAlert}>
+            <li
+              onClick={() => {
+                openModal("review");
+              }}
+            >
               <LuClipboardList />
               요즘 캠핑 후기
             </li>
-            <li onClick={onClickAlert}>
+            <li
+              onClick={() => {
+                openModal("my");
+              }}
+            >
               <FaCampground />내 캠핑장
             </li>
           </ul>
@@ -102,11 +105,14 @@ export default function MobileMenuModal({
       </MobileMenuList>
 
       {/* 후기, 내 캠핑장 alert */}
-      <Modal
-        isShowing={isShowing}
-        hide={modalToggle}
-        message="준비 중입니다!"
-      />
+      {currentModal === "review" ||
+        (currentModal === "my" && (
+          <Modal
+            currentModal={currentModal}
+            hide={closeModal}
+            message="준비 중입니다!"
+          />
+        ))}
     </>
   );
 }

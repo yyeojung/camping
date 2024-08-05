@@ -8,7 +8,7 @@ export function useSearch() {
   const [subRegion, setSubRegion] = useState<string | null>(null);
   //   const { region, setRegion, subRegion, setSubRegion } = useSearchState();
   const router = useRouter();
-  const [showAlert, setShowAlert] = useState<boolean>(false);
+  //   const [showAlert, setShowAlert] = useState<boolean>(false);
   const { query } = router;
 
   useEffect(() => {
@@ -37,15 +37,20 @@ export function useSearch() {
           console.log(error);
         });
     } else {
-      setShowAlert(true);
+      //   setShowAlert(true);
+      await router.push({
+        pathname: router.pathname,
+        query: { ...router.query, modal: "searchAlert" },
+      });
     }
   };
 
   const onCloseSearchAlret = () => {
-    setShowAlert(false); // 모달 닫기
+    // setShowAlert(false); // 모달 닫기
+    router.back();
   };
   return {
-    showAlert,
+    // showAlert,
     region,
     subRegion,
     onCloseSearchAlret,

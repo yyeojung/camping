@@ -81,9 +81,8 @@ const SearchBox = styled.div`
 `;
 
 export default function Home() {
-  const { showAlert, onCloseSearchAlret, onChangeSearch, onClickSearch } =
-    useSearch(); // 코드 중복으로 useSearch 커스텀 훅으로 수정
-  const { isShowing, modalToggle } = useModal();
+  const { onCloseSearchAlret, onChangeSearch, onClickSearch } = useSearch(); // 코드 중복으로 useSearch 커스텀 훅으로 수정
+  const { currentModal, openModal, closeModal } = useModal();
 
   return (
     <>
@@ -97,18 +96,20 @@ export default function Home() {
         <MainWrap>
           <Button
             onClick={() => {
-              modalToggle();
+              openModal("review");
             }}
             className="review"
           >
             요즘 캠핑 후기 보기
           </Button>
           {/* 캠핑 후기 준비중 alert */}
-          <Modal
-            isShowing={isShowing}
-            hide={modalToggle}
-            message="준비 중입니다!"
-          />
+          {currentModal === "review" && (
+            <Modal
+              currentModal={currentModal}
+              hide={closeModal}
+              message="준비 중입니다!"
+            />
+          )}
           <SearchBox>
             <h2>Dayily camping</h2>
             <div className="search">
@@ -120,11 +121,14 @@ export default function Home() {
             </div>
           </SearchBox>
           {/* 지역 미선택시 alert */}
-          <Modal
-            isShowing={showAlert}
-            hide={onCloseSearchAlret}
-            message="지역을 선택해주세요!"
-          />
+
+          {currentModal === "searchAlert" && (
+            <Modal
+              currentModal={currentModal}
+              hide={onCloseSearchAlret}
+              message="지역을 선택해주세요!"
+            />
+          )}
         </MainWrap>
       </Wrap>
     </>

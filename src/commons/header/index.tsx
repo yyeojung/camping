@@ -87,20 +87,19 @@ const MobileMenu = styled.button`
 `;
 
 export default function LayoutHeader() {
-  const { isShowing, modalToggle } = useModal();
+  const { currentModal, openModal, closeModal } = useModal();
   const isMobile = useIsMobile();
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   //  모바일 메뉴 토글 클릭이벤트
   const onClickMenu = () => {
     setMenuOpen((prev) => !prev);
-    console.log(menuOpen);
   };
 
   // 준비중 alert
-  const onClickAlert = () => {
-    modalToggle();
-  };
+  //   const onClickAlert = () => {
+  //     modalToggle();
+  //   };
   return (
     <>
       <Header>
@@ -112,8 +111,20 @@ export default function LayoutHeader() {
           </Link>
           {!isMobile ? (
             <Menu>
-              <li onClick={onClickAlert}>요즘 캠핑 후기</li>
-              <li onClick={onClickAlert}>내 캠핑장</li>
+              <li
+                onClick={() => {
+                  openModal("review");
+                }}
+              >
+                요즘 캠핑 후기
+              </li>
+              <li
+                onClick={() => {
+                  openModal("my");
+                }}
+              >
+                내 캠핑장
+              </li>
             </Menu>
           ) : (
             <MobileMenu onClick={onClickMenu}>
@@ -123,11 +134,13 @@ export default function LayoutHeader() {
           {/* 모바일메뉴 */}
           <MobileMenuModal menuOpen={menuOpen} onClick={onClickMenu} />
           {/* 후기, 내 캠핑장 alert */}
-          <Modal
-            isShowing={isShowing}
-            hide={modalToggle}
-            message="준비 중입니다!"
-          />
+          {(currentModal === "review" || currentModal === "my") && (
+            <Modal
+              currentModal={currentModal}
+              hide={closeModal}
+              message="준비 중입니다!"
+            />
+          )}
         </div>
       </Header>
     </>

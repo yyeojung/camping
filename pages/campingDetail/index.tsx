@@ -9,16 +9,19 @@ import { useIsMobile } from "@/commons/responsive/useMediaQuery";
 import DetailTitleIcon from "@/components/campingDetail/detailTitleIcon";
 import { responsive } from "@/commons/styles/globalStyles";
 import { BsPatchCheck } from "react-icons/bs";
+import DetailMap from "@/components/campingDetail/detailMap";
 
 const Section = styled.section`
   padding-bottom: 4rem;
-  border-bottom: 0.1rem solid #cacaca;
 
   .title {
     font-size: 2.4rem;
   }
   &:not(.first) {
     padding: 4rem 0;
+  }
+  &:not(:last-of-type) {
+    border-bottom: 0.1rem solid #cacaca;
   }
 
   &.first {
@@ -89,16 +92,17 @@ export default function CampingDetail() {
   const { selectedCamping } = useSelected(); // 검색화면에서 선택한 캠핑장 데이터
   const isMobile = useIsMobile();
 
-  const { isShowing, modalToggle } = useModal();
-  const onClickImage = () => {
-    modalToggle();
-  };
+  const { currentModal, openModal, closeModal } = useModal();
 
   return (
     <>
       <Section className="first">
         <DetailTitle />
-        <ImageDetail onClick={onClickImage} />
+        <ImageDetail
+          onClick={() => {
+            openModal("imageModal");
+          }}
+        />
         {isMobile ? <DetailTitleIcon className="mobile_icon" /> : null}
       </Section>
       <Section>
@@ -123,11 +127,13 @@ export default function CampingDetail() {
       </Section>
       <Section>
         <h2 className="title">오시는 길</h2>
-        <p>지도 준비중</p>
+        <DetailMap />
         <p>{selectedCamping?.direction ? selectedCamping?.direction : null}</p>
       </Section>
       {/* 이미지 전체 모달 */}
-      <ImageDetailModal isShowing={isShowing} hide={modalToggle} />
+      {currentModal === "imageModal" && (
+        <ImageDetailModal currentModal={currentModal} hide={closeModal} />
+      )}
     </>
   );
 }

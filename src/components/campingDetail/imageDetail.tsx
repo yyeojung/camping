@@ -119,6 +119,7 @@ export default function ImageDetail({ onClick }: IPropsImageDetail) {
       void fetchImageData(contentId);
     }
   }, [contentId]);
+  // imageContext로 이동
   // useEffct(() => {
   //   setLoading(true);
   //   async function fetchData(): Promise<void> {

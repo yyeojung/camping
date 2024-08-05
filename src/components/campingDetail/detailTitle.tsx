@@ -42,7 +42,7 @@ const Title = styled.div`
 
 export default function DetailTitle() {
   const { selectedCamping } = useSelected();
-  const { isShowing, modalToggle } = useModal();
+  const { currentModal, openModal, closeModal } = useModal();
   const isMobile = useIsMobile();
 
   return (
@@ -54,7 +54,9 @@ export default function DetailTitle() {
         <li>
           <CopyToClipboard
             text={selectedCamping?.addr1 ?? ""}
-            onCopy={modalToggle}
+            onCopy={() => {
+              openModal("copy");
+            }}
           >
             <button className="address">
               <span>{selectedCamping?.addr1}</span>
@@ -63,11 +65,13 @@ export default function DetailTitle() {
           </CopyToClipboard>
         </li>
         {/* 주소가 복사되었습니다 alert */}
-        <Modal
-          isShowing={isShowing}
-          hide={modalToggle}
-          message="주소가 복사되었습니다"
-        />
+        {currentModal === "copy" && (
+          <Modal
+            currentModal={currentModal}
+            hide={closeModal}
+            message="주소가 복사되었습니다"
+          />
+        )}
       </ul>
       {!isMobile ? <DetailTitleIcon /> : null}
     </Title>

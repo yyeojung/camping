@@ -1,3 +1,4 @@
+import { API_URL } from "@/commons/api/api";
 import axios from "axios";
 import {
   createContext,
@@ -54,10 +55,9 @@ export const ImageProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       const response = await axios.get<IApiResponse>(
-        `http://apis.data.go.kr/B551011/GoCamping/imageList?serviceKey=${SERVICE_KEY}&MobileOS=ETC&MobileApp=dayCamping&contentId=${contentId}&numOfRows=30&_type=json`,
+        `${API_URL}/imageList?serviceKey=${SERVICE_KEY}&MobileOS=ETC&MobileApp=dayCamping&contentId=${contentId}&numOfRows=30&_type=json`,
       );
       setImageData(response.data.response?.body?.items.item || []);
-      console.log(response.data);
     } catch (e) {
       console.error(e);
     } finally {

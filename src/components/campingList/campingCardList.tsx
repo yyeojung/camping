@@ -9,6 +9,7 @@ import Pagination from "../pagination/index";
 import Loading from "../Loading/index";
 import NoData from "../noData/index";
 import { useSelected } from "@/contexts/selectedContext";
+import { API_URL } from "@/commons/api/api";
 
 const Wrap = styled.div`
   display: flex;
@@ -76,9 +77,8 @@ export default function CampingCardList({ className }: IPropsList) {
       setLoading(true);
       try {
         const response = await axios.get<IApiResponse>(
-          `https://apis.data.go.kr/B551011/GoCamping/basedList?serviceKey=${SERVICE_KEY}&numOfRows=2000&pageNo=1&MobileOS=AND&MobileApp=dayCamping&_type=json`,
+          `${API_URL}/basedList?serviceKey=${SERVICE_KEY}&numOfRows=2000&pageNo=1&MobileOS=AND&MobileApp=dayCamping&_type=json`,
         );
-
         const items = response.data.response?.body?.items.item || []; // 데이터 없을 경우 추가 수정
         // 지역 필터
         const filteredItems = items.filter((item) => {
@@ -116,7 +116,7 @@ export default function CampingCardList({ className }: IPropsList) {
       setLoading(false);
     }
     void fetchData();
-  }, [query, SERVICE_KEY, currentPage]);
+  }, [query.region, SERVICE_KEY, currentPage]);
 
   const PER_PAGE = 8; // 한 페이지에 보여줄 아이템 수
   const pageCount = Math.ceil(totalCount / PER_PAGE); // 전체 페이지 수 계산

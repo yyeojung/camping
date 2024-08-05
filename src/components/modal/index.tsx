@@ -5,6 +5,7 @@ import { IoAlertCircleOutline } from "react-icons/io5";
 import { responsive } from "@/commons/styles/globalStyles";
 import ModalClose from "../button/modalClose";
 import { useEffect, type ReactNode } from "react";
+import { useRouter } from "next/router";
 // import { createBrowserHistory } from "history";
 
 const Wrap = styled.div`
@@ -56,7 +57,7 @@ const AlertIcon = styled(IoAlertCircleOutline)`
 `;
 
 interface IPropsModal {
-  isShowing: boolean;
+  currentModal: string | null;
   hide: () => void;
   message?: string;
   children?: ReactNode;
@@ -65,24 +66,25 @@ interface IPropsModal {
 }
 
 export function Modal({
-  isShowing,
+  currentModal,
   hide,
   message,
   children,
   customStyle,
   mobileStyle,
 }: IPropsModal) {
-  // const history = createBrowserHistory();
-  // const currentUrl = history.location.pathname;
+  const router = useRouter();
 
   useEffect(() => {
-    if (isShowing) {
+    const { modal } = router.query;
+    if (modal) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
-  }, [isShowing]);
-  return isShowing
+  }, [router.query.modal]);
+
+  return currentModal
     ? ReactDOM.createPortal(
         <Wrap onClick={hide}>
           <ModalInner
