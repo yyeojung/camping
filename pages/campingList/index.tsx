@@ -3,6 +3,7 @@ import Button from "@/components/button";
 import CampingCardList from "@/components/campingList/campingCardList";
 import DropDown from "@/components/dropdown";
 import { Modal } from "@/components/modal";
+import { useModal } from "@/hooks/useModal";
 import { useSearch } from "@/hooks/useSearch";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
@@ -42,8 +43,8 @@ const CardWrap = styled.div`
 
 export default function CampingList() {
   const { query } = useRouter();
-  const { showAlert, onCloseSearchAlret, onChangeSearch, onClickSearch } =
-    useSearch(); // 코드 중복으로 useSearch 커스텀 훅으로 수정
+  const { currentModal } = useModal();
+  const { onCloseSearchAlret, onChangeSearch, onClickSearch } = useSearch(); // 코드 중복으로 useSearch 커스텀 훅으로 수정
 
   return (
     <>
@@ -63,11 +64,13 @@ export default function CampingList() {
             검색
           </Button>
           {/* 지역 미선택시 alert */}
-          <Modal
-            isShowing={showAlert}
-            hide={onCloseSearchAlret}
-            message="지역을 선택해주세요!"
-          />
+          {currentModal === "searchAlert" && (
+            <Modal
+              currentModal={currentModal}
+              hide={onCloseSearchAlret}
+              message="지역을 선택해주세요!"
+            />
+          )}
         </SearchWrap>
       </Title>
       <CardWrap>
