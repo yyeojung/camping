@@ -9,7 +9,7 @@ interface ILayoutProps {
 const Guide = styled.div`
   max-width: 120rem;
   margin: auto;
-  padding-bottom: 6rem;
+  padding-bottom: 8rem;
   @media (max-width: 1200px) {
     padding: 0 1.6rem;
   }

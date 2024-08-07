@@ -1,12 +1,31 @@
 import { useSelected } from "@/contexts/selectedContext";
+import styled from "@emotion/styled";
 import { useEffect } from "react";
+import { FiMapPin } from "react-icons/fi";
+import Link from "next/link";
 
 declare global {
   interface Window {
     kakao: any;
   }
 }
+const MapArea = styled.div`
+  .road_map {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
 
+    strong {
+      color: #666;
+      font-size: 2rem;
+    }
+
+    a {
+      gap: 0.4rem;
+      padding: 1rem 2rem;
+    }
+  }
+`;
 export default function DetailMap() {
   const { selectedCamping } = useSelected();
   const mapX = Number(selectedCamping?.mapX);
@@ -44,9 +63,21 @@ export default function DetailMap() {
     kakaoMapScript.addEventListener("load", onLoadKakaoAPI);
   }, [selectedCamping]);
   return (
-    <div
-      id="map"
-      style={{ width: "100%", height: "40rem", marginTop: "4rem" }}
-    />
+    <MapArea>
+      <div
+        id="map"
+        style={{ width: "100%", height: "40rem", marginTop: "4rem" }}
+      />
+      <div className="road_map">
+        <strong>{selectedCamping?.addr1}</strong>
+        <Link
+          href={`https://map.kakao.com/link/to/${selectedCamping?.facltNm},${selectedCamping?.mapY},${selectedCamping?.mapX}`}
+        >
+          <a>
+            <FiMapPin />길 찾기
+          </a>
+        </Link>
+      </div>
+    </MapArea>
   );
 }
