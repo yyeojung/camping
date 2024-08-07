@@ -12,6 +12,7 @@ declare global {
 const MapArea = styled.div`
   .road_map {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     margin-top: 2rem;
 
@@ -21,6 +22,10 @@ const MapArea = styled.div`
     }
 
     a {
+      background: #67794a;
+      color: #fff;
+      border-radius: 1rem;
+      display: flex;
       gap: 0.4rem;
       padding: 1rem 2rem;
     }
@@ -73,7 +78,7 @@ export default function DetailMap() {
         <Link
           href={`https://map.kakao.com/link/to/${selectedCamping?.facltNm},${selectedCamping?.mapY},${selectedCamping?.mapX}`}
         >
-          <a>
+          <a target="_blank">
             <FiMapPin />길 찾기
           </a>
         </Link>

@@ -132,7 +132,9 @@ export default function LayoutHeader() {
             </MobileMenu>
           )}
           {/* 모바일메뉴 */}
-          <MobileMenuModal menuOpen={menuOpen} onClick={onClickMenu} />
+          {isMobile && (
+            <MobileMenuModal menuOpen={menuOpen} onClick={onClickMenu} />
+          )}
           {/* 후기, 내 캠핑장 alert */}
           {(currentModal === "review" || currentModal === "my") && (
             <Modal

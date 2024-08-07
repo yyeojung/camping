@@ -77,7 +77,7 @@ export default function CampingCardList({ className }: IPropsList) {
       setLoading(true);
       try {
         const response = await axios.get<IApiResponse>(
-          `${API_URL}/basedList?serviceKey=${SERVICE_KEY}&numOfRows=2000&pageNo=1&MobileOS=AND&MobileApp=dayCamping&_type=json`,
+          `${API_URL}/basedList?serviceKey=${SERVICE_KEY}&numOfRows=3000&pageNo=1&MobileOS=AND&MobileApp=dayCamping&_type=json`,
         );
         const items = response.data.response?.body?.items.item || []; // 데이터 없을 경우 추가 수정
         // 지역 필터
