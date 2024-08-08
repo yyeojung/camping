@@ -17,10 +17,16 @@ const Info = styled.div`
   }
 
   p {
+    display: flex;
+
     strong {
       display: inline-block;
       min-width: 6.4rem;
       margin-right: 0.8rem;
+    }
+    a {
+      max-width: calc(100% - 7.2rem);
+      word-break: break-all;
     }
 
     &.divider {
@@ -28,6 +34,9 @@ const Info = styled.div`
       align-items: center;
 
       span {
+        min-width: 3.2rem;
+      }
+      i {
         width: 0.1rem;
         height: 1.4rem;
         margin: 0 1.2rem;
@@ -74,12 +83,18 @@ export default function DetailInfo() {
       </p>
       <p className="divider">
         <strong>화로대</strong>
-        {selectedCamping?.brazierCl ? selectedCamping?.brazierCl : "직접 문의"}
-        <span></span>
+        <span>
+          {selectedCamping?.brazierCl
+            ? selectedCamping?.brazierCl
+            : "직접 문의"}
+        </span>
+        <i></i>
         <strong>반려동물 출입</strong>
-        {selectedCamping?.animalCmgCl
-          ? selectedCamping?.animalCmgCl
-          : "직접 문의"}
+        <span>
+          {selectedCamping?.animalCmgCl
+            ? selectedCamping?.animalCmgCl
+            : "직접 문의"}
+        </span>
       </p>
     </Info>
   );
