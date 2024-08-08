@@ -2,7 +2,7 @@ import { Modal } from "@/components/modal";
 import { useModal } from "@/hooks/useModal";
 import styled from "@emotion/styled";
 import Link from "next/link";
-import { useIsMobile } from "../responsive/useMediaQuery";
+import { useIsMobile } from "../../hooks/useMediaQuery";
 import { IoMenu } from "react-icons/io5";
 import { responsive } from "../styles/globalStyles";
 import MobileMenuModal from "@/components/modal/header/mobileMenuModal";

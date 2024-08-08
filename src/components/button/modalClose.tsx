@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { IoCloseOutline } from "react-icons/io5";
 import { IoIosArrowBack } from "react-icons/io";
 import { responsive } from "@/commons/styles/globalStyles";
-import { useIsMobile } from "@/commons/responsive/useMediaQuery";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 const ModalCloseBtn = styled.button`
   background: transparent;

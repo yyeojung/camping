@@ -5,11 +5,11 @@ import styled from "@emotion/styled";
 import DetailTitle from "@/components/campingDetail/detailTitle";
 import ImageDetail from "@/components/campingDetail/imageDetail";
 import DetailInfo from "@/components/campingDetail/detailInfo";
-import { useIsMobile } from "@/commons/responsive/useMediaQuery";
 import DetailTitleIcon from "@/components/campingDetail/detailTitleIcon";
 import { responsive } from "@/commons/styles/globalStyles";
 import { BsPatchCheck } from "react-icons/bs";
 import DetailMap from "@/components/campingDetail/detailMap";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 const Section = styled.section`
   padding-bottom: 4rem;

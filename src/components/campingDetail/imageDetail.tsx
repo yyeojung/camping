@@ -1,5 +1,5 @@
-import { useIsMobile } from "@/commons/responsive/useMediaQuery";
 import { useImage } from "@/contexts/imageContext";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 import { useEffect } from "react";

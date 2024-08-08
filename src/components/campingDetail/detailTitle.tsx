@@ -1,4 +1,3 @@
-import { useIsMobile } from "@/commons/responsive/useMediaQuery";
 import { FaRegCopy } from "react-icons/fa6";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Modal } from "@/components/modal";
@@ -7,6 +6,7 @@ import { useSelected } from "@/contexts/selectedContext";
 import { useModal } from "@/hooks/useModal";
 import DetailTitleIcon from "./detailTitleIcon";
 import { responsive } from "@/commons/styles/globalStyles";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 const Title = styled.div`
   display: flex;
