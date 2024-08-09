@@ -37,7 +37,7 @@ const Section = styled.section`
     margin-top: 4rem;
 
     p {
-      line-height: 1.4;
+      line-height: 1.5;
     }
   }
 `;

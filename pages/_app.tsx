@@ -6,6 +6,7 @@ import Layout from "../src/commons/layout";
 import { ImageProvider } from "@/contexts/imageContext";
 import { SelectedProvider } from "@/contexts/selectedContext";
 import { useEffect, useState } from "react";
+// import firebase from "../src/firebase/firebase"
 
 export default function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);

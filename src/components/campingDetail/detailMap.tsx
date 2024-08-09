@@ -25,6 +25,7 @@ const MapArea = styled.div`
       background: #67794a;
       color: #fff;
       border-radius: 1rem;
+      min-width: 11.4rem;
       display: flex;
       gap: 0.4rem;
       padding: 1rem 2rem;

@@ -17,7 +17,9 @@ const Guide = styled.div`
 export default function Layout(props: ILayoutProps): JSX.Element {
   const router = useRouter();
 
-  const isHiddenHeader = router.pathname === "/";
+  const hiddenPaths = ["/", "/login"];
+  const isHiddenHeader = hiddenPaths.includes(router.pathname);
+
   return (
     <>
       {!isHiddenHeader ? (

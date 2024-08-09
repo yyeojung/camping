@@ -104,7 +104,7 @@ const ImageNumber = styled.p`
   position: absolute;
   bottom: 2rem;
 `;
-interface IPropsModal {
+export interface IPropsModal {
   currentModal: string | null;
   hide: () => void;
 }
