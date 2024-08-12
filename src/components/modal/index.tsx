@@ -47,6 +47,14 @@ const ModalInner = styled.div<{
   p {
     margin-top: 1rem;
   }
+
+  .info {
+    min-height: 8rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const AlertIcon = styled(IoAlertCircleOutline)`
@@ -60,6 +68,8 @@ interface IPropsModal {
   currentModal: string | null;
   hide: () => void;
   message?: string;
+  subMessage?: string;
+  type?: "default" | "info" | "modal";
   children?: ReactNode;
   customStyle?: React.CSSProperties;
   mobileStyle?: React.CSSProperties;
@@ -69,6 +79,8 @@ export function Modal({
   currentModal,
   hide,
   message,
+  subMessage,
+  type = "default",
   children,
   customStyle,
   mobileStyle,
@@ -94,7 +106,31 @@ export function Modal({
               e.stopPropagation();
             }}
           >
-            {message ? (
+            {type === "default" && message && (
+              <>
+                <div>
+                  <AlertIcon />
+                  <p>{message}</p>
+                </div>
+                <Button onClick={hide}>닫기</Button>
+              </>
+            )}
+            {type === "info" && message && (
+              <>
+                <div className="info">
+                  <p>{message}</p>
+                  {subMessage && <p>{subMessage}</p>}
+                </div>
+                <Button onClick={hide}>닫기</Button>
+              </>
+            )}
+            {type === "modal" && message && (
+              <>
+                <ModalClose onClick={hide} />
+                {children}
+              </>
+            )}
+            {/* {message ? ( 모달 타입별로 관리하려고 삭제
               <>
                 <div>
                   <AlertIcon />
@@ -107,7 +143,7 @@ export function Modal({
                 <ModalClose onClick={hide} />
                 {children}
               </>
-            )}
+            )} */}
           </ModalInner>
         </Wrap>,
         document.body,

@@ -9,7 +9,7 @@ interface ILayoutProps {
 const Guide = styled.div`
   max-width: 120rem;
   margin: auto;
-  padding-bottom: 8rem;
+  padding: 8rem 0;
   @media (max-width: 1200px) {
     padding: 0 1.6rem;
   }
@@ -17,18 +17,23 @@ const Guide = styled.div`
 export default function Layout(props: ILayoutProps): JSX.Element {
   const router = useRouter();
 
-  const hiddenPaths = ["/", "/login"];
-  const isHiddenHeader = hiddenPaths.includes(router.pathname);
+  const isHome = router.pathname === "/";
+  const isLogin = router.pathname === "/login";
 
   return (
     <>
-      {!isHiddenHeader ? (
+      {isHome ? (
+        <>{props.children}</>
+      ) : isLogin ? (
+        <>
+          <LayoutHeader className="is_login" />
+          <>{props.children}</>
+        </>
+      ) : (
         <>
           <LayoutHeader />
           <Guide>{props.children}</Guide>
         </>
-      ) : (
-        <>{props.children}</>
       )}
     </>
   );

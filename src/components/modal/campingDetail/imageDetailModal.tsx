@@ -129,6 +129,7 @@ export default function ImageDetailModal({ currentModal, hide }: IPropsModal) {
       hide={hide}
       customStyle={customStyle}
       mobileStyle={mobileStyle}
+      type="modal"
     >
       <SlideWrap>
         <Slider {...settings}>

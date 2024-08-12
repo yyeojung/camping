@@ -1,3 +1,5 @@
+import { keyframes } from "@emotion/react";
+
 export const commonBtnStyle = `
   width: auto;
   height: 4rem;
@@ -14,5 +16,28 @@ export const commonBtnStyle = `
 
   &:hover {
     background-color: #7e925e;
+  }
+`;
+
+export const errorAnimation = keyframes`
+  0% {
+    transform: scale(0.95);
+  }
+  20% {
+    transform: scale(1);
+  }
+  40% {
+    margin-left: -10px;
+  }
+  60% {
+    margin-left: 0;
+    margin-right: -20px;
+  }
+  80% {
+    margin-right: 0;
+    margin-left: -20px;
+  }
+  100% {
+    margin: 0;
   }
 `;

@@ -9,10 +9,21 @@ import MobileMenuModal from "@/components/modal/header/mobileMenuModal";
 import { useState } from "react";
 
 const Header = styled.header`
-  position: relative;
+  position: fixed;
+  top: 0;
   width: 100%;
   height: 8rem;
+  background: #fff;
+  z-index: 10;
   border-bottom: 0.1rem solid #dbdbdb;
+
+  &.is_login {
+    background: transparent;
+
+    ul {
+      display: none;
+    }
+  }
 
   @media ${responsive.mobile} {
     height: 6rem;
@@ -86,7 +97,7 @@ const MobileMenu = styled.button`
   }
 `;
 
-export default function LayoutHeader() {
+export default function LayoutHeader({ className }: { className?: string }) {
   const { currentModal, openModal, closeModal } = useModal();
   const isMobile = useIsMobile();
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -102,7 +113,7 @@ export default function LayoutHeader() {
   //   };
   return (
     <>
-      <Header>
+      <Header className={className}>
         <div className="header_wrap">
           <Link href="/" passHref>
             <Logo>
