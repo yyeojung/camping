@@ -69,6 +69,7 @@ const ImgWrap = styled.div`
     bottom: 2rem;
     color: #000;
     font-size: 1.4rem;
+    background: #fff;
 
     &:hover {
       background: #e0e0e0;

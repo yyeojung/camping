@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { type ReactNode } from "react";
 import { FaCampground } from "react-icons/fa";
 
 const Wrap = styled.div`
@@ -15,11 +16,11 @@ const NoDataIcon = styled(FaCampground)`
   height: 10rem;
   fill: #ccc;
 `;
-export default function NoData() {
+export default function NoData({ children }: { children: ReactNode }) {
   return (
     <Wrap>
       <NoDataIcon />
-      <p>해당하는 지역에 캠핑장이 없습니다. </p>
+      {children}
     </Wrap>
   );
 }

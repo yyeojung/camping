@@ -11,6 +11,7 @@ export const commonBtnStyle = `
   justify-content: center;
   align-items: center;
   text-align: center;
+  border-radius: 0.8rem;
   cursor: pointer;
     transition: all .2s;
 

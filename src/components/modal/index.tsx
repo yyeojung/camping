@@ -124,7 +124,7 @@ export function Modal({
                 <Button onClick={hide}>닫기</Button>
               </>
             )}
-            {type === "modal" && message && (
+            {type === "modal" && (
               <>
                 <ModalClose onClick={hide} />
                 {children}

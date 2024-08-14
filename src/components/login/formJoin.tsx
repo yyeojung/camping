@@ -3,8 +3,7 @@ import { auth } from "@/firebase/firebase";
 import { useModal } from "@/hooks/useModal";
 import styled from "@emotion/styled";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useRouter } from "next/router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Modal } from "../modal";
 
 const Form = styled.form`
@@ -45,21 +44,11 @@ export default function FormJoin({
 }: {
   setFormError: (value: boolean) => void;
 }) {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [passwordConfirm, setPasswordConfirm] = useState<string>("");
+  const emailInput = useRef<HTMLInputElement>(null);
+  const pwdInput = useRef<HTMLInputElement>(null);
+  const pwdConfirmInput = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>("");
-  const router = useRouter();
   const { currentModal, openModal } = useModal();
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      target: { name, value },
-    } = e;
-    if (name === "email") setEmail(value);
-    if (name === "password") setPassword(value);
-    if (name === "passwordConfirm") setPasswordConfirm(value);
-  };
 
   const emailRegex =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
@@ -72,8 +61,15 @@ export default function FormJoin({
     }
   }
 
-  const onSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
+  const getUserId = () => ({
+    email: emailInput.current?.value ?? "",
+    password: pwdInput.current?.value ?? "",
+    passwordConfirm: pwdConfirmInput.current?.value ?? "",
+  });
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const { email, password, passwordConfirm } = getUserId();
 
     if (!emailRegex.test(email)) {
       setError("이메일 형식이 올바르지 않습니다.");
@@ -87,17 +83,18 @@ export default function FormJoin({
     } else {
       setError("");
       setFormError(false);
-      await register(email, password);
       openModal("completed");
     }
   };
 
-  // 모달 닫고 새로고침
-  const closeModal = () => {
-    router.back();
-    setTimeout(() => {
-      router.reload();
-    }, 300);
+  const closeModal = async () => {
+    const { email, password } = getUserId();
+    try {
+      await register(email, password);
+    } catch (error) {
+      console.log(error);
+      setError("회원가입 중 문제가 발생했습니다.");
+    }
   };
 
   return (
@@ -108,8 +105,7 @@ export default function FormJoin({
         type="email"
         placeholder="이메일을 입력해주세요."
         required
-        value={email}
-        onChange={onChange}
+        ref={emailInput}
       />
       <p className="pwd">Password</p>
       <input
@@ -117,16 +113,14 @@ export default function FormJoin({
         type="password"
         placeholder="비밀번호를 입력해주세요."
         required
-        value={password}
-        onChange={onChange}
+        ref={pwdInput}
       />
       <input
         name="passwordConfirm"
         type="password"
         placeholder="비밀번호를 다시 입력해주세요."
         required
-        value={passwordConfirm}
-        onChange={onChange}
+        ref={pwdConfirmInput}
       />
       {error && <p className="error">{error}</p>}
       <input className="btn" type="submit" value="Sign Up" />
@@ -136,7 +130,7 @@ export default function FormJoin({
           currentModal={currentModal}
           hide={closeModal}
           message="회원가입이 완료되었습니다."
-          subMessage="로그인창으로 이동합니다."
+          subMessage="자동으로 로그인이 됩니다."
           type="info"
         />
       )}

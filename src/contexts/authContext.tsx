@@ -1,29 +1,36 @@
-import { type User } from "firebase/auth";
-import {
-  createContext,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { auth } from "@/firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextType {
-  user: User | null;
-  setUser: Dispatch<SetStateAction<User | null>>;
+  isLogin: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType>({
-  user: null,
-  setUser: () => {},
+  isLogin: false,
 });
 
-function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [isLogin, setIsLogin] = useState<boolean>(false);
 
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLogin(true);
+      } else {
+        setIsLogin(false);
+      }
+    });
+  }, [auth]);
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ isLogin }}>{children}</AuthContext.Provider>
   );
-}
+};
 
-export default AuthProvider;
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("context가 없을 경우");
+  }
+  return context;
+};

@@ -42,22 +42,28 @@ const CardWrap = styled.div`
 `;
 
 export default function CampingList() {
-  const { query } = useRouter();
+  const router = useRouter();
+  const { query } = router;
   const { currentModal } = useModal();
   const { onCloseSearchAlret, onChangeSearch, onClickSearch } = useSearch(); // 코드 중복으로 useSearch 커스텀 훅으로 수정
 
+  const linkList = router.asPath === "/campingList";
   return (
     <>
       <Title>
-        <h2>
-          요즘{" "}
-          {query.region === "전체" ? (
-            <span>전국</span>
-          ) : (
-            <span>{query.region}</span>
-          )}
-          에 뜨는 캠핑장
-        </h2>
+        {linkList ? (
+          <h2>캠핑장을 검색해주세요.</h2>
+        ) : (
+          <h2>
+            요즘{" "}
+            {query.region === "전체" ? (
+              <span>전국</span>
+            ) : (
+              <span>{query.region}</span>
+            )}
+            에 뜨는 캠핑장
+          </h2>
+        )}
         <SearchWrap>
           <DropDown isMain={false} onChangeSearch={onChangeSearch} />
           <Button onClick={onClickSearch} className="search_btn">

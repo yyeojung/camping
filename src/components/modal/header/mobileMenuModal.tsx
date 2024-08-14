@@ -1,10 +1,9 @@
 import React from "react";
-import { IoCloseOutline } from "react-icons/io5";
+import { IoCloseOutline, IoSearch } from "react-icons/io5";
 import { LuClipboardList } from "react-icons/lu";
 import { FaCampground } from "react-icons/fa";
 import styled from "@emotion/styled";
-import { Modal } from "..";
-import { useModal } from "@/hooks/useModal";
+import Link from "next/link";
 
 const MobileMenuList = styled.div<{ menuOpen: boolean }>`
   position: fixed;
@@ -38,9 +37,12 @@ const MobileMenuList = styled.div<{ menuOpen: boolean }>`
     gap: 0.6rem;
     height: 4rem;
     line-height: 4rem;
-    font-size: 1.4rem;
     padding: 1.6rem;
     border-radius: 1.6rem;
+
+    a {
+      font-size: 1.4rem;
+    }
 
     &:not(:first-of-type) {
       margin-top: 0.4rem;
@@ -70,49 +72,38 @@ export default function MobileMenuModal({
   menuOpen: boolean;
   onClick: () => void;
 }) {
-  const { currentModal, openModal, closeModal } = useModal();
-
   return (
-    <>
-      <MobileMenuList menuOpen={menuOpen} onClick={onClick}>
-        <div
-          className="menu_box"
-          onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-            e.stopPropagation();
-          }}
-        >
-          <CloseMenuBtn onClick={onClick}>
-            <IoCloseOutline />
-          </CloseMenuBtn>
-          <ul>
-            <li
-              onClick={() => {
-                openModal("review");
-              }}
-            >
-              <LuClipboardList />
+    <MobileMenuList menuOpen={menuOpen} onClick={onClick}>
+      <div
+        className="menu_box"
+        onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+          e.stopPropagation();
+        }}
+      >
+        <CloseMenuBtn onClick={onClick}>
+          <IoCloseOutline />
+        </CloseMenuBtn>
+        <ul>
+          <li onClick={onClick}>
+            <IoSearch />
+            <Link href="/campingList" passHref>
+              캠핑장 검색
+            </Link>
+          </li>
+          <li onClick={onClick}>
+            <LuClipboardList />
+            <Link href="/campingReview" passHref>
               요즘 캠핑 후기
-            </li>
-            <li
-              onClick={() => {
-                openModal("my");
-              }}
-            >
-              <FaCampground />내 캠핑장
-            </li>
-          </ul>
-        </div>
-      </MobileMenuList>
-
-      {/* 후기, 내 캠핑장 alert */}
-      {currentModal === "review" ||
-        (currentModal === "my" && (
-          <Modal
-            currentModal={currentModal}
-            hide={closeModal}
-            message="준비 중입니다!"
-          />
-        ))}
-    </>
+            </Link>
+          </li>
+          <li onClick={onClick}>
+            <FaCampground />
+            <Link href="/myCamping" passHref>
+              내 캠핑장
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </MobileMenuList>
   );
 }

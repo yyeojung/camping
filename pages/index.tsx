@@ -6,6 +6,8 @@ import { responsive } from "./../src/commons/styles/globalStyles";
 import { useSearch } from "@/hooks/useSearch";
 import { Modal } from "../src/components/modal/index";
 import { useModal } from "@/hooks/useModal";
+import Link from "next/link";
+import { commonBtnStyle } from "@/commons/styles/common";
 
 const Wrap = styled.div`
   width: 100%;
@@ -28,6 +30,7 @@ const MainWrap = styled.div`
   box-shadow: 0 0.4rem 0.4rem 0 rgba(0, 0, 0, 0.25);
 
   .review {
+    ${commonBtnStyle}
     position: absolute;
     right: 0;
     top: -56px;
@@ -82,7 +85,7 @@ const SearchBox = styled.div`
 
 export default function Home() {
   const { onCloseSearchAlret, onChangeSearch, onClickSearch } = useSearch(); // 코드 중복으로 useSearch 커스텀 훅으로 수정
-  const { currentModal, openModal, closeModal } = useModal();
+  const { currentModal } = useModal();
 
   return (
     <>
@@ -94,22 +97,9 @@ export default function Home() {
       </Head>
       <Wrap>
         <MainWrap>
-          <Button
-            onClick={() => {
-              openModal("review");
-            }}
-            className="review"
-          >
-            요즘 캠핑 후기 보기
-          </Button>
-          {/* 캠핑 후기 준비중 alert */}
-          {currentModal === "review" && (
-            <Modal
-              currentModal={currentModal}
-              hide={closeModal}
-              message="준비 중입니다!"
-            />
-          )}
+          <Link href="/campingReview" passHref>
+            <a className="review">요즘 캠핑 후기 보기</a>
+          </Link>
           <SearchBox>
             <h2>Dayily Camping</h2>
             <div className="search">

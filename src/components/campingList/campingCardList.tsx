@@ -158,7 +158,9 @@ export default function CampingCardList({ className }: IPropsList) {
             )}
           </>
         ) : (
-          <NoData />
+          <NoData>
+            <p>해당하는 지역에 캠핑장이 없습니다. </p>
+          </NoData>
         )}
       </Wrap>
     </>

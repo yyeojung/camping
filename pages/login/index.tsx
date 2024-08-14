@@ -3,8 +3,10 @@ import { responsive } from "@/commons/styles/globalStyles";
 import Button from "@/components/button";
 import FormJoin from "@/components/login/formJoin";
 import FormLogin from "@/components/login/formLogin";
+import { useAuth } from "@/contexts/authContext";
 import styled from "@emotion/styled";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 
@@ -34,8 +36,10 @@ const LoginBox = styled.div`
   border-radius: 3rem;
   box-shadow: 0 1rem 2rem 0 rgba(0, 0, 0, 0.1);
 
-  @media ${responsive.mobile} {
+  @media ${responsive.tablet} {
     width: calc(100% - 3.2rem);
+  }
+  @media ${responsive.mobile} {
     min-height: auto;
   }
 
@@ -120,18 +124,29 @@ const LoginBox = styled.div`
   }
 `;
 export default function index() {
-  const [formError, setFormError] = useState<boolean>(false);
-  const [tabLogin, setTabLogin] = useState<boolean>(true);
+  const [formError, setFormError] = useState<boolean>(false); // 로그인, 회원가입 에러
+  const [tabLogin, setTabLogin] = useState<boolean>(true); // 로그인, 회원가입 탭
+  const router = useRouter();
+  const { isLogin } = useAuth();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setFormError(false);
-    }, 1000);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [formError]);
+    // 로그인된 상태에서 /login 들어오면 홈으로
+    if (isLogin) {
+      void router.replace("/");
+    } else {
+      // active 클래스 1초 뒤 삭제
+      const timer = setTimeout(() => {
+        setFormError(false);
+      }, 1000);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [formError, isLogin]);
 
+  if (isLogin) {
+    return null;
+  }
   return (
     <Wrap>
       <BoxWrap>
@@ -156,7 +171,7 @@ export default function index() {
               <div className="form">
                 <h2>Login</h2>
                 <p className="info">아래 테스트 이메일로 로그인 가능합니다:)</p>
-                <FormLogin />
+                <FormLogin formError={formError} setFormError={setFormError} />
               </div>
             ) : (
               <div className="form">

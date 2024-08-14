@@ -3,7 +3,7 @@ import { auth } from "@/firebase/firebase";
 import styled from "@emotion/styled";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/router";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 const Form = styled.form`
   margin-top: 6rem;
@@ -38,29 +38,35 @@ const Form = styled.form`
     color: #dc4f4f;
   }
 `;
-export default function FormLogin() {
-  const [error, setError] = useState<boolean>(false);
+export default function FormLogin({
+  formError,
+  setFormError,
+}: {
+  formError: boolean;
+  setFormError: (value: boolean) => void;
+}) {
   const emailInput = useRef<HTMLInputElement>(null);
   const pwdInput = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   async function login(email: string, password: string) {
     try {
-      const user = await signInWithEmailAndPassword(auth, email, password);
-      setError(false);
-      return user;
+      const userLogin = await signInWithEmailAndPassword(auth, email, password);
+      setFormError(false);
+      router.back();
+      return userLogin;
     } catch (error) {
       console.log(error);
-      setError(true);
+      setFormError(true);
+      return null;
     }
   }
 
-  const onSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const email = emailInput.current?.value ?? "";
     const password = pwdInput.current?.value ?? "";
     await login(email, password);
-    router.back();
   };
   return (
     <Form onSubmit={onSubmit}>
@@ -78,7 +84,7 @@ export default function FormLogin() {
         name="password"
         placeholder="test1234"
       />
-      {error && <p className="error">이메일, 비밀번호를 확인해주세요.</p>}
+      {formError && <p className="error">이메일, 비밀번호를 확인해주세요.</p>}
       <input className="btn" type="submit" value="Login" />
     </Form>
   );
