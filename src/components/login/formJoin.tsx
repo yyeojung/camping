@@ -66,8 +66,7 @@ export default function FormJoin({
 
   async function register(email: string, password: string) {
     try {
-      const user = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(user);
+      return await createUserWithEmailAndPassword(auth, email, password);
     } catch (error) {
       console.log(error);
     }
@@ -106,7 +105,7 @@ export default function FormJoin({
       <p>Email</p>
       <input
         name="email"
-        type="text"
+        type="email"
         placeholder="이메일을 입력해주세요."
         required
         value={email}

@@ -1,4 +1,5 @@
 import { errorAnimation } from "@/commons/styles/common";
+import { responsive } from "@/commons/styles/globalStyles";
 import Button from "@/components/button";
 import FormJoin from "@/components/login/formJoin";
 import FormLogin from "@/components/login/formLogin";
@@ -33,6 +34,11 @@ const LoginBox = styled.div`
   border-radius: 3rem;
   box-shadow: 0 1rem 2rem 0 rgba(0, 0, 0, 0.1);
 
+  @media ${responsive.mobile} {
+    width: calc(100% - 3.2rem);
+    min-height: auto;
+  }
+
   &.active {
     animation: ${errorAnimation} 0.1s;
   }
@@ -42,6 +48,10 @@ const LoginBox = styled.div`
   }
   .left {
     background: #5db0a3;
+
+    @media ${responsive.mobile} {
+      display: none;
+    }
 
     h2 {
       font-family: "inter";
@@ -58,6 +68,11 @@ const LoginBox = styled.div`
   .right {
     position: relative;
 
+    @media ${responsive.mobile} {
+      width: 100%;
+      padding-bottom: 10rem;
+    }
+
     .link_home {
       color: #6a6a6a;
       position: absolute;
@@ -69,6 +84,10 @@ const LoginBox = styled.div`
     .form {
       max-width: 30rem;
       margin: 11rem auto 0;
+      @media ${responsive.mobile} {
+        margin: 8rem auto 0;
+        width: calc(100% - 3.2rem);
+      }
 
       h2 {
         font-family: "inter";

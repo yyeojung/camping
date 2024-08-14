@@ -12,6 +12,7 @@ const BtnWrap = styled.button<BtnWrapProps>`
   width: 3.6rem;
   height: 3.6rem;
   border-radius: 50%;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -94,7 +94,7 @@ export const globalStyles = css`
     background-color: transparent;
   }
   button {
-    background: #fff;
+    background: transparent;
     cursor: pointer;
     border: none;
     border-radius: 0.8rem;
