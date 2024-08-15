@@ -3,10 +3,8 @@ import type { AppProps } from "next/app";
 import { Global } from "@emotion/react";
 import { globalStyles } from "../src/commons/styles/globalStyles";
 import Layout from "../src/commons/layout";
-import { ImageProvider } from "@/contexts/imageContext";
-import { SelectedProvider } from "@/contexts/selectedContext";
 import { useEffect, useState } from "react";
-import { AuthProvider } from "@/contexts/authContext";
+import Providers from "@/contexts/providers";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);
@@ -20,17 +18,11 @@ export default function App({ Component, pageProps }: AppProps) {
     return null;
   }
   return (
-    // <CampingProvider> 캠핑 검색목록에서 클릭하는 1개의 캠핑장 정보만 넘기면 되서 삭제
-    <AuthProvider>
-      <SelectedProvider>
-        <ImageProvider>
-          <Global styles={globalStyles} />
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ImageProvider>
-      </SelectedProvider>
-    </AuthProvider>
-    // </CampingProvider>
+    <Providers>
+      <Global styles={globalStyles} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </Providers>
   );
 }

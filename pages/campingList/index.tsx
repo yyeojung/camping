@@ -1,3 +1,5 @@
+import SubContents from "@/commons/layout/subContents";
+import SubTitle from "@/commons/layout/subTitle";
 import { responsive } from "@/commons/styles/globalStyles";
 import Button from "@/components/button";
 import CampingCardList from "@/components/campingList/campingCardList";
@@ -8,26 +10,23 @@ import { useSearch } from "@/hooks/useSearch";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 
-const Title = styled.div`
-  margin-top: 6.4rem;
-  display: flex;
-  justify-content: space-between;
+const Wrap = styled.div`
+  .title {
+    display: flex;
+    justify-content: space-between;
 
-  @media ${responsive.tablet} {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  h2 {
-    font-size: 2.4rem;
-
-    span {
-      font-size: 2.4rem;
-      color: #75c36b;
+    @media ${responsive.tablet} {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    h2 {
+      span {
+        font-size: 2.4rem;
+        color: #75c36b;
+      }
     }
   }
 `;
-
 const SearchWrap = styled.div`
   display: flex;
   gap: 2rem;
@@ -35,10 +34,6 @@ const SearchWrap = styled.div`
     flex-direction: column;
     gap: 1rem;
   }
-`;
-
-const CardWrap = styled.div`
-  padding-bottom: 6rem;
 `;
 
 export default function CampingList() {
@@ -49,8 +44,8 @@ export default function CampingList() {
 
   const linkList = router.asPath === "/campingList";
   return (
-    <>
-      <Title>
+    <Wrap>
+      <SubTitle className="title">
         {linkList ? (
           <h2>캠핑장을 검색해주세요.</h2>
         ) : (
@@ -78,10 +73,10 @@ export default function CampingList() {
             />
           )}
         </SearchWrap>
-      </Title>
-      <CardWrap>
+      </SubTitle>
+      <SubContents>
         <CampingCardList className="card" />
-      </CardWrap>
-    </>
+      </SubContents>
+    </Wrap>
   );
 }

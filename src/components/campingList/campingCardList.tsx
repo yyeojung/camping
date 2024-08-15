@@ -12,6 +12,7 @@ import { useSelected } from "@/contexts/selectedContext";
 import { API_URL } from "@/commons/api/api";
 
 const Wrap = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
