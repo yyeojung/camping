@@ -93,7 +93,6 @@ export default function CampingDetail() {
   const isMobile = useIsMobile();
 
   const { currentModal, openModal, closeModal } = useModal();
-
   return (
     <>
       <Section className="first">

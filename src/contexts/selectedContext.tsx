@@ -1,3 +1,4 @@
+import { type ICampingList } from "@/commons/type/commonType";
 import {
   createContext,
   type ReactNode,
@@ -5,7 +6,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import { type ICampingList } from "./campingContext";
 
 interface SelectedContextType {
   selectedCamping: ICampingList | null;

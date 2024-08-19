@@ -38,11 +38,11 @@ const SearchWrap = styled.div`
 
 export default function CampingList() {
   const router = useRouter();
-  const { query } = router;
+  const { query, asPath } = router;
   const { currentModal } = useModal();
   const { onCloseSearchAlret, onChangeSearch, onClickSearch } = useSearch(); // 코드 중복으로 useSearch 커스텀 훅으로 수정
 
-  const linkList = router.asPath === "/campingList";
+  const linkList = asPath === "/campingList";
   return (
     <Wrap>
       <SubTitle className="title">

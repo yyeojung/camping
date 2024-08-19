@@ -4,12 +4,12 @@ import axios from "axios";
 import { responsive } from "@/commons/styles/globalStyles";
 import CampingCard from "./campingCard";
 import { useRouter } from "next/router";
-import { type ICampingList } from "@/contexts/campingContext";
 import Pagination from "../pagination/index";
 import Loading from "../Loading/index";
 import NoData from "../noData/index";
 import { useSelected } from "@/contexts/selectedContext";
 import { API_URL } from "@/commons/api/api";
+import { type ICampingList } from "@/commons/type/commonType";
 
 const Wrap = styled.div`
   width: 100%;

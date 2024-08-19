@@ -1,6 +1,6 @@
 import { createContext, type ReactNode, useContext, useState } from "react";
 
-export interface ICampingList {
+interface ICampingList {
   facltNm: string;
   lineIntro?: string;
   intro: string;

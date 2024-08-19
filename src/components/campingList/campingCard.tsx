@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import LikeBtn from "../likeBtn";
 import { LocationIcon } from "./locationIcon";
 import { BsImage } from "react-icons/bs";
-import { type ICampingList } from "@/contexts/campingContext";
+import { type ICampingList } from "@/commons/type/commonType";
+import LikeBtn from "../likeBtn";
 
 const CardWrap = styled.div`
   cursor: pointer;

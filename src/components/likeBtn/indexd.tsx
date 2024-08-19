@@ -1,5 +1,8 @@
+import { useAuth } from "@/contexts/authContext";
+import { useLikeList } from "@/contexts/likeListContext";
+import { addLike, getLikeList, removeLike } from "@/firebase/likeList";
 import styled from "@emotion/styled";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface BtnWrapProps {
   like: boolean;
@@ -25,12 +28,26 @@ const BtnWrap = styled.button<BtnWrapProps>`
   }
 `;
 
-export default function LikeBtn({ className }: { className?: string }) {
-  const [like, setLike] = useState<boolean>(false);
+export default function LikeBtn({
+  className,
+  campingItemId,
+}: {
+  className?: string;
+  campingItemId: number;
+}) {
+  const { user } = useAuth();
+  const { isLiked, toggleLike } = useLikeList();
 
-  const onClickLike = () => {
+  const like = isLiked(campingItemId);
+
+  const onClickLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
     setLike((prev) => !prev);
   };
+  //   const onClickLike = () => {
+  //     setLike((prev) => !prev);
+  //   };
   return (
     <BtnWrap onClick={onClickLike} className={className} like={like}>
       <i>
