@@ -1,6 +1,5 @@
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { responsive } from "@/commons/styles/globalStyles";
 import CampingCard from "./campingCard";
 import { useRouter } from "next/router";
@@ -8,8 +7,8 @@ import Pagination from "../pagination/index";
 import Loading from "../Loading/index";
 import NoData from "../noData/index";
 import { useSelected } from "@/contexts/selectedContext";
-import { API_URL } from "@/commons/api/api";
 import { type ICampingList } from "@/commons/type/commonType";
+import { useCampingData } from "@/hooks/useCampingData";
 
 const Wrap = styled.div`
   width: 100%;
@@ -31,97 +30,49 @@ const Wrap = styled.div`
   }
 `;
 
-// interface ICampingList {
-//   facltNm: string;
-//   lineIntro?: string;
-//   addr1: string;
-//   firstImageUrl?: string;
-//   themaEnvrnCl?: string;
-//   tel: string;
-//   contentId: number;
-//   lctCl?: string;
-//   doNm: string;
-//   sigunguNm: string;
-// }
-
-interface IApiResponse {
-  response: {
-    body: {
-      items: {
-        item: ICampingList[];
-      };
-      totalCount: number;
-    };
-  };
-}
-
 interface IPropsList {
   className?: string;
 }
 
 export default function CampingCardList({ className }: IPropsList) {
   const [list, setList] = useState<ICampingList[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 번호
   const [totalCount, setTotalCount] = useState<number>(0); // 전체 캠핑 아이템 수
   const router = useRouter();
   const { query } = router;
   const { setSelectedCamping } = useSelected();
-  //   const { region, subRegion } = useSearchState();
-  const SERVICE_KEY = process.env.NEXT_PUBLIC_SERVICE_KEY;
+  const [campingData, loading] = useCampingData();
 
   // 데이터 불러오기
   useEffect(() => {
-    async function fetchData(): Promise<void> {
-      if (!query.region) return; // 지역 값이 유효할 때만
+    if (!query.region || !campingData) return; // 지역 값이 유효할 때만
 
-      setLoading(true);
-      try {
-        const response = await axios.get<IApiResponse>(
-          `${API_URL}/basedList?serviceKey=${SERVICE_KEY}&numOfRows=3000&pageNo=1&MobileOS=AND&MobileApp=dayCamping&_type=json`,
-        );
-        const responsed = await fetch(
-          `https://camping-84569-default-rtdb.firebaseio.com/response/body/items.json`,
-        );
-        console.log(responsed);
-        const items = response.data.response?.body?.items.item || []; // 데이터 없을 경우 추가 수정
-        // 지역 필터
-        const filteredItems = items.filter((item) => {
-          // 전체 지역일 경우
-          if (query.region === "전체") {
-            return true;
-          }
-          // 도는 선택 시는 전체
-          if (query.region !== "전체" && query.subRegion === "전체") {
-            return item.doNm === query.region;
-          }
-          // 도 선택 && 시 선택
-          if (query.region !== "전체" && query.subRegion !== "전체") {
-            return (
-              item.doNm === query.region && item.sigunguNm === query.subRegion
-            );
-          }
-          return false;
-        });
-        setTotalCount(filteredItems.length);
-        const paginatedItems = filteredItems.slice(
-          (currentPage - 1) * PER_PAGE,
-          currentPage * PER_PAGE,
-        );
-
-        // 데이터 없을 때
-        if (paginatedItems.length === 0) {
-          setList([]);
-        } else {
-          setList(paginatedItems);
-        }
-      } catch (e) {
-        console.error(e);
+    // 로컬 api 삭제
+    // 지역 필터
+    const filteredItems = campingData.filter((item) => {
+      // 전체 지역일 경우
+      if (query.region === "전체") {
+        return true;
       }
-      setLoading(false);
-    }
-    void fetchData();
-  }, [query.region, SERVICE_KEY, currentPage]);
+      // 도는 선택 시는 전체
+      if (query.region !== "전체" && query.subRegion === "전체") {
+        return item.doNm === query.region;
+      }
+      // 도 선택 && 시 선택
+      if (query.region !== "전체" && query.subRegion !== "전체") {
+        return item.doNm === query.region && item.sigunguNm === query.subRegion;
+      }
+      return false;
+    });
+    setTotalCount(filteredItems.length);
+    const paginatedItems = filteredItems.slice(
+      (currentPage - 1) * PER_PAGE,
+      currentPage * PER_PAGE,
+    );
+
+    // 데이터 없을 때
+    setList(paginatedItems.length > 0 ? paginatedItems : []);
+  }, [query.region, campingData, currentPage]);
 
   const PER_PAGE = 8; // 한 페이지에 보여줄 아이템 수
   const pageCount = Math.ceil(totalCount / PER_PAGE); // 전체 페이지 수 계산
@@ -134,16 +85,7 @@ export default function CampingCardList({ className }: IPropsList) {
     const { contentId } = item;
     void router.push(`/campingDetail?contentId=${contentId}`);
   };
-  //   const onClickCard = async (contentId: number) => {
-  //     await router
-  //       .push({
-  //         pathname: "/campingDetail",
-  //         query: { contentId },
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   };
+
   return (
     <>
       <Wrap>

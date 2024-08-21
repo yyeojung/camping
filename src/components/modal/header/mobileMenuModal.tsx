@@ -37,11 +37,12 @@ const MobileMenuList = styled.div<{ menuOpen: boolean }>`
     gap: 0.6rem;
     height: 4rem;
     line-height: 4rem;
-    padding: 1.6rem;
     border-radius: 1.6rem;
 
     a {
       font-size: 1.4rem;
+      width: 100%;
+      padding: 0 1.6rem;
     }
 
     &:not(:first-of-type) {
@@ -85,21 +86,26 @@ export default function MobileMenuModal({
         </CloseMenuBtn>
         <ul>
           <li onClick={onClick}>
-            <IoSearch />
             <Link href="/campingList" passHref>
-              캠핑장 검색
+              <a>
+                <IoSearch />
+                캠핑장 검색
+              </a>
             </Link>
           </li>
           <li onClick={onClick}>
-            <LuClipboardList />
             <Link href="/campingReview" passHref>
-              요즘 캠핑 후기
+              <a>
+                <LuClipboardList />
+                요즘 캠핑 후기
+              </a>
             </Link>
           </li>
           <li onClick={onClick}>
-            <FaCampground />
             <Link href="/myCamping" passHref>
-              내 캠핑장
+              <a>
+                <FaCampground />내 캠핑장
+              </a>
             </Link>
           </li>
         </ul>

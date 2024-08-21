@@ -3,6 +3,10 @@ import { LocationIcon } from "./locationIcon";
 import { BsImage } from "react-icons/bs";
 import { type ICampingList } from "@/commons/type/commonType";
 import LikeBtn from "../likeBtn/index";
+import { Modal } from "../modal";
+import { useModal } from "@/hooks/useModal";
+import { useAuth } from "@/contexts/authContext";
+import { useRouter } from "next/router";
 
 const CardWrap = styled.div`
   cursor: pointer;
@@ -94,6 +98,22 @@ export default function CampingCard({
   className,
   onClick,
 }: IPropsCampingList) {
+  const { currentModal, openModal } = useModal();
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const onClickLike = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!user) {
+      openModal("likeAlert");
+    }
+  };
+
+  const closeModal = () => {
+    router.back();
+    setTimeout(() => {
+      void router.push("/login");
+    }, 100);
+  };
   return (
     <>
       {list.map((item: ICampingList) => {
@@ -114,7 +134,7 @@ export default function CampingCard({
           >
             <CardInner>
               <ImgBox>
-                <LikeBtn className="like" />
+                <LikeBtn className="like" onClick={onClickLike} />
                 {item.firstImageUrl ? (
                   <img src={item.firstImageUrl} alt={item.facltNm} />
                 ) : (
@@ -146,6 +166,15 @@ export default function CampingCard({
           </CardWrap>
         );
       })}
+
+      {/* 로그인 창으로 이동합니다. alert */}
+      {currentModal === "likeAlert" && (
+        <Modal
+          currentModal={currentModal}
+          hide={closeModal}
+          message="로그인 창으로 이동합니다."
+        />
+      )}
     </>
   );
 }

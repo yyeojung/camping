@@ -8,11 +8,11 @@ import styled from "@emotion/styled";
 const Wrap = styled.div``;
 
 export default function MyCamping() {
-  const { isLogin } = useAuth();
+  const { user } = useAuth();
 
   return (
     <>
-      {isLogin ? (
+      {user ? (
         <Wrap>
           <SubTitle>
             <h2>관심 캠핑장</h2>
