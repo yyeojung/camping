@@ -15,10 +15,13 @@ const IconWrap = styled.div`
 `;
 
 export default function DetailTitleIcon({ className }: { className?: string }) {
+  const temporary = () => {
+    console.log("임시");
+  };
   return (
     <IconWrap className={className}>
       <LinkCopy />
-      <LikeBtn className="like" />
+      <LikeBtn className="like" onClick={temporary} />
     </IconWrap>
   );
 }
