@@ -28,7 +28,8 @@ const BtnWrap = styled.button<BtnWrapProps>`
 export default function LikeBtn({ className }: { className?: string }) {
   const [like, setLike] = useState<boolean>(false);
 
-  const onClickLike = () => {
+  const onClickLike = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     setLike((prev) => !prev);
   };
   return (

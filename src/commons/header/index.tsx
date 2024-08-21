@@ -143,7 +143,7 @@ const MobileMenuBtn = styled.button`
 export default function LayoutHeader({ className }: { className?: string }) {
   const isMobile = useIsMobile();
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  const { user } = useAuth();
+  const { isLogin } = useAuth();
   const { currentModal, openModal, closeModal } = useModal();
   const router = useRouter();
 
@@ -192,7 +192,7 @@ export default function LayoutHeader({ className }: { className?: string }) {
                 </Link>
               </li>
               <li>
-                {user ? (
+                {isLogin ? (
                   <Link href="/myCamping" passHref>
                     내 캠핑장
                   </Link>
@@ -207,7 +207,7 @@ export default function LayoutHeader({ className }: { className?: string }) {
                 )}
               </li>
               <li className="login">
-                {!user ? (
+                {!isLogin ? (
                   <Link href="/login" passHref>
                     로그인
                   </Link>
@@ -219,7 +219,7 @@ export default function LayoutHeader({ className }: { className?: string }) {
           ) : (
             <MobileHeader>
               <li className="login">
-                {!user ? (
+                {!isLogin ? (
                   <Link href="/login" passHref>
                     로그인
                   </Link>

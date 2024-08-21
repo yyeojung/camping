@@ -1,55 +1,63 @@
-import { getLikeList } from "@/firebase/likeList";
-import {
-  createContext,
-  type ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import { useAuth } from "./authContext";
+import { createContext, type ReactNode, useContext, useState } from "react";
+import { addDoc, collection } from "firebase/firestore";
+import { auth, db } from "@/firebase/firebase";
+import { type ICampingList } from "@/commons/type/commonType";
 
 interface LikeContextType {
-  likedItems: Set<number>; // 좋아요한 아이템의 ID를 Set으로 관리
-  toggleLike: (itemId: number) => void;
-  isLiked: (itemId: number) => boolean;
+  like: boolean;
+  setCampingItem: (item: ICampingList) => void;
+  campingItem: ICampingList | null;
+  addItem: () => Promise<void>;
 }
 
 const LikeContext = createContext<LikeContextType | undefined>(undefined);
 
 export const LikeProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useAuth();
-  const [likedItems, setLikedItems] = useState<Set<number>>(new Set());
+  const [like, setLike] = useState<boolean>(false);
+  const [campingItem, setCampingItem] = useState<ICampingList | null>(null);
+  const user = auth.currentUser;
 
-  // 사용자 ID를 통해 좋아요 상태를 초기화합니다.
-  useEffect(() => {
-    const fetchLikedItems = async () => {
-      // 유저의 좋아요 목록을 가져옵니다.
-      if (user) {
-        const likeList = await getLikeList(user.uid);
-        const likedItemIds = likeList?.map((item) => item.contentId);
-        setLikedItems(new Set(likedItemIds));
-      }
-    };
+  const addItem = async () => {
+    if (!campingItem || !user) return;
 
-    void fetchLikedItems();
-  }, []); // 빈 배열로 빈 효과만 초기화 시 호출
-
-  const toggleLike = (itemId: number) => {
-    setLikedItems((prev) => {
-      const newLikedItems = new Set(prev);
-      if (newLikedItems.has(itemId)) {
-        newLikedItems.delete(itemId);
-      } else {
-        newLikedItems.add(itemId);
-      }
-      return newLikedItems;
-    });
+    try {
+      await addDoc(collection(db, "likeList"), {
+        userId: user?.uid,
+        like: true,
+        campingItem: {
+          facltNm: campingItem.facltNm,
+          lineIntro: campingItem.lineIntro,
+          intro: campingItem.intro,
+          addr1: campingItem.addr1,
+          firstImageUrl: campingItem.firstImageUrl,
+          themaEnvrnCl: campingItem.themaEnvrnCl,
+          tel: campingItem.tel,
+          contentId: campingItem.contentId,
+          lctCl: campingItem.lctCl,
+          induty: campingItem.induty,
+          doNm: campingItem.doNm,
+          sigunguNm: campingItem.sigunguNm,
+          direction: campingItem.direction,
+          brazierCl: campingItem.brazierCl,
+          sbrsCl: campingItem.sbrsCl,
+          sbrsEtc: campingItem.sbrsEtc,
+          homepage: campingItem.homepage,
+          animalCmgCl: campingItem.animalCmgCl,
+          tooltip: campingItem.tooltip,
+          mapX: campingItem.mapX,
+          mapY: campingItem.mapY,
+        },
+      });
+      setLike(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const isLiked = (itemId: number) => likedItems.has(itemId);
-
   return (
-    <LikeContext.Provider value={{ likedItems, toggleLike, isLiked }}>
+    <LikeContext.Provider
+      value={{ like, addItem, campingItem, setCampingItem }}
+    >
       {children}
     </LikeContext.Provider>
   );

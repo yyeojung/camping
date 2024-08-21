@@ -1,14 +1,14 @@
 export interface ICampingList {
   facltNm: string;
-  lineIntro?: string;
+  lineIntro: string;
   intro: string;
   addr1: string;
-  induty: string;
-  firstImageUrl?: string;
-  themaEnvrnCl?: string;
+  firstImageUrl: string;
+  themaEnvrnCl: string;
   tel: string;
   contentId: number;
-  lctCl?: string;
+  lctCl: string;
+  induty: string;
   doNm: string;
   sigunguNm: string;
   direction: string;
@@ -20,15 +20,4 @@ export interface ICampingList {
   tooltip: string;
   mapX: string;
   mapY: string;
-}
-
-export interface FirebaseData {
-  add1: string;
-  contentId: number;
-  facltNm: string;
-  firstImageUrl: string;
-  intro: string;
-  lctCl: string;
-  tel: string;
-  themaEnvrnCl: string;
 }

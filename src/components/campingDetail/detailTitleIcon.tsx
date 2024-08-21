@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import LinkCopy from "@/components/button/linkCopy";
-import LikeBtn from "../likeBtn";
+import LikeBtn from "../likeBtn/index";
 
 const IconWrap = styled.div`
   display: flex;

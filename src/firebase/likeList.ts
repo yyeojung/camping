@@ -8,12 +8,12 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import { type FirebaseData } from "@/commons/type/commonType";
+import { type ICampingList } from "@/commons/type/commonType";
 
 const likeListItem = collection(db, "likeList");
 
 // 좋아요 추가
-export const addLike = async (campingItem: FirebaseData, userId: string) => {
+export const addLike = async (campingItem: ICampingList, userId: string) => {
   try {
     await addDoc(likeListItem, {
       ...campingItem,
@@ -47,7 +47,7 @@ export const getLikeList = async (userId: string) => {
   try {
     const q = query(likeListItem, where("userId", "==", userId));
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map((doc) => doc.data() as FirebaseData);
+    return querySnapshot.docs.map((doc) => doc.data() as ICampingList);
   } catch (error) {
     console.log(error);
     return [];

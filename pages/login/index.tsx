@@ -127,11 +127,11 @@ export default function index() {
   const [formError, setFormError] = useState<boolean>(false); // 로그인, 회원가입 에러
   const [tabLogin, setTabLogin] = useState<boolean>(true); // 로그인, 회원가입 탭
   const router = useRouter();
-  const { user } = useAuth();
+  const { isLogin } = useAuth();
 
   useEffect(() => {
     // 로그인된 상태에서 /login 들어오면 홈으로
-    if (user) {
+    if (isLogin) {
       void router.replace("/");
     } else {
       // active 클래스 1초 뒤 삭제
@@ -142,9 +142,9 @@ export default function index() {
         clearTimeout(timer);
       };
     }
-  }, [formError, user]);
+  }, [formError, isLogin]);
 
-  if (user) {
+  if (isLogin) {
     return null;
   }
   return (

@@ -1,41 +1,29 @@
 import { auth } from "@/firebase/firebase";
-import { onAuthStateChanged, type User } from "firebase/auth";
-import {
-  createContext,
-  type Dispatch,
-  type SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextType {
-  user: User | null;
-  setUser: Dispatch<SetStateAction<User | null>>;
+  isLogin: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType>({
-  user: null,
-  setUser: () => {},
+  isLogin: false,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLogin(true);
       } else {
-        setUser(null);
+        setIsLogin(false);
       }
     });
-  }, []);
-
+  }, [auth]);
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ isLogin }}>{children}</AuthContext.Provider>
   );
 };
 

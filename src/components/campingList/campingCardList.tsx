@@ -80,6 +80,10 @@ export default function CampingCardList({ className }: IPropsList) {
         const response = await axios.get<IApiResponse>(
           `${API_URL}/basedList?serviceKey=${SERVICE_KEY}&numOfRows=3000&pageNo=1&MobileOS=AND&MobileApp=dayCamping&_type=json`,
         );
+        const responsed = await fetch(
+          `https://camping-84569-default-rtdb.firebaseio.com/response/body/items.json`,
+        );
+        console.log(responsed);
         const items = response.data.response?.body?.items.item || []; // 데이터 없을 경우 추가 수정
         // 지역 필터
         const filteredItems = items.filter((item) => {
