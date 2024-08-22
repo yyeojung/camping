@@ -1,13 +1,12 @@
 import { type ICampingList } from "@/commons/type/commonType";
 import { useSelected } from "@/contexts/selectedContext";
-import { db } from "@/firebase/firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import CampingCard from "../campingList/campingCard";
 import NoData from "../noData";
 import { useAuth } from "@/contexts/authContext";
 import Loading from "../Loading";
+import { getLikeList } from "@/firebase/likeList";
 
 export default function LikeCampingList() {
   const [likeItem, setLikeItem] = useState<ICampingList[]>([]);
@@ -20,12 +19,7 @@ export default function LikeCampingList() {
     if (!user) return;
     setLoading(true);
 
-    const likeQuery = query(
-      collection(db, "likeList"),
-      where("userId", "==", user.uid),
-    );
-    const snapshot = await getDocs(likeQuery);
-    const items = snapshot.docs.map((doc) => doc.data().campingItem);
+    const items = await getLikeList(user.uid);
     setLikeItem(items);
 
     setLoading(false);

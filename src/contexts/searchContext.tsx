@@ -50,7 +50,7 @@ export const SearchProvider = ({ children }: { children: ReactNode }) => {
 
 export const useSearchState = () => {
   const context = useContext(SearchContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("context가 없을 경우r");
   }
   return context;

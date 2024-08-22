@@ -7,6 +7,8 @@ import { Modal } from "../modal";
 import { useModal } from "@/hooks/useModal";
 import { useAuth } from "@/contexts/authContext";
 import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { likeState } from "@/firebase/likeList";
 
 const CardWrap = styled.div`
   cursor: pointer;
@@ -98,9 +100,29 @@ export default function CampingCard({
   className,
   onClick,
 }: IPropsCampingList) {
+  const [likeList, setLikeList] = useState<string[]>([]);
   const { currentModal, openModal } = useModal();
   const router = useRouter();
   const { user } = useAuth();
+
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    isMounted.current = true;
+    if (user) {
+      const unsubscribe = likeState(user.uid, (updatedLikes) => {
+        setLikeList(updatedLikes);
+      });
+
+      // 컴포넌트 언마운트 시 구독 해제
+      return () => {
+        isMounted.current = false;
+        if (unsubscribe) {
+          unsubscribe();
+        }
+      };
+    }
+  }, []);
 
   const onClickLike = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!user) {
@@ -114,6 +136,7 @@ export default function CampingCard({
       void router.push("/login");
     }, 100);
   };
+
   return (
     <>
       {list.map((item: ICampingList) => {
@@ -124,6 +147,8 @@ export default function CampingCard({
           .concat(
             Array(3 - icons.length > 0 ? 3 - icons.length : 0).fill("없음"),
           );
+
+        const isLiked = likeList.includes(item.contentId);
         return (
           <CardWrap
             key={item.contentId}
@@ -134,7 +159,12 @@ export default function CampingCard({
           >
             <CardInner>
               <ImgBox>
-                <LikeBtn className="like" onClick={onClickLike} />
+                <LikeBtn
+                  className="like"
+                  onClick={onClickLike}
+                  campingItem={item}
+                  like={isLiked}
+                />
                 {item.firstImageUrl ? (
                   <img src={item.firstImageUrl} alt={item.facltNm} />
                 ) : (

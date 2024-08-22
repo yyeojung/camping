@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import LinkCopy from "@/components/button/linkCopy";
 import LikeBtn from "../likeBtn/index";
+import { type ICampingList } from "@/commons/type/commonType";
 
 const IconWrap = styled.div`
   display: flex;
@@ -13,15 +14,27 @@ const IconWrap = styled.div`
     box-shadow: none;
   }
 `;
-
-export default function DetailTitleIcon({ className }: { className?: string }) {
-  const temporary = () => {
-    console.log("임시");
-  };
+interface IPropsDetailIcon {
+  className?: string;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  campingItem: ICampingList;
+  like: boolean;
+}
+export default function DetailTitleIcon({
+  className,
+  onClick,
+  campingItem,
+  like,
+}: IPropsDetailIcon) {
   return (
     <IconWrap className={className}>
       <LinkCopy />
-      <LikeBtn className="like" onClick={temporary} />
+      <LikeBtn
+        className="like"
+        onClick={onClick}
+        campingItem={campingItem}
+        like={like}
+      />
     </IconWrap>
   );
 }

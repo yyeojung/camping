@@ -75,7 +75,7 @@ export default function CampingList() {
         </SearchWrap>
       </SubTitle>
       <SubContents>
-        <CampingCardList className="card" />
+        <CampingCardList />
       </SubContents>
     </Wrap>
   );

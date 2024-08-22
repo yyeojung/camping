@@ -1,5 +1,7 @@
+import { type ICampingList } from "@/commons/type/commonType";
+import { useAuth } from "@/contexts/authContext";
+import { addLike, removeLike } from "@/firebase/likeList";
 import styled from "@emotion/styled";
-import { useState } from "react";
 
 interface BtnWrapProps {
   like: boolean;
@@ -28,60 +30,36 @@ const BtnWrap = styled.button<BtnWrapProps>`
 interface LikeBtnProps {
   className?: string;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  campingItem: ICampingList;
+  like: boolean;
 }
 
-export default function LikeBtn({ className, onClick }: LikeBtnProps) {
-  const [isLike, setIsLike] = useState<boolean>(false);
-  const onClickLike = (e: React.MouseEvent<HTMLButtonElement>) => {
+export default function LikeBtn({
+  className,
+  onClick,
+  campingItem,
+  like,
+}: LikeBtnProps) {
+  const { user } = useAuth();
+
+  const onClickLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-
-    setIsLike((prev) => !prev);
-
-    onClick(e);
-    // if (!user) {
-    //   // 로그인 안한 상태면 로그인화면으로(모달창을 먼저 띄우려 했으나 user 호출이 여러번 되는 이슈로 뒤로 미룸.)
-    //   void router.push("/login");
-    // } else if (campingItem) {
-    //     try {
-    //         await addDoc(collection(db, "likeList"), {
-    //           userId: user?.uid,
-    //           like: true,
-    //           campingItem: {
-    //             facltNm: campingItem.facltNm,
-    //             lineIntro: campingItem.lineIntro,
-    //             intro: campingItem.intro,
-    //             addr1: campingItem.addr1,
-    //             firstImageUrl: campingItem.firstImageUrl,
-    //             themaEnvrnCl: campingItem.themaEnvrnCl,
-    //             tel: campingItem.tel,
-    //             contentId: campingItem.contentId,
-    //             lctCl: campingItem.lctCl,
-    //             induty: campingItem.induty,
-    //             doNm: campingItem.doNm,
-    //             sigunguNm: campingItem.sigunguNm,
-    //             direction: campingItem.direction,
-    //             brazierCl: campingItem.brazierCl,
-    //             sbrsCl: campingItem.sbrsCl,
-    //             sbrsEtc: campingItem.sbrsEtc,
-    //             homepage: campingItem.homepage,
-    //             animalCmgCl: campingItem.animalCmgCl,
-    //             tooltip: campingItem.tooltip,
-    //             mapX: campingItem.mapX,
-    //             mapY: campingItem.mapY,
-    //           },
-    //         });
-    //         setIsLike(true);
-    //     }catch (error) {
-    //         console.log(error)
-    //     }
-    // }
+    if (!user) {
+      onClick(e);
+    } else {
+      if (!like) {
+        void addLike(campingItem, user.uid);
+      } else {
+        void removeLike(user.uid, campingItem.contentId);
+      }
+    }
   };
 
   return (
     <>
-      <BtnWrap onClick={onClickLike} className={className} like={isLike}>
+      <BtnWrap onClick={onClickLike} className={className} like={like}>
         <i>
-          {isLike ? (
+          {like ? (
             <span className="sr_only">선호캠핑장</span>
           ) : (
             <span className="sr_only">비선호캠핑장</span>

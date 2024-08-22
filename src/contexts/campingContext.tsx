@@ -43,7 +43,7 @@ export const CampingProvider = ({ children }: { children: ReactNode }) => {
 
 export const useCamping = () => {
   const context = useContext(CampingContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("context가 없을 경우");
   }
   return context;

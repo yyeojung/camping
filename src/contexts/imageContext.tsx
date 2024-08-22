@@ -75,7 +75,7 @@ export const ImageProvider = ({ children }: { children: ReactNode }) => {
 
 export const useImage = () => {
   const context = useContext(ImageContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("context가 없을 경우");
   }
   return context;
