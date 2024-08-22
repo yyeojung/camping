@@ -7,10 +7,6 @@ import { useModal } from "@/hooks/useModal";
 import DetailTitleIcon from "./detailTitleIcon";
 import { responsive } from "@/commons/styles/globalStyles";
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import { useAuth } from "@/contexts/authContext";
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
-import { likeState } from "@/firebase/likeList";
 
 const Title = styled.div`
   display: flex;
@@ -45,48 +41,10 @@ const Title = styled.div`
 `;
 
 export default function DetailTitle() {
-  const [likeList, setLikeList] = useState<string[]>([]);
   const { selectedCamping } = useSelected();
   const { currentModal, openModal, closeModal } = useModal();
   const isMobile = useIsMobile();
-  const { user } = useAuth();
-  const router = useRouter();
 
-  const isMounted = useRef(true);
-
-  if (!selectedCamping) {
-    return null;
-  }
-  useEffect(() => {
-    isMounted.current = true;
-    if (user) {
-      const unsubscribe = likeState(user.uid, (updatedLikes) => {
-        setLikeList(updatedLikes);
-      });
-
-      // 컴포넌트 언마운트 시 구독 해제
-      return () => {
-        isMounted.current = false;
-        if (unsubscribe) {
-          unsubscribe();
-        }
-      };
-    }
-  }, []);
-  const onClickLike = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!user) {
-      openModal("likeAlert");
-    }
-  };
-
-  const closeLikeModal = () => {
-    router.back();
-    setTimeout(() => {
-      void router.push("/login");
-    }, 100);
-  };
-
-  const isLiked = likeList.includes(selectedCamping.contentId);
   return (
     <>
       <Title>
@@ -108,13 +66,8 @@ export default function DetailTitle() {
             </CopyToClipboard>
           </li>
         </ul>
-        {!isMobile ? (
-          <DetailTitleIcon
-            onClick={onClickLike}
-            campingItem={selectedCamping}
-            like={isLiked}
-          />
-        ) : null}
+
+        {!isMobile ? <DetailTitleIcon /> : null}
       </Title>
 
       {/* 주소가 복사되었습니다 alert */}
@@ -123,14 +76,6 @@ export default function DetailTitle() {
           currentModal={currentModal}
           hide={closeModal}
           message="주소가 복사되었습니다"
-        />
-      )}
-      {/* 로그인 창으로 이동합니다. alert */}
-      {currentModal === "likeAlert" && (
-        <Modal
-          currentModal={currentModal}
-          hide={closeLikeModal}
-          message="로그인 창으로 이동합니다."
         />
       )}
     </>
