@@ -5,6 +5,7 @@ import {
   doc,
   getDocs,
   onSnapshot,
+  orderBy,
   query,
   where,
 } from "firebase/firestore";
@@ -18,7 +19,7 @@ export const addLike = async (campingItem: ICampingList, userId: string) => {
   try {
     await addDoc(likeListItem, {
       userId,
-      like: true,
+      createdAt: Date.now(),
       campingItem: {
         facltNm: campingItem.facltNm,
         lineIntro: campingItem.lineIntro,
@@ -49,21 +50,9 @@ export const addLike = async (campingItem: ICampingList, userId: string) => {
 };
 
 // 좋아요 삭제
-export const removeLike = async (userId: string, contentId: string) => {
+export const removeLike = async (docId: string) => {
   try {
-    const q = query(
-      likeListItem,
-      where("userId", "==", userId),
-      where("campingItem.contentId", "==", contentId),
-    );
-
-    const snapshot = await getDocs(q);
-
-    const deletePromises = snapshot.docs.map(async (docSnapshot) => {
-      await deleteDoc(doc(db, "likeList", docSnapshot.id));
-    });
-
-    await Promise.all(deletePromises);
+    await deleteDoc(doc(db, "likeList", docId));
   } catch (error) {
     console.log(error);
   }
@@ -72,7 +61,11 @@ export const removeLike = async (userId: string, contentId: string) => {
 // 좋아요 리스트
 export const getLikeList = async (userId: string) => {
   try {
-    const q = query(likeListItem, where("userId", "==", userId));
+    const q = query(
+      likeListItem,
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc"),
+    );
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => doc.data().campingItem);
   } catch (error) {
@@ -84,7 +77,7 @@ export const getLikeList = async (userId: string) => {
 // 좋아요 상태
 export const likeState = (
   userId: string,
-  likeUpdate: (likeId: string[]) => void,
+  likeUpdate: (likeItems: Array<{ contentId: string; docId: string }>) => void,
 ): (() => void) | undefined => {
   if (!userId) return;
   try {
@@ -92,9 +85,10 @@ export const likeState = (
     // 실시간 조회로 바꿈
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const updatedLike =
-        snapshot.docs.map(
-          (doc) => doc.data().campingItem.contentId as string,
-        ) || [];
+        snapshot.docs.map((doc) => ({
+          contentId: doc.data().campingItem.contentId as string,
+          docId: doc.id, // Firestore 문서 ID
+        })) || [];
       likeUpdate(updatedLike);
     });
     return unsubscribe;

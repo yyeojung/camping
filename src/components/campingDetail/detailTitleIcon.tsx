@@ -24,7 +24,9 @@ interface IPropsDetailIcon {
   className?: string;
 }
 export default function DetailTitleIcon({ className }: IPropsDetailIcon) {
-  const [likeList, setLikeList] = useState<string[]>([]);
+  const [likeList, setLikeList] = useState<
+    Array<{ contentId: string; docId: string }>
+  >([]);
   const { selectedCamping } = useSelected();
   const { currentModal, openModal } = useModal();
   const { user } = useAuth();
@@ -63,7 +65,13 @@ export default function DetailTitleIcon({ className }: IPropsDetailIcon) {
       void router.push("/login");
     }, 100);
   };
-  const isLiked = likeList.includes(selectedCamping.contentId);
+
+  const key =
+    likeList.find((like) => like.contentId === selectedCamping.contentId)
+      ?.docId ?? selectedCamping.contentId;
+  const isLiked = likeList.some(
+    (like) => like.contentId === selectedCamping.contentId,
+  );
   return (
     <>
       <IconWrap className={className}>
@@ -73,7 +81,9 @@ export default function DetailTitleIcon({ className }: IPropsDetailIcon) {
           onClick={onClickLike}
           campingItem={selectedCamping}
           like={isLiked}
+          docId={key}
         />
+        ;
       </IconWrap>
 
       {/* 로그인 창으로 이동합니다. alert */}

@@ -1,7 +1,3 @@
-export interface ICampingLike {
-  like: boolean;
-  contentId: string;
-}
 export interface ICampingList {
   facltNm: string;
   lineIntro: string;

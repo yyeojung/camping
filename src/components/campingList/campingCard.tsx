@@ -100,7 +100,9 @@ export default function CampingCard({
   className,
   onClick,
 }: IPropsCampingList) {
-  const [likeList, setLikeList] = useState<string[]>([]);
+  const [likeList, setLikeList] = useState<
+    Array<{ contentId: string; docId: string }>
+  >([]);
   const { currentModal, openModal } = useModal();
   const router = useRouter();
   const { user } = useAuth();
@@ -148,7 +150,14 @@ export default function CampingCard({
             Array(3 - icons.length > 0 ? 3 - icons.length : 0).fill("없음"),
           );
 
-        const isLiked = likeList.includes(item.contentId);
+        // 좋아요 리스트에서 contentId가 캠핑장 contentId하고 같으면 문서의 id를 반환
+        const key =
+          likeList.find((like) => like.contentId === item.contentId)?.docId ??
+          item.contentId;
+        // 좋아요 리스트의 contetnId와 캠핑장 contetnId가 같으면 true 반환
+        const isLiked = likeList.some(
+          (like) => like.contentId === item.contentId,
+        );
         return (
           <CardWrap
             key={item.contentId}
@@ -164,6 +173,7 @@ export default function CampingCard({
                   onClick={onClickLike}
                   campingItem={item}
                   like={isLiked}
+                  docId={key}
                 />
                 {item.firstImageUrl ? (
                   <img src={item.firstImageUrl} alt={item.facltNm} />

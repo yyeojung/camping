@@ -17,6 +17,7 @@ const Icon = styled.i<IPropsType>`
       case "숲":
         return `background-image: url(/image/icon/icon_forest.png)`;
       case "강":
+      case "계곡":
         return `background-image: url(/image/icon/icon_wave.png)`;
       case "해변":
         return `background-image: url(/image/icon/icon_beach.png)`;

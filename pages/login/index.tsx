@@ -26,6 +26,9 @@ const BoxWrap = styled.div`
   justify-content: center;
   height: 100vh;
   padding-top: 8rem;
+  @media ${responsive.mobile} {
+    padding-top: 6rem;
+  }
 `;
 const LoginBox = styled.div`
   display: flex;

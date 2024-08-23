@@ -32,6 +32,7 @@ interface LikeBtnProps {
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   campingItem: ICampingList;
   like: boolean;
+  docId: string;
 }
 
 export default function LikeBtn({
@@ -39,6 +40,7 @@ export default function LikeBtn({
   onClick,
   campingItem,
   like,
+  docId,
 }: LikeBtnProps) {
   const { user } = useAuth();
 
@@ -50,7 +52,7 @@ export default function LikeBtn({
       if (!like) {
         void addLike(campingItem, user.uid);
       } else {
-        void removeLike(user.uid, campingItem.contentId);
+        void removeLike(docId);
       }
     }
   };
