@@ -72,7 +72,7 @@ export default function CampingCardList({ className }: IPropsList) {
 
     // 데이터 없을 때
     setList(paginatedItems.length > 0 ? paginatedItems : []);
-  }, [query.region, currentPage, query.subRegion]);
+  }, [query.region, currentPage, campingData, query.subRegion]);
 
   const PER_PAGE = 8; // 한 페이지에 보여줄 아이템 수
   const pageCount = Math.ceil(totalCount / PER_PAGE); // 전체 페이지 수 계산
