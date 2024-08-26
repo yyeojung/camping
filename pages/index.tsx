@@ -10,12 +10,11 @@ import Link from "next/link";
 import { commonBtnStyle } from "@/commons/styles/common";
 
 const Wrap = styled.div`
-  width: 100%;
-  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: url(/image/camping.jpg) center/cover no-repeat;
+  min-height: 100vh;
   @supports (-webkit-touch-callout: none) {
     min-height: -webkit-fill-available;
   }
@@ -70,6 +69,7 @@ const SearchBox = styled.div`
     background-position: center;
     background-size: 2.4rem;
     width: 8rem;
+
     .mobile {
       width: 100%;
       display: none;

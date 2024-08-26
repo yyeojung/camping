@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { IoCloseOutline, IoSearch } from "react-icons/io5";
 import { LuClipboardList } from "react-icons/lu";
 import { FaCampground } from "react-icons/fa";
@@ -73,6 +73,14 @@ export default function MobileMenuModal({
   menuOpen: boolean;
   onClick: () => void;
 }) {
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [menuOpen]);
+
   return (
     <MobileMenuList menuOpen={menuOpen} onClick={onClick}>
       <div

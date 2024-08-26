@@ -5,6 +5,9 @@ const Contents = styled.div`
   display: flex;
   align-items: center;
   min-height: calc(100vh - 26rem);
+  @supports (-webkit-touch-callout: none) {
+    min-height: -webkit-fill-available;
+  }
 `;
 export default function SubContents({
   children,

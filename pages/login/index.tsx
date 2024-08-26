@@ -18,6 +18,9 @@ const Wrap = styled.div`
   );
   width: 100%;
   min-height: 100vh;
+  @supports (-webkit-touch-callout: none) {
+    min-height: -webkit-fill-available;
+  }
 `;
 
 const BoxWrap = styled.div`
@@ -28,6 +31,9 @@ const BoxWrap = styled.div`
   padding-top: 8rem;
   @media ${responsive.mobile} {
     padding-top: 6rem;
+  }
+  @supports (-webkit-touch-callout: none) {
+    min-height: -webkit-fill-available;
   }
 `;
 const LoginBox = styled.div`

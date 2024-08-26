@@ -109,8 +109,10 @@ const RegionSelect = styled.div<IPropsSelect>`
 
 export default function DropDown({ isMain, onChangeSearch }: IPropsSelect) {
   // 광역시
-  const [selectedRegion, setSelectedRegion] =
-    useState<SingleValue<Option>>(null);
+  const [selectedRegion, setSelectedRegion] = useState<SingleValue<Option>>({
+    value: "전체",
+    label: "전체",
+  });
   // 하위지역
   const [subRegions, setSubRegions] = useState<Option[]>([]);
   // 광역시 선택시 하위지역 리셋
@@ -123,17 +125,20 @@ export default function DropDown({ isMain, onChangeSearch }: IPropsSelect) {
   // 광역시도 onChange
   const onChangeRegion = (selectedOption: SingleValue<Option>) => {
     setSelectedRegion(selectedOption);
-    setSubRegionReset(null); // 광역시가 선택되면 서브는 리셋
+
     if (selectedOption) {
-      onChangeSearch?.(selectedOption.value, null); // 지역 검색 값 저장
+      const subAreas =
+        regionMapping[selectedOption.value as keyof typeof regionMapping];
+      const defaultSubRegion = subAreas[0];
+      setSubRegionReset({ value: "전체", label: "전체" }); // 광역시가 선택되면 서브는 기본값 전체
+      onChangeSearch?.(selectedOption.value, defaultSubRegion); // 지역 검색 값 저장
 
       if (selectedOption.value === "전체") {
         // 전체일 떄는 서브드롭박스를 disabled
         setSubDisabled(true);
+        setSubRegionReset(null);
       } else {
         // 전체가 아닐 때 서브 드롭박스에 광역시에 맞는 지역으로 매핑
-        const subAreas =
-          regionMapping[selectedOption.value as keyof typeof regionMapping];
         setSubRegions(createOptions(subAreas));
         setSubDisabled(false);
       }
@@ -154,15 +159,15 @@ export default function DropDown({ isMain, onChangeSearch }: IPropsSelect) {
 
   // query가 있을 때는 셀렉트박스에 값 넣어주기
   useEffect(() => {
-    const initialRegion = query.region ? (query.region as string) : "";
+    const initialRegion = query.region ? (query.region as string) : "전체";
     const initialSubRegion = query.subRegion
       ? (query.subRegion as string)
-      : null;
+      : "전체";
 
     const initialRegionOption = createOptions(AREA0).find(
       (option) => option.value === initialRegion,
     );
-    setSelectedRegion(initialRegionOption ?? null);
+    setSelectedRegion(initialRegionOption ?? { value: "전체", label: "전체" });
 
     if (initialRegion !== "전체" && initialRegionOption) {
       const subAreas =
@@ -175,7 +180,9 @@ export default function DropDown({ isMain, onChangeSearch }: IPropsSelect) {
           (option) => option.value === initialSubRegion,
         );
         // 하위지역 셀렉트박스에 값 넣어주기
-        setSubRegionReset(initialSubRegionOption ?? null);
+        setSubRegionReset(
+          initialSubRegionOption ?? { value: "전체", label: "전체" },
+        );
       }
     }
   }, [query]);

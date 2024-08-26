@@ -69,7 +69,6 @@ export default function CampingCardList({ className }: IPropsList) {
       currentPage * PER_PAGE,
     );
 
-    console.log(filteredItems);
     // 데이터 없을 때
     setList(paginatedItems.length > 0 ? paginatedItems : []);
   }, [query.region, currentPage, campingData, query.subRegion]);

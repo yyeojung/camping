@@ -83,7 +83,6 @@ export default function DetailTitleIcon({ className }: IPropsDetailIcon) {
           like={isLiked}
           docId={key}
         />
-        ;
       </IconWrap>
 
       {/* 로그인 창으로 이동합니다. alert */}

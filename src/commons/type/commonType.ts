@@ -1,3 +1,10 @@
+export interface IReviewType {
+  contents: string;
+  createdAt: string;
+  image: string;
+  title: string;
+  writer: string;
+}
 export interface ICampingList {
   facltNm: string;
   lineIntro: string;

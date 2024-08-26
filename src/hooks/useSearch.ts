@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 export function useSearch() {
   //  뒤로가기 재로딩 이슈 전역 저장
-  const [region, setRegion] = useState<string>("");
+  const [region, setRegion] = useState<string>("전체"); // 광역시도 기본값 전체
   const [subRegion, setSubRegion] = useState<string | null>(null);
   //   const { region, setRegion, subRegion, setSubRegion } = useSearchState();
   const router = useRouter();
