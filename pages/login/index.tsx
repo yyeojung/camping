@@ -17,14 +17,14 @@ const Wrap = styled.div`
     rgba(70, 130, 180, 0.4)
   );
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
 `;
 
 const BoxWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
   padding-top: 8rem;
   @media ${responsive.mobile} {
     padding-top: 6rem;

@@ -12,6 +12,7 @@ import { commonBtnStyle } from "@/commons/styles/common";
 const Wrap = styled.div`
   width: 100%;
   min-height: 100vh;
+  min-height: -webkit-fill-available;
   display: flex;
   align-items: center;
   justify-content: center;
