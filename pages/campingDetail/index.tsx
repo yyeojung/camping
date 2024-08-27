@@ -129,7 +129,9 @@ export default function CampingDetail() {
         <DetailMap />
         <p>{selectedCamping?.direction ? selectedCamping?.direction : null}</p>
       </Section>
-      <Section>{/* <DetailReview /> */}</Section>
+      <Section>
+        {/* <DetailReview contentId={selectedCamping?.contentId} /> */}
+      </Section>
       {/* 이미지 전체 모달 */}
       {currentModal === "imageModal" && (
         <ImageDetailModal currentModal={currentModal} hide={closeModal} />

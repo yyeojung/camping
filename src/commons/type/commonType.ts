@@ -1,9 +1,12 @@
 export interface IReviewType {
+  contentId: string;
+  facltNm: string;
   contents: string;
   createdAt: string;
   image: string;
   title: string;
   writer: string;
+  userId: string;
 }
 export interface ICampingList {
   facltNm: string;

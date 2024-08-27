@@ -42,6 +42,7 @@ export default function CampingCardList({ className }: IPropsList) {
   const { query } = router;
   const { setSelectedCamping } = useSelected();
   const [campingData, loading] = useCampingData();
+
   // 데이터 불러오기
   useEffect(() => {
     if (!query.region || !campingData) return; // 지역 값이 유효할 때만

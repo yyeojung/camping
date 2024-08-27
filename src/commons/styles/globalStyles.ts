@@ -106,7 +106,7 @@ export const globalStyles = css`
     padding: 0.8rem;
     border-radius: 0.4rem;
     border: 0.1rem solid #ccc;
-    font-size: 1rem;
+    font-size: 1.6rem;
     transition: border-color 0.3s ease;
   }
 

@@ -52,7 +52,8 @@ export default function DetailTitleIcon({ className }: IPropsDetailIcon) {
         }
       };
     }
-  }, []);
+  }, [user]);
+
   const onClickLike = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!user) {
       openModal("likeAlert");

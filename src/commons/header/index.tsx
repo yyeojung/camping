@@ -182,7 +182,7 @@ export default function LayoutHeader({ className }: { className?: string }) {
           {!isMobile ? (
             <Menu>
               <li>
-                <Link href="/campingList" passHref>
+                <Link href="/campingList?region=전체&subRegion=" passHref>
                   캠핑장 검색
                 </Link>
               </li>

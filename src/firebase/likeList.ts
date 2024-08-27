@@ -19,7 +19,7 @@ export const addLike = async (campingItem: ICampingList, userId: string) => {
   try {
     await addDoc(likeListItem, {
       userId,
-      createdAt: Date.now(),
+      createdAt: new Date(),
       campingItem: {
         facltNm: campingItem.facltNm,
         lineIntro: campingItem.lineIntro,
@@ -86,7 +86,7 @@ export const likeState = (
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const updatedLike =
         snapshot.docs.map((doc) => ({
-          contentId: doc.data().campingItem.contentId as string,
+          contentId: doc.data().campingItem.contentId, // as string,
           docId: doc.id, // Firestore 문서 ID
         })) || [];
       likeUpdate(updatedLike);
