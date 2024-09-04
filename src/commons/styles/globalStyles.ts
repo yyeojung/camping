@@ -110,6 +110,10 @@ export const globalStyles = css`
     transition: border-color 0.3s ease;
   }
 
+  textarea {
+    resize: none;
+  }
+
   input:focus,
   textarea:focus {
     border-color: #007bff;

@@ -3,14 +3,22 @@ import { useEffect, useState } from "react";
 
 export default function SearchName() {
   const [data] = useCampingData();
-  const [facltNm, setFacltNm] = useState<string[] | null>(null); // 캠핑장 이름 배열
+  const [facltNm, setFacltNm] = useState<Array<{
+    contentId: string;
+    facltNm: string;
+  }> | null>(null); // 캠핑장 이름 배열
   const [searchInput, setSearchInput] = useState<string>(""); // 검색어 상태
-  const [filteredFacltNm, setFilteredFacltNm] = useState<string[]>([]); // 필터링된 캠핑장 이
+  const [filteredFacltNm, setFilteredFacltNm] = useState<
+    Array<{ contentId: string; facltNm: string }>
+  >([]); // 필터링된 캠핑장 이름
   const [searchOpen, setSearchOpen] = useState<boolean>(false); // 검색 목록 오픈
 
   useEffect(() => {
     if (data) {
-      const facltNmList = data.map((itme) => itme.facltNm);
+      const facltNmList = data.map((item) => ({
+        contentId: item.contentId,
+        facltNm: item.facltNm,
+      }));
       setFacltNm(facltNmList);
     }
   }, [data]);
@@ -18,9 +26,9 @@ export default function SearchName() {
   // 캠핑장 이름 필터링
   useEffect(() => {
     if (facltNm) {
-      const filtered = facltNm.filter((name) =>
+      const filtered = facltNm.filter((item) =>
         // 캠핑장 이름이 입력한 input을 포함하고 있는지 확인
-        name.toLowerCase().includes(searchInput.toLowerCase()),
+        item.facltNm.toLowerCase().includes(searchInput.toLowerCase()),
       );
       setFilteredFacltNm(filtered);
     }
@@ -40,11 +48,11 @@ export default function SearchName() {
       <input type="text" onChange={onSearchName} value={searchInput} />
       <ul>
         {searchOpen &&
-          filteredFacltNm.map((name, index) => (
-            <li key={index}>
+          filteredFacltNm.map((item, index) => (
+            <li key={item.contentId}>
               <button
                 onClick={() => {
-                  onClickName(name);
+                  onClickName(item.facltNm);
                 }}
               >
                 {name}

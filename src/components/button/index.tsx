@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 interface IPropsButton {
   className?: string;
+  type?: "button" | "submit" | "reset";
   onClick?: () => void;
   children: ReactNode;
 }
@@ -12,9 +13,14 @@ const CustomButton = styled.button`
   ${commonBtnStyle}
 `;
 
-export default function Button({ className, children, onClick }: IPropsButton) {
+export default function Button({
+  className,
+  type,
+  children,
+  onClick,
+}: IPropsButton) {
   return (
-    <CustomButton className={className} onClick={onClick}>
+    <CustomButton className={className} onClick={onClick} type={type}>
       {children}
     </CustomButton>
   );

@@ -35,7 +35,7 @@ const ModalInner = styled.div<{
   justify-content: space-between;
   border-radius: 2rem;
   text-align: center;
-  box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.2rem 3rem 0 rgba(0, 0, 0, 0.2);
   ${({ customStyle }) => customStyle && { ...customStyle }}
 
   @media ${responsive.mobile} {

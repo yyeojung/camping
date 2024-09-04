@@ -16,14 +16,9 @@ const reviewDb = collection(db, "review");
 export const addReview = async (reviewItem: IReviewType, userId: string) => {
   try {
     await addDoc(reviewDb, {
+      ...reviewItem,
       userId,
       createdAt: new Date(),
-      title: reviewItem.title,
-      writer: reviewItem.writer,
-      contents: reviewItem.contents,
-      image: reviewItem.image,
-      contentId: reviewItem.contentId,
-      facltNm: reviewItem.facltNm,
     });
   } catch (error) {
     console.log(error);

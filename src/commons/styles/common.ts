@@ -28,15 +28,15 @@ export const errorAnimation = keyframes`
     transform: scale(1);
   }
   40% {
-    margin-left: -10px;
+    margin-left: -1rem;
   }
   60% {
     margin-left: 0;
-    margin-right: -20px;
+    margin-right: -2rem;
   }
   80% {
     margin-right: 0;
-    margin-left: -20px;
+    margin-left: -2rem;
   }
   100% {
     margin: 0;

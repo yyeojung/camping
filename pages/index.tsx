@@ -35,7 +35,7 @@ const MainWrap = styled.div`
     ${commonBtnStyle}
     position: absolute;
     right: 0;
-    top: -56px;
+    top: -5.6rem;
   }
 
   @media ${responsive.tablet} {
