@@ -12,6 +12,7 @@ export const commonBtnStyle = `
   align-items: center;
   text-align: center;
   border-radius: 0.8rem;
+  font-weight: bold;
   cursor: pointer;
     transition: all .2s;
 

@@ -1,12 +1,14 @@
 import SubTitle from "@/commons/layout/subTitle";
 import { responsive } from "@/commons/styles/globalStyles";
 import Button from "@/components/button";
+import DropDown from "@/components/dropdown";
 import UploadImage from "@/components/reviewRegister/uploadImage";
 import { useAuth } from "@/contexts/authContext";
 import { storage } from "@/firebase/firebase";
 import { addReview } from "@/firebase/review";
 import styled from "@emotion/styled";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 const Wrap = styled.div`
@@ -28,6 +30,9 @@ const RegisterForm = styled.div`
     padding-left: 0.6rem;
   }
 
+  .submit_btn {
+  }
+
   @media ${responsive.mobile} {
     padding: 4rem 1.6rem;
   }
@@ -39,6 +44,17 @@ const Row = styled.div`
 
   &:not(:first-of-type) {
     margin-top: 1.6rem;
+  }
+
+  &:last-of-type {
+    justify-content: flex-end;
+    gap: 1rem;
+
+    .cancel_btn {
+      background: #f6f6f6;
+      color: #8d8d8d;
+      border-color: #8d8d8d;
+    }
   }
 
   .form_title {
@@ -84,9 +100,10 @@ export default function ReviewResigter() {
   const [title, setTitle] = useState<string>("");
   const [contents, setContents] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File[]>([]); // 스토리지에 저장될 이미지
+  const router = useRouter();
 
   const onStorageImage = (files: File[]) => {
-    setSelectedImage(files);
+    setSelectedImage((prevImages) => [...prevImages, ...files]);
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -117,6 +134,7 @@ export default function ReviewResigter() {
         images: uploadedUrls,
       };
       await addReview(reviewItem, user.uid);
+      void router.push("/campingReview");
     } catch (error) {
       console.log(error);
     }
@@ -146,6 +164,7 @@ export default function ReviewResigter() {
             <p className="form_title">
               캠핑장<span className="required">*</span>
             </p>
+            <DropDown isMain={false} />
           </Row>
           <Row>
             <p className="form_title">
@@ -163,7 +182,12 @@ export default function ReviewResigter() {
             <p className="form_title">사진 첨부</p>
             <UploadImage onImageSelected={onStorageImage} />
           </Row>
-          <Button type="submit">등록하기</Button>
+          <Row>
+            <Button className="cancel_btn" type="button">
+              취소하기
+            </Button>
+            <Button type="submit">등록하기</Button>
+          </Row>
         </form>
       </RegisterForm>
     </Wrap>

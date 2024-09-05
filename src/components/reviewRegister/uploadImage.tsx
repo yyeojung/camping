@@ -79,13 +79,14 @@ const ImageWrap = styled.div`
 `;
 
 interface IPropsImageUpload {
-  onImageSelected: (files: File[]) => void; // 이미지 파일 상태
+  onImageSelected: (files: File[]) => void; // 부모 컴포넌트에 넘겨주는 이미지 파일 함수
 }
 export default function UploadImage({ onImageSelected }: IPropsImageUpload) {
   const [postImg, setPostImg] = useState<string[]>([]); // 이미지 미리보기 상태
-  const fileEl = useRef<HTMLInputElement>(null);
+  const fileEl = useRef<HTMLInputElement>(null); // 파일 input에 접근하는 useRef
   const { currentModal, openModal, closeModal } = useModal();
 
+  // 파일들을 Base64로 변환하는 함수
   const encodeFileToBase = async (fileList: File[]) => {
     const encodingFiles = fileList.map(async (file) => {
       const reader = new FileReader();
@@ -96,16 +97,19 @@ export default function UploadImage({ onImageSelected }: IPropsImageUpload) {
         };
       });
     });
+    console.log(fileList);
 
     const convertFiles = await Promise.all(encodingFiles);
     setPostImg([...postImg, ...convertFiles] as string[]);
   };
 
+  // input 파일 onChange 이벤트
   const onChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const selectedFiles = Array.from(e.target.files);
+      const selectedFiles = Array.from(e.target.files); // 선택 파일들을 배열로 변환
 
-      if (postImg.length + selectedFiles.length > 6) {
+      if (postImg.length + selectedFiles.length > 4) {
+        // 이미지가 4개 초과이면 경고창
         openModal("registerImage");
         return;
       }
@@ -115,12 +119,12 @@ export default function UploadImage({ onImageSelected }: IPropsImageUpload) {
         formData.append("file", file);
       });
 
-      void encodeFileToBase(selectedFiles);
-
-      onImageSelected(selectedFiles);
+      void encodeFileToBase(selectedFiles); // 선택된 파일들을 Base64로 변환하여 미리보기에 저장
+      onImageSelected(selectedFiles); // 부모 컴포넌트로 전달
     }
   };
 
+  // 이미지 삭제 이벤트
   const onClickDeleteImage = (index: number) => {
     const deleteImage = [...postImg];
     deleteImage.splice(index, 1);
@@ -141,7 +145,7 @@ export default function UploadImage({ onImageSelected }: IPropsImageUpload) {
         <button
           className="upload_btn"
           type="button"
-          onClick={() => fileEl.current?.click()}
+          onClick={() => fileEl.current?.click()} // input file 참조
         >
           <span className="sr_only">파일 업로드</span>
           <LuPlus />
@@ -164,14 +168,14 @@ export default function UploadImage({ onImageSelected }: IPropsImageUpload) {
           ))}
         </ul>
       </ImageWrap>
-      <p className="guide">최대 6개의 이미지만 선택 가능합니다.</p>
+      <p className="guide">최대 4개의 이미지만 선택 가능합니다.</p>
 
       {/* 내캠핑장 로그인 alert */}
       {currentModal === "registerImage" && (
         <Modal
           currentModal={currentModal}
           hide={closeModal}
-          message="최대 6개의 이미지만 선택 가능합니다."
+          message="최대 4개의 이미지만 선택 가능합니다."
         />
       )}
     </Wrap>
