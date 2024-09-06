@@ -3,11 +3,11 @@ import { useSelected } from "@/contexts/selectedContext";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import CampingCard from "../campingList/campingCard";
-import NoData from "../noData";
+import NoData from "../../noData";
 import { useAuth } from "@/contexts/authContext";
-import Loading from "../Loading";
+import Loading from "../../Loading";
 import { getLikeList } from "@/firebase/likeList";
-import Pagination from "../pagination";
+import Pagination from "../../pagination";
 
 export default function LikeCampingList() {
   const [likeItem, setLikeItem] = useState<ICampingList[]>([]);

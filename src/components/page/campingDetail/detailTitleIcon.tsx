@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
 import LinkCopy from "@/components/button/linkCopy";
-import LikeBtn from "../likeBtn/index";
+import LikeBtn from "../../likeBtn/index";
 import { useEffect, useRef, useState } from "react";
 import { useSelected } from "@/contexts/selectedContext";
 import { useModal } from "@/hooks/useModal";
 import { useAuth } from "@/contexts/authContext";
 import { useRouter } from "next/router";
-import { Modal } from "../modal";
+import { Modal } from "../../modal";
 import { likeState } from "@/firebase/likeList";
 
 const IconWrap = styled.div`

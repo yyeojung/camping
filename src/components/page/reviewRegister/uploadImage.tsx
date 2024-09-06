@@ -2,7 +2,7 @@ import { useModal } from "@/hooks/useModal";
 import styled from "@emotion/styled";
 import { useRef, useState } from "react";
 import { LuPlus } from "react-icons/lu";
-import { Modal } from "../modal";
+import { Modal } from "../../modal";
 import { IoIosClose } from "react-icons/io";
 
 const Wrap = styled.div`
@@ -24,7 +24,7 @@ const ImageWrap = styled.div`
   .upload_btn {
     width: 5.4rem;
     height: 5.4rem;
-    background: #f6f6f6;
+    background: #f2f2f2;
     border: 0.1rem solid #ccc;
     display: flex;
     align-items: center;
@@ -97,7 +97,6 @@ export default function UploadImage({ onImageSelected }: IPropsImageUpload) {
         };
       });
     });
-    console.log(fileList);
 
     const convertFiles = await Promise.all(encodingFiles);
     setPostImg([...postImg, ...convertFiles] as string[]);

@@ -2,7 +2,7 @@ import SubContents from "@/commons/layout/subContents";
 import SubTitle from "@/commons/layout/subTitle";
 import { responsive } from "@/commons/styles/globalStyles";
 import Button from "@/components/button";
-import CampingCardList from "@/components/campingList/campingCardList";
+import CampingCardList from "@/components/page/campingList/campingCardList";
 import DropDown from "@/components/dropdown";
 import { Modal } from "@/components/modal";
 import { useModal } from "@/hooks/useModal";
@@ -30,9 +30,36 @@ const Wrap = styled.div`
 const SearchWrap = styled.div`
   display: flex;
   gap: 2rem;
+
   @media ${responsive.mobile} {
     flex-direction: column;
     gap: 1rem;
+  }
+
+  .search_select {
+    gap: 1rem;
+
+    @media ${responsive.mobile} {
+      gap: 0.6rem;
+    }
+
+    .select__control {
+      width: 20rem;
+      border-color: #a9a9a9;
+      color: #000;
+
+      &.select__control--is-disabled {
+        border-color: #d9d9d9;
+      }
+    }
+
+    .select__single-value {
+      color: #000;
+    }
+
+    .select__indicator {
+      color: #a9a9a9;
+    }
   }
 `;
 
@@ -60,7 +87,7 @@ export default function CampingList() {
           </h2>
         )}
         <SearchWrap>
-          <DropDown isMain={false} onChangeSearch={onChangeSearch} />
+          <DropDown className="search_select" onChangeSearch={onChangeSearch} />
           <Button onClick={onClickSearch} className="search_btn">
             검색
           </Button>

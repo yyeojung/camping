@@ -19,24 +19,26 @@ interface Option {
 
 // 옵션 타입 정의
 interface IPropsSelect {
-  isMain: boolean;
+  //   isMain: boolean;
+  className?: string;
   onChangeSearch?: (region: string, subRegion: string | null) => void;
 }
 
-const customSelect = (isMain: boolean): StylesConfig<Option, false> => ({
+export const customSelect = (): StylesConfig<Option, false> => ({
   control: (base, state) => ({
     ...base,
-    width: isMain ? "26rem" : "20rem",
+    width: "26rem",
     height: "4rem",
     borderRadius: "1rem",
-    background: state.isDisabled ? "#f6f6f6" : "rgba(255, 255, 255, 0.3)",
+    background: state.isDisabled ? "#f2f2f2" : "rgba(255, 255, 255, 0.3)",
     borderWidth: ".2rem",
     borderStyle: "solid",
-    borderColor: state.isDisabled ? "#d9d9d9" : isMain ? "#fff" : "#000",
+    borderColor: state.isDisabled ? "#d9d9d9" : "#fff",
     boxShadow: ".3rem .3rem .4rem 0 rgba(0, 0, 0, 0.1)",
-    color: isMain ? "#fff" : "#000",
+    cursor: "pointer",
+    color: "#fff",
     "&:hover": {
-      borderColor: isMain ? "#fff" : "#000",
+      borderColor: "#fff",
     },
     "@media (max-width: 767px)": {
       width: "100%",
@@ -44,15 +46,16 @@ const customSelect = (isMain: boolean): StylesConfig<Option, false> => ({
   }),
   placeholder: (base, state) => ({
     ...base,
-    color: state.isDisabled ? "#d9d9d9" : isMain ? "#fff" : "#000",
+    color: state.isDisabled ? "#d9d9d9" : "#fff",
+    // color: state.isDisabled ? "#d9d9d9" : isMain ? "#fff" : "#000",
   }),
   singleValue: (base) => ({
     ...base,
-    color: isMain ? "#fff" : "#000",
+    color: "#fff",
   }),
   dropdownIndicator: (base, state) => ({
     ...base,
-    color: state.isDisabled ? "#d9d9d9" : isMain ? "#fff" : "#000",
+    color: state.isDisabled ? "#d9d9d9" : "#fff",
     transition: "all .2s",
     transform: state.selectProps.menuIsOpen ? "rotate(180deg)" : "rotate(0deg)",
   }),
@@ -74,18 +77,15 @@ const customSelect = (isMain: boolean): StylesConfig<Option, false> => ({
     ...base,
     minHeight: "3.6rem",
     width: "calc(100% - .6rem)",
-    background: state.isSelected
-      ? "#67794A"
-      : state.isFocused
-        ? "rgb(103, 121, 74, 0.8)"
-        : base.background,
-    color: state.isSelected || state.isFocused ? "#fff" : base.color,
+    background: state.isSelected ? "rgb(218, 227, 202)" : "transparent",
+    color: "#000",
     borderRadius: "1rem",
+    cursor: "pointer",
     "&:hover": {
-      background: "rgb(103, 121, 74, 0.8)",
+      background: "rgba(218, 227, 202, 0.5)",
     },
     "&:active": {
-      background: "#67794A",
+      background: "rgb(218, 227, 202)",
     },
   }),
 });
@@ -99,15 +99,15 @@ const createOptions = (areas: string[]): Option[] =>
 
 const RegionSelect = styled.div<IPropsSelect>`
   display: flex;
-  gap: ${(props) => (props.isMain ? "3.2rem" : "1.0rem")};
+  gap: 3.2rem;
 
   @media ${responsive.mobile} {
     flex-direction: column;
-    gap: ${(props) => (props.isMain ? "1rem" : "0.6rem")};
+    gap: 1rem;
   }
 `;
 
-export default function DropDown({ isMain, onChangeSearch }: IPropsSelect) {
+export default function DropDown({ className, onChangeSearch }: IPropsSelect) {
   // 광역시
   const [selectedRegion, setSelectedRegion] = useState<SingleValue<Option>>({
     value: "전체",
@@ -187,9 +187,9 @@ export default function DropDown({ isMain, onChangeSearch }: IPropsSelect) {
     }
   }, [query]);
 
-  const customStyle = customSelect(isMain);
+  const customStyle = customSelect();
   return (
-    <RegionSelect isMain={isMain}>
+    <RegionSelect className={className}>
       <Select
         instanceId="main_select"
         isSearchable={false}
@@ -198,6 +198,7 @@ export default function DropDown({ isMain, onChangeSearch }: IPropsSelect) {
         onChange={onChangeRegion}
         placeholder="광역시도 선택"
         styles={customStyle}
+        classNamePrefix="select"
       />
       <Select
         instanceId="sub_select"
@@ -208,6 +209,7 @@ export default function DropDown({ isMain, onChangeSearch }: IPropsSelect) {
         placeholder="하위 지역 선택"
         isDisabled={subDisabled}
         styles={customStyle}
+        classNamePrefix="select"
       />
     </RegionSelect>
   );

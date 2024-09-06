@@ -2,13 +2,13 @@ import ImageDetailModal from "@/components/modal/campingDetail/imageDetailModal"
 import { useSelected } from "@/contexts/selectedContext";
 import { useModal } from "@/hooks/useModal";
 import styled from "@emotion/styled";
-import DetailTitle from "@/components/campingDetail/detailTitle";
-import ImageDetail from "@/components/campingDetail/imageDetail";
-import DetailInfo from "@/components/campingDetail/detailInfo";
-import DetailTitleIcon from "@/components/campingDetail/detailTitleIcon";
+import DetailTitle from "@/components/page/campingDetail/detailTitle";
+import ImageDetail from "@/components/page/campingDetail/imageDetail";
+import DetailInfo from "@/components/page/campingDetail/detailInfo";
+import DetailTitleIcon from "@/components/page/campingDetail/detailTitleIcon";
 import { responsive } from "@/commons/styles/globalStyles";
 import { BsPatchCheck } from "react-icons/bs";
-import DetailMap from "@/components/campingDetail/detailMap";
+import DetailMap from "@/components/page/campingDetail/detailMap";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 
 const Section = styled.section`

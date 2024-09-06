@@ -106,7 +106,7 @@ export default function Home() {
           <SearchBox>
             <h2>Dayily Camping</h2>
             <div className="search">
-              <DropDown isMain={true} onChangeSearch={onChangeSearch} />
+              <DropDown onChangeSearch={onChangeSearch} />
               <Button onClick={onClickSearch} className="search_btn">
                 <span className="mobile">검색하기</span>
                 <span className="sr_only">검색</span>

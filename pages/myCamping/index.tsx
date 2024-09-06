@@ -1,7 +1,7 @@
 import SubContents from "@/commons/layout/subContents";
 import SubTitle from "@/commons/layout/subTitle";
 import { responsive } from "@/commons/styles/globalStyles";
-import LikeCampingList from "@/components/myCamping/likeCampingList";
+import LikeCampingList from "@/components/page/myCamping/likeCampingList";
 import NoData from "@/components/noData";
 import { useAuth } from "@/contexts/authContext";
 import styled from "@emotion/styled";

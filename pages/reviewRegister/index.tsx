@@ -1,11 +1,16 @@
+import SubContents from "@/commons/layout/subContents";
 import SubTitle from "@/commons/layout/subTitle";
 import { responsive } from "@/commons/styles/globalStyles";
 import Button from "@/components/button";
-import DropDown from "@/components/dropdown";
-import UploadImage from "@/components/reviewRegister/uploadImage";
+import Loading from "@/components/Loading";
+import { Modal } from "@/components/modal";
+import NoData from "@/components/noData";
+import CampingSelect from "@/components/page/reviewRegister/campingSelect";
+import UploadImage from "@/components/page/reviewRegister/uploadImage";
 import { useAuth } from "@/contexts/authContext";
 import { storage } from "@/firebase/firebase";
 import { addReview } from "@/firebase/review";
+import { useModal } from "@/hooks/useModal";
 import styled from "@emotion/styled";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useRouter } from "next/router";
@@ -14,6 +19,18 @@ import { useState } from "react";
 const Wrap = styled.div`
   h2 {
     text-align: center;
+  }
+
+  .loading_wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
   }
 `;
 const RegisterForm = styled.div`
@@ -51,7 +68,7 @@ const Row = styled.div`
     gap: 1rem;
 
     .cancel_btn {
-      background: #f6f6f6;
+      background: #f2f2f2;
       color: #8d8d8d;
       border-color: #8d8d8d;
     }
@@ -66,7 +83,7 @@ const Row = styled.div`
   input,
   textarea {
     width: calc(100% - 18.4rem);
-    background: #f6f6f6;
+    background: #f2f2f2;
     border: 0.1rem solid #ccc;
     border-radius: 1rem;
 
@@ -100,15 +117,25 @@ export default function ReviewResigter() {
   const [title, setTitle] = useState<string>("");
   const [contents, setContents] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File[]>([]); // 스토리지에 저장될 이미지
+  const [dbContentId, setDbContentId] = useState<string>("");
+  const [dbFacltNm, setDbFacltNm] = useState<string>("");
   const router = useRouter();
+  const { currentModal, openModal, closeModal } = useModal();
+  const [loading, setLoading] = useState(false);
 
+  // 스토리지에 저장될 이미지
   const onStorageImage = (files: File[]) => {
     setSelectedImage((prevImages) => [...prevImages, ...files]);
   };
 
+  // 리뷰 등록 submit
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!user) return;
+    if (!dbFacltNm) {
+      openModal("alertCampinName");
+      return;
+    }
 
     const imageUpload = async () => {
       if (selectedImage === null) return;
@@ -126,18 +153,30 @@ export default function ReviewResigter() {
     };
 
     try {
+      setLoading(true);
       const uploadedUrls = await imageUpload(); // 이미지 업로드 후 URL 받아오기
       const reviewItem = {
         title,
         contents,
+        contentId: dbContentId,
+        facltNm: dbFacltNm,
         userId: user.uid,
         images: uploadedUrls,
       };
       await addReview(reviewItem, user.uid);
+      setLoading(false);
       void router.push("/campingReview");
     } catch (error) {
       console.log(error);
     }
+  };
+  // 선택 캠핑장 이름, contentId
+  const selectedCamping = (selectedCamping: {
+    contentId: string;
+    facltNm: string;
+  }) => {
+    setDbFacltNm(selectedCamping.facltNm);
+    setDbContentId(selectedCamping.contentId);
   };
 
   return (
@@ -145,51 +184,82 @@ export default function ReviewResigter() {
       <SubTitle>
         <h2>요즘 캠핑 후기 등록</h2>
       </SubTitle>
-      <RegisterForm>
-        <form onSubmit={onSubmit}>
-          <Row>
-            <p className="form_title">
-              제목<span className="required">*</span>
-            </p>
-            <input
-              required
-              type="text"
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-              }}
-            />
-          </Row>
-          <Row>
-            <p className="form_title">
-              캠핑장<span className="required">*</span>
-            </p>
-            <DropDown isMain={false} />
-          </Row>
-          <Row>
-            <p className="form_title">
-              내용<span className="required">*</span>
-            </p>
-            <textarea
-              required
-              value={contents}
-              onChange={(e) => {
-                setContents(e.target.value);
-              }}
-            />
-          </Row>
-          <Row>
-            <p className="form_title">사진 첨부</p>
-            <UploadImage onImageSelected={onStorageImage} />
-          </Row>
-          <Row>
-            <Button className="cancel_btn" type="button">
-              취소하기
-            </Button>
-            <Button type="submit">등록하기</Button>
-          </Row>
-        </form>
-      </RegisterForm>
+
+      {user ? (
+        <>
+          <RegisterForm>
+            <form onSubmit={onSubmit}>
+              <Row>
+                <p className="form_title">
+                  제목<span className="required">*</span>
+                </p>
+                <input
+                  required
+                  type="text"
+                  value={title}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                  }}
+                />
+              </Row>
+              <Row>
+                <p className="form_title">
+                  캠핑장<span className="required">*</span>
+                </p>
+                <CampingSelect onSelectCamping={selectedCamping} />
+              </Row>
+              <Row>
+                <p className="form_title">
+                  내용<span className="required">*</span>
+                </p>
+                <textarea
+                  required
+                  value={contents}
+                  onChange={(e) => {
+                    setContents(e.target.value);
+                  }}
+                />
+              </Row>
+              <Row>
+                <p className="form_title">사진 첨부</p>
+                <UploadImage onImageSelected={onStorageImage} />
+              </Row>
+              <Row>
+                <Button
+                  className="cancel_btn"
+                  type="button"
+                  onClick={() => {
+                    router.back();
+                  }}
+                >
+                  취소하기
+                </Button>
+                <Button type="submit">등록하기</Button>
+              </Row>
+            </form>
+          </RegisterForm>
+          {loading ? (
+            <div className="loading_wrap">
+              <Loading />
+            </div>
+          ) : null}
+        </>
+      ) : (
+        <SubContents>
+          <NoData>
+            <p>로그인 후 이용이 가능합니다.</p>
+          </NoData>
+        </SubContents>
+      )}
+
+      {/* 캠핑장 미선택시 alert */}
+      {currentModal === "alertCampinName" && (
+        <Modal
+          currentModal={currentModal}
+          hide={closeModal}
+          message="캠핑장은 필수 선택입니다."
+        />
+      )}
     </Wrap>
   );
 }
