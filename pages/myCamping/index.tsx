@@ -39,16 +39,6 @@ export default function MyCamping() {
         {user ? (
           <div className="card_wrap">
             <LikeCampingList />
-
-            {/* {pageCount > 0 && (
-              <Pagination
-                totalItems={totalCount}
-                onClick={onClickPage}
-                currentPage={currentPage}
-                pageCount={5}
-                itemCountPerPage={PER_PAGE}
-              />
-            )} */}
           </div>
         ) : (
           <NoData>

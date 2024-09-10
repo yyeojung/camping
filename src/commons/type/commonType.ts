@@ -1,11 +1,11 @@
 export interface IReviewType {
-  //   contentId: string;
-  //   facltNm: string;
-  //   image: File  | null;
-  //   createdAt: string;
+  contentId: string;
+  facltNm: string;
+  images: string[] | null;
+  createdAt: Date;
   contents: string;
   title: string;
-  //   writer: string;
+  writer: string;
   userId: string;
 }
 export interface ICampingList {

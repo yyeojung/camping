@@ -18,6 +18,7 @@ export default function LikeCampingList() {
   const [pageList, setPageList] = useState<ICampingList[]>([]); // 페이지 리스트당 캠핑장 데이터
   const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 번호
 
+  // 데이터 가져오기
   const fetchItem = async () => {
     if (!user) return;
     setLoading(true);
@@ -37,6 +38,7 @@ export default function LikeCampingList() {
     void fetchItem();
   }, [currentPage]);
 
+  // 카드 클릭 이벤트
   const onClickCard = (item: ICampingList) => {
     setSelectedCamping(item);
     const { contentId } = item;

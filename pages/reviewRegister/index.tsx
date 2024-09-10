@@ -125,7 +125,7 @@ export default function ReviewResigter() {
 
   // 스토리지에 저장될 이미지
   const onStorageImage = (files: File[]) => {
-    setSelectedImage((prevImages) => [...prevImages, ...files]);
+    setSelectedImage((prev) => [...prev, ...files]);
   };
 
   // 리뷰 등록 submit
@@ -152,6 +152,9 @@ export default function ReviewResigter() {
       return uploadedUrls;
     };
 
+    // 유저 이메일
+    const userEmail = user?.email ? user.email.split("@") : [""];
+
     try {
       setLoading(true);
       const uploadedUrls = await imageUpload(); // 이미지 업로드 후 URL 받아오기
@@ -161,7 +164,9 @@ export default function ReviewResigter() {
         contentId: dbContentId,
         facltNm: dbFacltNm,
         userId: user.uid,
-        images: uploadedUrls,
+        createdAt: new Date(),
+        writer: userEmail[0],
+        images: uploadedUrls ?? null,
       };
       await addReview(reviewItem, user.uid);
       setLoading(false);
@@ -170,6 +175,7 @@ export default function ReviewResigter() {
       console.log(error);
     }
   };
+
   // 선택 캠핑장 이름, contentId
   const selectedCamping = (selectedCamping: {
     contentId: string;

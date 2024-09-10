@@ -73,6 +73,7 @@ const ImageWrap = styled.div`
       img {
         width: 100%;
         height: 100%;
+        object-fit: cover;
       }
     }
   }
@@ -99,7 +100,10 @@ export default function UploadImage({ onImageSelected }: IPropsImageUpload) {
     });
 
     const convertFiles = await Promise.all(encodingFiles);
-    setPostImg([...postImg, ...convertFiles] as string[]);
+    const filterImage = convertFiles.filter(
+      (file) => !postImg.includes(file as string),
+    ); // 중복이미지 제외시키기 위해 추가
+    setPostImg([...postImg, ...filterImage] as string[]);
   };
 
   // input 파일 onChange 이벤트

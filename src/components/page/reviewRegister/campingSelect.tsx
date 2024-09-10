@@ -9,6 +9,9 @@ import Select, { type SingleValue } from "react-select";
 const Wrap = styled.div`
   width: calc(100% - 18.4rem);
 
+  @media ${responsive.mobile} {
+    width: 100%;
+  }
   .row {
     display: flex;
     gap: 1rem;
@@ -16,7 +19,6 @@ const Wrap = styled.div`
 
     @media ${responsive.mobile} {
       flex-direction: column;
-      width: 100%;
     }
   }
 

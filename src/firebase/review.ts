@@ -17,8 +17,8 @@ export const addReview = async (reviewItem: IReviewType, userId: string) => {
   try {
     await addDoc(reviewDb, {
       ...reviewItem,
-      userId,
-      createdAt: new Date(),
+      //   userId,
+      //   createdAt: new Date(),
     });
   } catch (error) {
     console.log(error);
@@ -53,7 +53,7 @@ export const getReview = async () => {
         facltNm: data.facltNm,
         contents: data.contents,
         createdAt: `${year}.${month}.${days}`, // 날짜 포맷팅
-        image: data.image,
+        images: data.images,
         title: data.title,
         writer: data.writer,
         userId: data.userId,
