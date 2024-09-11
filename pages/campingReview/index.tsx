@@ -1,16 +1,28 @@
 import SubContents from "@/commons/layout/subContents";
 import SubTitle from "@/commons/layout/subTitle";
 import { type IReviewType } from "@/commons/type/commonType";
+import Button from "@/components/button";
 import Loading from "@/components/Loading";
+import { Modal } from "@/components/modal";
 import NoData from "@/components/noData";
+import { useAuth } from "@/contexts/authContext";
 import { getReview } from "@/firebase/review";
+import { useModal } from "@/hooks/useModal";
 import styled from "@emotion/styled";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const Wrap = styled.div``;
 
 const ReviewWrap = styled.div`
   padding-top: 4rem;
+
+  .btn_wrap {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+  }
 `;
 const Table = styled.table`
   width: 100%;
@@ -28,6 +40,7 @@ const Table = styled.table`
     }
 
     td {
+      line-height: 1.3;
       height: 5.4rem;
       padding: 1.2rem;
       word-break: keep-all;
@@ -74,6 +87,9 @@ const Table = styled.table`
 export default function CampingReview() {
   const [loading, setLoading] = useState<boolean>(false);
   const [reviewList, setReviewList] = useState<IReviewType[]>([]);
+  const { currentModal, openModal } = useModal();
+  const { user } = useAuth();
+  const router = useRouter();
 
   const fetchItem = async () => {
     setLoading(true);
@@ -87,6 +103,14 @@ export default function CampingReview() {
   useEffect(() => {
     void fetchItem();
   }, []);
+
+  // 글쓰기 버튼 모달 닫기
+  const closeRegisterModal = () => {
+    router.back();
+    setTimeout(() => {
+      void router.push("/login");
+    }, 100);
+  };
 
   return (
     <Wrap>
@@ -135,6 +159,21 @@ export default function CampingReview() {
               ))}
             </tbody>
           </Table>
+          <div className="btn_wrap">
+            {user ? (
+              <Link href="/reviewRegister">
+                <Button>글쓰기</Button>
+              </Link>
+            ) : (
+              <a
+                onClick={() => {
+                  openModal("registerLogin");
+                }}
+              >
+                <Button>글쓰기</Button>
+              </a>
+            )}
+          </div>
         </ReviewWrap>
       ) : (
         <SubContents>
@@ -142,6 +181,15 @@ export default function CampingReview() {
             <p>작성된 후기가 없습니다.</p>
           </NoData>
         </SubContents>
+      )}
+
+      {/* 글쓰기 로그인 alert */}
+      {currentModal === "registerLogin" && (
+        <Modal
+          currentModal={currentModal}
+          hide={closeRegisterModal}
+          message="로그인 후 이용 가능합니다!"
+        />
       )}
     </Wrap>
   );

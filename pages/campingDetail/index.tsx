@@ -10,6 +10,7 @@ import { responsive } from "@/commons/styles/globalStyles";
 import { BsPatchCheck } from "react-icons/bs";
 import DetailMap from "@/components/page/campingDetail/detailMap";
 import { useIsMobile } from "@/hooks/useMediaQuery";
+import DetailReview from "@/components/page/campingDetail/detailReview";
 
 const Section = styled.section`
   padding-bottom: 4rem;
@@ -130,7 +131,8 @@ export default function CampingDetail() {
         <p>{selectedCamping?.direction ? selectedCamping?.direction : null}</p>
       </Section>
       <Section>
-        {/* <DetailReview contentId={selectedCamping?.contentId} /> */}
+        <h2 className="title">캠핑장 후기</h2>
+        <DetailReview contentId={selectedCamping?.contentId} />
       </Section>
       {/* 이미지 전체 모달 */}
       {currentModal === "imageModal" && (

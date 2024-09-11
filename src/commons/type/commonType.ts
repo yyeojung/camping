@@ -2,7 +2,7 @@ export interface IReviewType {
   contentId: string;
   facltNm: string;
   images: string[] | null;
-  createdAt: Date;
+  createdAt: Date | string;
   contents: string;
   title: string;
   writer: string;
