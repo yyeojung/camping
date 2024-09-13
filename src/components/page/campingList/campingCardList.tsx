@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import Pagination from "../../pagination/index";
 import Loading from "../../Loading/index";
 import NoData from "../../noData/index";
-import { useSelected } from "@/contexts/selectedContext";
 import { type ICampingList } from "@/commons/type/commonType";
 import { useCampingData } from "@/hooks/useCampingData";
 
@@ -40,16 +39,15 @@ export default function CampingCardList({ className }: IPropsList) {
   const [totalCount, setTotalCount] = useState<number>(0); // 전체 캠핑 아이템 수
   const router = useRouter();
   const { query } = router;
-  const { setSelectedCamping } = useSelected();
-  const [campingData, loading] = useCampingData();
+  const { database, loading } = useCampingData();
 
   // 데이터 불러오기
   useEffect(() => {
-    if (!query.region || !campingData) return; // 지역 값이 유효할 때만
+    if (!query.region || !database) return; // 지역 값이 유효할 때만
 
     // 로컬 api 삭제
     // 지역 필터
-    const filteredItems = campingData.filter((item) => {
+    const filteredItems = database.filter((item) => {
       // 전체 지역일 경우
       if (query.region === "전체") {
         return true;
@@ -72,7 +70,7 @@ export default function CampingCardList({ className }: IPropsList) {
 
     // 데이터 없을 때
     setList(paginatedItems.length > 0 ? paginatedItems : []);
-  }, [query.region, currentPage, campingData, query.subRegion]);
+  }, [query.region, currentPage, database, query.subRegion]);
 
   const PER_PAGE = 8; // 한 페이지에 보여줄 아이템 수
   const pageCount = Math.ceil(totalCount / PER_PAGE); // 전체 페이지 수 계산
@@ -81,7 +79,6 @@ export default function CampingCardList({ className }: IPropsList) {
   };
 
   const onClickCard = (item: ICampingList) => {
-    setSelectedCamping(item);
     const { contentId } = item;
     void router.push(`/campingDetail?contentId=${contentId}`);
   };

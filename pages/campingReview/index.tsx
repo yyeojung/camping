@@ -53,33 +53,15 @@ const Table = styled.table`
         max-width: 10rem;
       }
 
-      &:not(:nth-child(2)) {
-        text-align: center;
-      }
-    }
-  }
-
-  .review_contents {
-    display: flex;
-
-    img {
-      height: 12rem;
-      width: 19rem;
-      object-fit: cover;
-      border: 0.1rem solid #eee;
-      margin-left: 1rem;
-    }
-
-    .text {
-      margin-left: 1rem;
-      line-height: 1.2;
-
-      p {
+      .title {
         overflow: hidden;
+        white-space: nowrap;
         text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
+        max-width: 72rem;
+      }
+
+      &:not(:nth-of-type(2)) {
+        text-align: center;
       }
     }
   }
@@ -139,17 +121,13 @@ export default function CampingReview() {
               </tr>
             </thead>
             <tbody>
-              {reviewList.map((item) => (
-                <tr key={item.contentId}>
+              {reviewList.map((item, index) => (
+                <tr key={index}>
                   <td>
                     <strong>{item.facltNm}</strong>
                   </td>
                   <td>
-                    <div className="review_contents">
-                      <div className="text">
-                        <p>{item.title}</p>
-                      </div>
-                    </div>
+                    <p className="title">{item.title}</p>
                   </td>
                   <td>
                     <p className="writer">{item.writer}</p>
@@ -161,7 +139,7 @@ export default function CampingReview() {
           </Table>
           <div className="btn_wrap">
             {user ? (
-              <Link href="/reviewRegister">
+              <Link href="/reviewRegister" passHref>
                 <Button>글쓰기</Button>
               </Link>
             ) : (

@@ -2,7 +2,7 @@ import { useCampingData } from "@/hooks/useCampingData";
 import { useEffect, useState } from "react";
 
 export default function SearchName() {
-  const [data] = useCampingData();
+  const { database } = useCampingData();
   const [facltNm, setFacltNm] = useState<Array<{
     contentId: string;
     facltNm: string;
@@ -14,14 +14,14 @@ export default function SearchName() {
   const [searchOpen, setSearchOpen] = useState<boolean>(false); // 검색 목록 오픈
 
   useEffect(() => {
-    if (data) {
-      const facltNmList = data.map((item) => ({
+    if (database) {
+      const facltNmList = database.map((item) => ({
         contentId: item.contentId,
         facltNm: item.facltNm,
       }));
       setFacltNm(facltNmList);
     }
-  }, [data]);
+  }, [database]);
 
   // 캠핑장 이름 필터링
   useEffect(() => {

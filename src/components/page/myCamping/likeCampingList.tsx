@@ -1,5 +1,4 @@
 import { type ICampingList } from "@/commons/type/commonType";
-import { useSelected } from "@/contexts/selectedContext";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import CampingCard from "../campingList/campingCard";
@@ -13,7 +12,8 @@ export default function LikeCampingList() {
   const [likeItem, setLikeItem] = useState<ICampingList[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { setSelectedCamping } = useSelected();
+  //   const { setSelectedCamping } = useSelected();
+
   const { user } = useAuth();
   const [pageList, setPageList] = useState<ICampingList[]>([]); // 페이지 리스트당 캠핑장 데이터
   const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 번호
@@ -40,7 +40,6 @@ export default function LikeCampingList() {
 
   // 카드 클릭 이벤트
   const onClickCard = (item: ICampingList) => {
-    setSelectedCamping(item);
     const { contentId } = item;
     void router.push(`/campingDetail?contentId=${contentId}`);
   };

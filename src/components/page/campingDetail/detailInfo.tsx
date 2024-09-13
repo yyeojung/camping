@@ -1,5 +1,5 @@
 import DragScroll from "@/components/dragScroll/dragScroll";
-import { useSelected } from "@/contexts/selectedContext";
+import { useCampingData } from "@/hooks/useCampingData";
 import styled from "@emotion/styled";
 import Link from "next/link";
 
@@ -49,10 +49,11 @@ const Info = styled.div`
   }
 `;
 export default function DetailInfo() {
-  const { selectedCamping } = useSelected();
+  //   const { selectedCamping } = useSelected();
+  const { selectedData } = useCampingData(); // 검색화면에서 넘겨주는게 아닌 쿼리에 맞는 데이터 가져오기
 
   // 부대시설, 업종 배열로 변경
-  const arrSbrsCl = selectedCamping?.sbrsCl.split(",");
+  const arrSbrsCl = selectedData?.sbrsCl.split(",");
   return (
     <Info>
       {arrSbrsCl && arrSbrsCl?.length > 1 ? (
@@ -64,14 +65,14 @@ export default function DetailInfo() {
       ) : null}
       <p>
         <strong>업종</strong>
-        {selectedCamping?.induty}
+        {selectedData?.induty}
       </p>
       <p>
         <strong>홈페이지</strong>
 
-        {selectedCamping?.homepage ? (
-          <Link href={selectedCamping?.homepage}>
-            <a target="_blank">{selectedCamping?.homepage}</a>
+        {selectedData?.homepage ? (
+          <Link href={selectedData?.homepage} passHref>
+            <a target="_blank">{selectedData?.homepage}</a>
           </Link>
         ) : (
           "홈페이지 정보 없음"
@@ -79,21 +80,17 @@ export default function DetailInfo() {
       </p>
       <p>
         <strong>연락처</strong>
-        {selectedCamping?.tel ? selectedCamping?.tel : "직접 문의"}
+        {selectedData?.tel ? selectedData?.tel : "직접 문의"}
       </p>
       <p className="divider">
         <strong>화로대</strong>
         <span>
-          {selectedCamping?.brazierCl
-            ? selectedCamping?.brazierCl
-            : "직접 문의"}
+          {selectedData?.brazierCl ? selectedData?.brazierCl : "직접 문의"}
         </span>
         <i></i>
         <strong>반려동물 출입</strong>
         <span>
-          {selectedCamping?.animalCmgCl
-            ? selectedCamping?.animalCmgCl
-            : "직접 문의"}
+          {selectedData?.animalCmgCl ? selectedData?.animalCmgCl : "직접 문의"}
         </span>
       </p>
     </Info>

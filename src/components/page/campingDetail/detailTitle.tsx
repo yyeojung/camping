@@ -2,17 +2,17 @@ import { FaRegCopy } from "react-icons/fa6";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Modal } from "@/components/modal";
 import styled from "@emotion/styled";
-import { useSelected } from "@/contexts/selectedContext";
 import { useModal } from "@/hooks/useModal";
 import DetailTitleIcon from "./detailTitleIcon";
 import { responsive } from "@/commons/styles/globalStyles";
 import { useIsMobile } from "@/hooks/useMediaQuery";
+import { useCampingData } from "@/hooks/useCampingData";
 
 const Title = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 2.4rem;
+  margin-top: 4rem;
 
   ul li {
     display: flex;
@@ -41,7 +41,9 @@ const Title = styled.div`
 `;
 
 export default function DetailTitle() {
-  const { selectedCamping } = useSelected();
+  //   const { selectedCamping } = useSelected();
+  const { selectedData } = useCampingData(); // 검색화면에서 넘겨주는게 아닌 쿼리에 맞는 데이터 가져오기
+
   const { currentModal, openModal, closeModal } = useModal();
   const isMobile = useIsMobile();
 
@@ -50,17 +52,17 @@ export default function DetailTitle() {
       <Title>
         <ul>
           <li>
-            <strong>{selectedCamping?.facltNm}</strong>
+            <strong>{selectedData?.facltNm}</strong>
           </li>
           <li>
             <CopyToClipboard
-              text={selectedCamping?.addr1 ?? ""}
+              text={selectedData?.addr1 ?? ""}
               onCopy={() => {
                 openModal("copy");
               }}
             >
               <button className="address">
-                <span>{selectedCamping?.addr1}</span>
+                <span>{selectedData?.addr1}</span>
                 <FaRegCopy style={{ marginLeft: ".4rem" }} />
               </button>
             </CopyToClipboard>

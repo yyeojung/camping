@@ -101,9 +101,9 @@ export default function CampingSelect({
   const [campingDisabled, setCampingDisabled] = useState(true);
   const [selectCampingName, setSelectCampingName] =
     useState<SingleValue<Option>>(null); // 캠핑장 이름
-  const [campingData] = useCampingData();
+  const { database } = useCampingData();
 
-  const campingName = campingData
+  const campingName = database
     ?.filter((item) => {
       if (subRegion === "전체") {
         return item.doNm === region;

@@ -112,6 +112,7 @@ export const globalStyles = css`
 
   textarea {
     resize: none;
+    line-height: 1.5;
   }
 
   input:focus,

@@ -177,12 +177,12 @@ export default function ReviewResigter() {
   };
 
   // 선택 캠핑장 이름, contentId
-  const selectedCamping = (selectedCamping: {
+  const selectCamping = (selectCamping: {
     contentId: string;
     facltNm: string;
   }) => {
-    setDbFacltNm(selectedCamping.facltNm);
-    setDbContentId(selectedCamping.contentId);
+    setDbFacltNm(selectCamping.facltNm);
+    setDbContentId(selectCamping.contentId);
   };
 
   return (
@@ -212,13 +212,14 @@ export default function ReviewResigter() {
                 <p className="form_title">
                   캠핑장<span className="required">*</span>
                 </p>
-                <CampingSelect onSelectCamping={selectedCamping} />
+                <CampingSelect onSelectCamping={selectCamping} />
               </Row>
               <Row>
                 <p className="form_title">
                   내용<span className="required">*</span>
                 </p>
                 <textarea
+                  spellCheck="false"
                   required
                   value={contents}
                   onChange={(e) => {

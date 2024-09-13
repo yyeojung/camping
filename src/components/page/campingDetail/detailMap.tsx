@@ -1,8 +1,8 @@
-import { useSelected } from "@/contexts/selectedContext";
 import styled from "@emotion/styled";
 import { useEffect } from "react";
 import { FiMapPin } from "react-icons/fi";
 import Link from "next/link";
+import { useCampingData } from "@/hooks/useCampingData";
 
 declare global {
   interface Window {
@@ -33,13 +33,14 @@ const MapArea = styled.div`
   }
 `;
 export default function DetailMap() {
-  const { selectedCamping } = useSelected();
-  const mapX = Number(selectedCamping?.mapX);
-  const mapY = Number(selectedCamping?.mapY);
+  //   const { selectedCamping } = useSelected();
+  const { selectedData } = useCampingData(); // 검색화면에서 넘겨주는게 아닌 쿼리에 맞는 데이터 가져오기
+  const mapX = Number(selectedData?.mapX);
+  const mapY = Number(selectedData?.mapY);
   const MAP_KEY = process.env.NEXT_PUBLIC_KAKAO_MAP_KEY;
 
   useEffect(() => {
-    if (!selectedCamping) return;
+    if (!selectedData) return;
 
     const kakaoMapScript = document.createElement("script");
     kakaoMapScript.async = false;
@@ -67,7 +68,7 @@ export default function DetailMap() {
     };
 
     kakaoMapScript.addEventListener("load", onLoadKakaoAPI);
-  }, [selectedCamping]);
+  }, [selectedData]);
   return (
     <MapArea>
       <div
@@ -75,9 +76,9 @@ export default function DetailMap() {
         style={{ width: "100%", height: "40rem", marginTop: "4rem" }}
       />
       <div className="road_map">
-        <strong>{selectedCamping?.addr1}</strong>
+        <strong>{selectedData?.addr1}</strong>
         <Link
-          href={`https://map.kakao.com/link/to/${selectedCamping?.facltNm},${selectedCamping?.mapY},${selectedCamping?.mapX}`}
+          href={`https://map.kakao.com/link/to/${selectedData?.facltNm},${selectedData?.mapY},${selectedData?.mapX}`}
         >
           <a target="_blank">
             <FiMapPin />길 찾기
