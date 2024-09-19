@@ -42,6 +42,8 @@ export const getReview = async () => {
 
     return snapshot.docs.map((doc) => {
       const data = doc.data();
+      const docId = doc.id; // 문서 고유 id
+
       // timestamp 날짜로 변경
       const date = data.createdAt;
       const day = date.toDate();
@@ -49,6 +51,7 @@ export const getReview = async () => {
       const month = ("0" + (day.getMonth() + 1)).slice(-2);
       const days = ("0" + day.getDate()).slice(-2);
       return {
+        docId,
         contentId: data.contentId,
         facltNm: data.facltNm,
         contents: data.contents,

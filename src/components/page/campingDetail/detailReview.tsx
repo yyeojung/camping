@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useModal } from "@/hooks/useModal";
 import { useRouter } from "next/router";
 import { Modal } from "@/components/modal";
+import Pagination from "@/components/pagination";
 
 const Wrap = styled.div`
   .title_wrap {
@@ -18,6 +19,21 @@ const Wrap = styled.div`
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1rem;
+
+    .btn_wrap {
+      display: flex;
+      gap: 1rem;
+
+      .review_list {
+        background: #fff;
+        color: #000;
+        border-color: #000;
+      }
+    }
+  }
+
+  .pagenation {
+    margin-top: 2.4rem;
   }
 
   .nodata {
@@ -45,12 +61,19 @@ const ReviewUl = styled.ul`
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
+    max-width: calc(100% - 30rem);
 
-    .info {
+    strong {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .info span {
       color: #898989;
       font-size: 1.4rem;
 
-      span:not(:first-of-type)::before {
+      &:not(:first-of-type)::before {
         display: inline-block;
         clear: both;
         content: "";
@@ -63,12 +86,12 @@ const ReviewUl = styled.ul`
     }
 
     .contents {
+      font-size: 1.4rem;
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;
-      max-width: 78rem;
     }
   }
 
@@ -112,35 +135,41 @@ export default function DetailReview({
   const { user } = useAuth();
   const { currentModal, openModal } = useModal();
   const router = useRouter();
-
-  const fetchItem = async () => {
-    let isMounted = true;
-
-    try {
-      const items = await getReview();
-      if (isMounted) {
-        setReview(items); // 컴포넌트가 마운트된 상태에서만 업데이트
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
-    return () => {
-      isMounted = false; // 비동기 작업 후 언마운트 상태로 변경
-    };
-  };
+  const [pageList, setPageList] = useState<IReviewType[]>([]); // 페이지 리스트당 캠핑장후기 데이터
+  const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 번호
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      await fetchItem(); // useEffect 내부에서 fetchItem 호출
+    let isMounted = true;
+
+    const fetchItem = async () => {
+      try {
+        const items = await getReview();
+        if (isMounted && contentId) {
+          // 캠핑장 id와 동일한 후기만 가져오기
+          const filteredReview = items.filter(
+            (item) => item.contentId === contentId,
+          ); // 필터링
+          setReview(filteredReview); // 컴포넌트가 마운트된 상태에서만 업데이트
+
+          // 페이지네이션
+          const paginatedItems = filteredReview.slice(
+            (currentPage - 1) * PER_PAGE,
+            currentPage * PER_PAGE,
+          );
+          setPageList(paginatedItems);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     };
 
-    void fetchReviews();
+    void fetchItem(); // 데이터 가져오기 함수 호출
 
+    // cleanup 함수
     return () => {
-      void fetchItem(); // 언마운트 시 호출
+      isMounted = false; // 컴포넌트가 언마운트될 때 상태 변경
     };
-  }, []);
+  }, [currentPage, contentId]);
 
   // 글쓰기 버튼 모달 닫기
   const closeRegisterModal = () => {
@@ -150,74 +179,101 @@ export default function DetailReview({
     }, 100);
   };
 
-  const reviewId = review.map((item) => item.contentId);
-  const filteredReview = reviewId.filter((item) => item === contentId);
+  // 페이지네이션
+  const totalCount = review.length;
+  const PER_PAGE = 5;
+  const pageCount = Math.ceil(totalCount / PER_PAGE);
+
+  const onClickPage = (selected: number) => {
+    setCurrentPage(selected);
+  };
 
   return (
     <Wrap>
       <div className="title_wrap">
         <h2 className="title">캠핑장 후기</h2>
-        {user ? (
-          <Link href="/reviewRegister" passHref>
-            <Button>글쓰기</Button>
+        <div className="btn_wrap">
+          <Link href="/campingReview" passHref>
+            <a>
+              <Button className="review_list">목록</Button>
+            </a>
           </Link>
-        ) : (
-          <a
-            onClick={() => {
-              openModal("registerLogin");
-            }}
-          >
-            <Button>글쓰기</Button>
-          </a>
-        )}
-      </div>
-      {filteredReview.length > 0 ? (
-        <ReviewUl>
-          {review.map(
-            (item, index) =>
-              contentId === item.contentId && (
-                <li key={index}>
-                  {item.images && item.images.length > 0 && (
-                    <div className="image_box">
-                      <img src={item.images[0]} alt={item.facltNm} />
-                    </div>
-                  )}
-                  <div className="contents_wrap">
-                    <strong>{item.title}</strong>
-                    <p className="info">
-                      <span>{item.writer}</span>
-                      <span>{item.createdAt}</span>
-                    </p>
-                    <p className="contents" key={index}>
-                      {item.contents.split("\n").map(
-                        (
-                          item,
-                          index, // 줄바꿈 유지
-                        ) => (
-                          <React.Fragment key={index}>
-                            {item}
-                            <br />
-                          </React.Fragment>
-                        ),
-                      )}
-                    </p>
-                  </div>
-                  {user?.uid === item.userId && (
-                    <div className="user_btn">
-                      <button>
-                        <MdOutlineModeEditOutline />
-                        <span className="sr_only">수정</span>
-                      </button>
-                      <button>
-                        <FaRegTrashAlt />
-                        <span className="sr_only">삭제</span>
-                      </button>
-                    </div>
-                  )}
-                </li>
-              ),
+          {user ? (
+            <Link href="/reviewRegister" passHref>
+              <a>
+                <Button>글쓰기</Button>
+              </a>
+            </Link>
+          ) : (
+            <a
+              onClick={() => {
+                openModal("registerLogin");
+              }}
+            >
+              <Button>글쓰기</Button>
+            </a>
           )}
-        </ReviewUl>
+        </div>
+      </div>
+      {pageList.length > 0 ? (
+        <>
+          <ReviewUl>
+            {pageList.map(
+              (item, index) =>
+                contentId === item.contentId && (
+                  <li key={index}>
+                    {item.images && item.images.length > 0 && (
+                      <div className="image_box">
+                        <img src={item.images[0]} alt={item.facltNm} />
+                      </div>
+                    )}
+                    <div className="contents_wrap">
+                      <strong>{item.title}</strong>
+                      <p className="info">
+                        <span>{item.writer}</span>
+                        <span>{item.createdAt}</span>
+                      </p>
+                      <p className="contents" key={index}>
+                        {item.contents.split("\n").map(
+                          (
+                            item,
+                            index, // 줄바꿈 유지
+                          ) => (
+                            <React.Fragment key={index}>
+                              {item}
+                              <br />
+                            </React.Fragment>
+                          ),
+                        )}
+                      </p>
+                    </div>
+                    {user?.uid === item.userId && (
+                      <div className="user_btn">
+                        <button>
+                          <MdOutlineModeEditOutline />
+                          <span className="sr_only">수정</span>
+                        </button>
+                        <button>
+                          <FaRegTrashAlt />
+                          <span className="sr_only">삭제</span>
+                        </button>
+                      </div>
+                    )}
+                  </li>
+                ),
+            )}
+          </ReviewUl>
+          {pageCount > 0 && (
+            <Pagination
+              className="pagenation"
+              totalItems={totalCount}
+              onClick={onClickPage}
+              currentPage={currentPage}
+              pageCount={5}
+              itemCountPerPage={PER_PAGE}
+            />
+          )}
+        </>
       ) : (
         <div className="nodata">
           <NoData>후기가 없습니다.</NoData>

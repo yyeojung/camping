@@ -7,6 +7,7 @@ import { Modal } from "@/components/modal";
 import NoData from "@/components/noData";
 import CampingSelect from "@/components/page/reviewRegister/campingSelect";
 import UploadImage from "@/components/page/reviewRegister/uploadImage";
+import ReviewForm from "@/components/reviewForm/ReviewForm";
 import { useAuth } from "@/contexts/authContext";
 import { storage } from "@/firebase/firebase";
 import { addReview } from "@/firebase/review";
@@ -31,27 +32,6 @@ const Wrap = styled.div`
     background: rgba(0, 0, 0, 0.4);
     display: flex;
     align-items: center;
-  }
-`;
-const RegisterForm = styled.div`
-  width: 100%;
-  background: #fff;
-  border-radius: 3rem;
-  border: 0.1rem solid #ccc;
-  padding: 4rem 8rem;
-  margin-top: 4rem;
-
-  .required {
-    color: #eb3737;
-    font-weight: 800;
-    padding-left: 0.6rem;
-  }
-
-  .submit_btn {
-  }
-
-  @media ${responsive.mobile} {
-    padding: 4rem 1.6rem;
   }
 `;
 
@@ -193,7 +173,7 @@ export default function ReviewResigter() {
 
       {user ? (
         <>
-          <RegisterForm>
+          <ReviewForm>
             <form onSubmit={onSubmit}>
               <Row>
                 <p className="form_title">
@@ -244,7 +224,7 @@ export default function ReviewResigter() {
                 <Button type="submit">등록하기</Button>
               </Row>
             </form>
-          </RegisterForm>
+          </ReviewForm>
           {loading ? (
             <div className="loading_wrap">
               <Loading />

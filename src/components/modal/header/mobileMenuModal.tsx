@@ -43,6 +43,9 @@ const MobileMenuList = styled.div<{ menuOpen: boolean }>`
       font-size: 1.4rem;
       width: 100%;
       padding: 0 1.6rem;
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
     }
 
     &:not(:first-of-type) {
@@ -94,7 +97,7 @@ export default function MobileMenuModal({
         </CloseMenuBtn>
         <ul>
           <li onClick={onClick}>
-            <Link href="/campingList" passHref>
+            <Link href="/campingList?region=전체&subRegion=" passHref>
               <a>
                 <IoSearch />
                 캠핑장 검색

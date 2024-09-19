@@ -51,6 +51,9 @@ const SearchWrap = styled.div`
       &.select__control--is-disabled {
         border-color: #d9d9d9;
       }
+      @media ${responsive.mobile} {
+        width: 100%;
+      }
     }
 
     .select__single-value {

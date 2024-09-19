@@ -1,4 +1,5 @@
 export interface IReviewType {
+  docId?: string;
   contentId: string;
   facltNm: string;
   images: string[] | null;

@@ -183,18 +183,18 @@ export default function LayoutHeader({ className }: { className?: string }) {
             <Menu>
               <li>
                 <Link href="/campingList?region=전체&subRegion=" passHref>
-                  캠핑장 검색
+                  <a>캠핑장 검색</a>
                 </Link>
               </li>
               <li>
                 <Link href="/campingReview" passHref>
-                  요즘 캠핑 후기
+                  <a>요즘 캠핑 후기</a>
                 </Link>
               </li>
               <li>
                 {user ? (
                   <Link href="/myCamping" passHref>
-                    내 캠핑장
+                    <a>내 캠핑장</a>
                   </Link>
                 ) : (
                   <a
@@ -209,7 +209,7 @@ export default function LayoutHeader({ className }: { className?: string }) {
               <li className="login">
                 {!user ? (
                   <Link href="/login" passHref>
-                    로그인
+                    <a>로그인</a>
                   </Link>
                 ) : (
                   <button onClick={onClickLogout}>로그아웃</button>
@@ -221,7 +221,7 @@ export default function LayoutHeader({ className }: { className?: string }) {
               <li className="login">
                 {!user ? (
                   <Link href="/login" passHref>
-                    로그인
+                    <a>로그인</a>
                   </Link>
                 ) : (
                   <button onClick={onClickLogout}>로그아웃</button>

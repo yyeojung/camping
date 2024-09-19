@@ -35,6 +35,7 @@ const Table = styled.table`
   }
 
   tbody tr {
+    cursor: pointer;
     &:hover {
       background: rgba(218, 227, 202, 0.2);
     }
@@ -94,6 +95,11 @@ export default function CampingReview() {
     }, 100);
   };
 
+  // 캠핑 후기 보기 링크
+  const onClickReview = (docId: string) => {
+    void router.push(`/reviewBoard/${docId}`);
+  };
+
   return (
     <Wrap>
       <SubTitle>
@@ -122,7 +128,12 @@ export default function CampingReview() {
             </thead>
             <tbody>
               {reviewList.map((item, index) => (
-                <tr key={index}>
+                <tr
+                  key={item.docId}
+                  onClick={() => {
+                    onClickReview(item.docId ?? item.contentId);
+                  }}
+                >
                   <td>
                     <strong>{item.facltNm}</strong>
                   </td>
@@ -140,7 +151,9 @@ export default function CampingReview() {
           <div className="btn_wrap">
             {user ? (
               <Link href="/reviewRegister" passHref>
-                <Button>글쓰기</Button>
+                <a>
+                  <Button>글쓰기</Button>
+                </a>
               </Link>
             ) : (
               <a

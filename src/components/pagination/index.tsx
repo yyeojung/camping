@@ -35,6 +35,7 @@ const PageWrap = styled.ul`
 `;
 interface IPropsPage {
   totalItems: number;
+  className?: string;
   itemCountPerPage: number;
   pageCount: number;
   currentPage: number;
@@ -45,6 +46,7 @@ export default function Pagination({
   totalItems,
   itemCountPerPage,
   pageCount,
+  className,
   onClick,
   currentPage,
 }: IPropsPage) {
@@ -89,7 +91,7 @@ export default function Pagination({
   //     }
   //   };
   return (
-    <PageWrap>
+    <PageWrap className={className}>
       <li
         onClick={() => {
           onCickMovePage("first");
