@@ -16,14 +16,17 @@ const Form = styled.div`
     padding-left: 0.6rem;
   }
 
-  .submit_btn {
-  }
-
   @media ${responsive.mobile} {
     padding: 4rem 1.6rem;
   }
 `;
 
-export default function ReviewForm({ children }: { children: ReactNode }) {
-  return <Form>{children}</Form>;
+export default function ReviewForm({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return <Form className={className}>{children}</Form>;
 }

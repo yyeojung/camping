@@ -7,7 +7,7 @@ import { Modal } from "@/components/modal";
 import NoData from "@/components/noData";
 import CampingSelect from "@/components/page/reviewRegister/campingSelect";
 import UploadImage from "@/components/page/reviewRegister/uploadImage";
-import ReviewForm from "@/components/reviewForm/ReviewForm";
+import ReviewForm from "@/components/reviewForm/reviewForm";
 import { useAuth } from "@/contexts/authContext";
 import { storage } from "@/firebase/firebase";
 import { addReview } from "@/firebase/review";
@@ -15,7 +15,7 @@ import { useModal } from "@/hooks/useModal";
 import styled from "@emotion/styled";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { type ChangeEvent, useState } from "react";
 
 const Wrap = styled.div`
   h2 {
@@ -60,20 +60,22 @@ const Row = styled.div`
     text-align: center;
   }
 
-  input,
   textarea {
     width: calc(100% - 18.4rem);
     background: #f2f2f2;
     border: 0.1rem solid #ccc;
     border-radius: 1rem;
+    height: 30rem;
 
     &:focus {
       border: 0.1rem solid #67794a;
     }
   }
 
-  textarea {
-    height: 30rem;
+  textarea.title {
+    height: 4rem;
+    overflow: hidden;
+    min-height: 4rem;
   }
 
   @media ${responsive.mobile} {
@@ -165,6 +167,16 @@ export default function ReviewResigter() {
     setDbContentId(selectCamping.contentId);
   };
 
+  // 제목 onChange 이벤트 (auto textarea, 100자 이내)
+  const onChangeTitle = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setTitle(e.target.value);
+    const remHeight = (e.target.scrollHeight / 10).toFixed(1);
+    e.target.style.height = `${remHeight}rem`;
+    if (e.target.value.length > 100) {
+      alert("100자 이내로 입력해주세요.");
+    }
+  };
+
   return (
     <Wrap>
       <SubTitle>
@@ -179,13 +191,12 @@ export default function ReviewResigter() {
                 <p className="form_title">
                   제목<span className="required">*</span>
                 </p>
-                <input
+                <textarea
                   required
-                  type="text"
                   value={title}
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                  }}
+                  className="title"
+                  placeholder="제목을 입력해주세요."
+                  onChange={onChangeTitle}
                 />
               </Row>
               <Row>

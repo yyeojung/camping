@@ -5,6 +5,7 @@ import Button from "@/components/button";
 import Loading from "@/components/Loading";
 import { Modal } from "@/components/modal";
 import NoData from "@/components/noData";
+import Pagination from "@/components/pagination";
 import { useAuth } from "@/contexts/authContext";
 import { getReview } from "@/firebase/review";
 import { useModal } from "@/hooks/useModal";
@@ -73,19 +74,29 @@ export default function CampingReview() {
   const { currentModal, openModal } = useModal();
   const { user } = useAuth();
   const router = useRouter();
+  const [pageList, setPageList] = useState<IReviewType[]>([]); // 페이지 리스트당 캠핑장후기 데이터
+  const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 번호
 
   const fetchItem = async () => {
     setLoading(true);
 
     const items = await getReview();
     setReviewList(items);
+    if (items) {
+      // 페이지네이션
+      const paginatedItems = items.slice(
+        (currentPage - 1) * PER_PAGE,
+        currentPage * PER_PAGE,
+      );
+      setPageList(paginatedItems);
+    }
 
     setLoading(false);
   };
 
   useEffect(() => {
     void fetchItem();
-  }, []);
+  }, [currentPage]);
 
   // 글쓰기 버튼 모달 닫기
   const closeRegisterModal = () => {
@@ -100,6 +111,15 @@ export default function CampingReview() {
     void router.push(`/reviewBoard/${docId}`);
   };
 
+  // 페이지네이션
+  const totalCount = reviewList.length;
+  const PER_PAGE = 10;
+  const pageCount = Math.ceil(totalCount / PER_PAGE);
+
+  const onClickPage = (selected: number) => {
+    setCurrentPage(selected);
+  };
+
   return (
     <Wrap>
       <SubTitle>
@@ -109,63 +129,76 @@ export default function CampingReview() {
         <SubContents>
           <Loading />
         </SubContents>
-      ) : reviewList && reviewList.length > 0 ? (
-        <ReviewWrap>
-          <Table>
-            <colgroup>
-              <col width={"15%"} />
-              <col width={"65%"} />
-              <col width={"10%"} />
-              <col width={"10%"} />
-            </colgroup>
-            <thead>
-              <tr>
-                <td>Name</td>
-                <td>Review</td>
-                <td>Writer</td>
-                <td>Date</td>
-              </tr>
-            </thead>
-            <tbody>
-              {reviewList.map((item, index) => (
-                <tr
-                  key={item.docId}
+      ) : pageList && pageList.length > 0 ? (
+        <>
+          <ReviewWrap>
+            <Table>
+              <colgroup>
+                <col width={"15%"} />
+                <col width={"65%"} />
+                <col width={"10%"} />
+                <col width={"10%"} />
+              </colgroup>
+              <thead>
+                <tr>
+                  <td>Name</td>
+                  <td>Review</td>
+                  <td>Writer</td>
+                  <td>Date</td>
+                </tr>
+              </thead>
+              <tbody>
+                {pageList.map((item, index) => (
+                  <tr
+                    key={item.docId}
+                    onClick={() => {
+                      onClickReview(item.docId ?? item.contentId);
+                    }}
+                  >
+                    <td>
+                      <strong>{item.facltNm}</strong>
+                    </td>
+                    <td>
+                      <p className="title">{item.title}</p>
+                    </td>
+                    <td>
+                      <p className="writer">{item.writer}</p>
+                    </td>
+                    <td>{item.createdAt}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+            <div className="btn_wrap">
+              {user ? (
+                <Link href="/reviewRegister" passHref>
+                  <a>
+                    <Button>글쓰기</Button>
+                  </a>
+                </Link>
+              ) : (
+                <a
                   onClick={() => {
-                    onClickReview(item.docId ?? item.contentId);
+                    openModal("registerLogin");
                   }}
                 >
-                  <td>
-                    <strong>{item.facltNm}</strong>
-                  </td>
-                  <td>
-                    <p className="title">{item.title}</p>
-                  </td>
-                  <td>
-                    <p className="writer">{item.writer}</p>
-                  </td>
-                  <td>{item.createdAt}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-          <div className="btn_wrap">
-            {user ? (
-              <Link href="/reviewRegister" passHref>
-                <a>
                   <Button>글쓰기</Button>
                 </a>
-              </Link>
-            ) : (
-              <a
-                onClick={() => {
-                  openModal("registerLogin");
-                }}
-              >
-                <Button>글쓰기</Button>
-              </a>
-            )}
-          </div>
-        </ReviewWrap>
+              )}
+            </div>
+          </ReviewWrap>
+
+          {pageCount > 0 && (
+            <Pagination
+              className="pagenation"
+              totalItems={totalCount}
+              onClick={onClickPage}
+              currentPage={currentPage}
+              pageCount={5}
+              itemCountPerPage={PER_PAGE}
+            />
+          )}
+        </>
       ) : (
         <SubContents>
           <NoData>

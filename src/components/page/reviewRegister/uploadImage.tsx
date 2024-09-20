@@ -111,8 +111,8 @@ export default function UploadImage({ onImageSelected }: IPropsImageUpload) {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files); // 선택 파일들을 배열로 변환
 
-      if (postImg.length + selectedFiles.length > 4) {
-        // 이미지가 4개 초과이면 경고창
+      if (postImg.length + selectedFiles.length > 2) {
+        // 이미지가 2개 초과이면 경고창
         openModal("registerImage");
         return;
       }
@@ -171,14 +171,14 @@ export default function UploadImage({ onImageSelected }: IPropsImageUpload) {
           ))}
         </ul>
       </ImageWrap>
-      <p className="guide">최대 4개의 이미지만 선택 가능합니다.</p>
+      <p className="guide">최대 2개의 이미지만 선택 가능합니다.</p>
 
       {/* 내캠핑장 로그인 alert */}
       {currentModal === "registerImage" && (
         <Modal
           currentModal={currentModal}
           hide={closeModal}
-          message="최대 4개의 이미지만 선택 가능합니다."
+          message="최대 2개의 이미지만 선택 가능합니다."
         />
       )}
     </Wrap>
