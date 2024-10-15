@@ -18,6 +18,12 @@ export default function LikeCampingList() {
   const [pageList, setPageList] = useState<ICampingList[]>([]); // 페이지 리스트당 캠핑장 데이터
   const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 번호
 
+  // 쿼리에서 페이지 번호 가져오기
+  useEffect(() => {
+    const pageQuery = router.query.page ? Number(router.query.page) : 1;
+    setCurrentPage(pageQuery);
+  }, [router.query.page]);
+
   // 데이터 가져오기
   const fetchItem = async () => {
     if (!user) return;

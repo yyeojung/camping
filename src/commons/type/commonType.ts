@@ -2,6 +2,8 @@ export interface IReviewType {
   docId?: string;
   contentId: string;
   facltNm: string;
+  region: string;
+  subRegion: string;
   images: string[] | null;
   createdAt: Date | string;
   contents: string;

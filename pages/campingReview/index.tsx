@@ -12,18 +12,19 @@ import { useModal } from "@/hooks/useModal";
 import styled from "@emotion/styled";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { BsImage } from "react-icons/bs";
 import { useEffect, useState } from "react";
 
-const Wrap = styled.div``;
-
-const ReviewWrap = styled.div`
-  padding-top: 4rem;
-
+const Wrap = styled.div`
   .btn_wrap {
     display: flex;
     justify-content: flex-end;
     margin-top: 1rem;
   }
+`;
+
+const ReviewWrap = styled.div`
+  padding: 2rem 0;
 `;
 const Table = styled.table`
   width: 100%;
@@ -43,7 +44,7 @@ const Table = styled.table`
 
     td {
       line-height: 1.3;
-      height: 5.4rem;
+      min-height: 5.4rem;
       padding: 1.2rem;
       word-break: keep-all;
       border-bottom: 0.1rem solid #999999;
@@ -59,7 +60,22 @@ const Table = styled.table`
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        max-width: 72rem;
+        max-width: 69rem;
+      }
+
+      .icon_image {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+
+        i {
+          width: 1.6rem;
+          height: 1.6rem;
+
+          svg {
+            fill: #8d8d8d;
+          }
+        }
       }
 
       &:not(:nth-of-type(2)) {
@@ -76,6 +92,12 @@ export default function CampingReview() {
   const router = useRouter();
   const [pageList, setPageList] = useState<IReviewType[]>([]); // 페이지 리스트당 캠핑장후기 데이터
   const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 번호
+
+  // 쿼리에서 페이지 번호 가져오기
+  useEffect(() => {
+    const pageQuery = router.query.page ? Number(router.query.page) : 1;
+    setCurrentPage(pageQuery);
+  }, [router.query.page]);
 
   const fetchItem = async () => {
     setLoading(true);
@@ -125,6 +147,23 @@ export default function CampingReview() {
       <SubTitle>
         <h2>요즘 캠핑 후기</h2>
       </SubTitle>
+      <div className="btn_wrap">
+        {user ? (
+          <Link href="/reviewRegister" passHref>
+            <a>
+              <Button>글쓰기</Button>
+            </a>
+          </Link>
+        ) : (
+          <a
+            onClick={() => {
+              openModal("registerLogin");
+            }}
+          >
+            <Button>글쓰기</Button>
+          </a>
+        )}
+      </div>
       {loading ? (
         <SubContents>
           <Loading />
@@ -159,7 +198,20 @@ export default function CampingReview() {
                       <strong>{item.facltNm}</strong>
                     </td>
                     <td>
-                      <p className="title">{item.title}</p>
+                      <div
+                        className={
+                          item.images && item.images.length > 0
+                            ? "icon_image"
+                            : ""
+                        }
+                      >
+                        <p className="title">{item.title}</p>
+                        {item.images && item.images.length > 0 && (
+                          <i>
+                            <BsImage />
+                          </i>
+                        )}
+                      </div>
                     </td>
                     <td>
                       <p className="writer">{item.writer}</p>
@@ -169,23 +221,6 @@ export default function CampingReview() {
                 ))}
               </tbody>
             </Table>
-            <div className="btn_wrap">
-              {user ? (
-                <Link href="/reviewRegister" passHref>
-                  <a>
-                    <Button>글쓰기</Button>
-                  </a>
-                </Link>
-              ) : (
-                <a
-                  onClick={() => {
-                    openModal("registerLogin");
-                  }}
-                >
-                  <Button>글쓰기</Button>
-                </a>
-              )}
-            </div>
           </ReviewWrap>
 
           {pageCount > 0 && (

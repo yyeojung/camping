@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { LuPlus } from "react-icons/lu";
 import { Modal } from "../../modal";
 import { IoIosClose } from "react-icons/io";
+import { deleteImageStorage } from "@/firebase/review";
 
 const Wrap = styled.div`
   input {
@@ -80,10 +81,18 @@ const ImageWrap = styled.div`
 `;
 
 interface IPropsImageUpload {
-  onImageSelected: (files: File[]) => void; // 부모 컴포넌트에 넘겨주는 이미지 파일 함수
+  selectedImage: File[]; // 부모 컴포넌트에 넘겨주는 이미지 파일  리스트
+  setSelectedImage: React.Dispatch<React.SetStateAction<File[]>>;
+  editImages?: string[];
+  onDeleteImage?: (updatedImages: string[]) => void;
 }
-export default function UploadImage({ onImageSelected }: IPropsImageUpload) {
-  const [postImg, setPostImg] = useState<string[]>([]); // 이미지 미리보기 상태
+export default function UploadImage({
+  selectedImage,
+  setSelectedImage,
+  editImages,
+  onDeleteImage,
+}: IPropsImageUpload) {
+  const [postImg, setPostImg] = useState<string[]>(editImages ?? []); // 이미지 미리보기 상태
   const fileEl = useRef<HTMLInputElement>(null); // 파일 input에 접근하는 useRef
   const { currentModal, openModal, closeModal } = useModal();
 
@@ -123,16 +132,34 @@ export default function UploadImage({ onImageSelected }: IPropsImageUpload) {
       });
 
       void encodeFileToBase(selectedFiles); // 선택된 파일들을 Base64로 변환하여 미리보기에 저장
-      onImageSelected(selectedFiles); // 부모 컴포넌트로 전달
+      setSelectedImage((prev) => [...prev, ...selectedFiles]); // 선택된 이미지 업데이트
+
+      // input 초기화
+      if (fileEl.current) {
+        fileEl.current.value = "";
+      }
     }
   };
 
   // 이미지 삭제 이벤트
   const onClickDeleteImage = (index: number) => {
     const deleteImage = [...postImg];
-    deleteImage.splice(index, 1);
+    const deleteItem = deleteImage.splice(index, 1)[0]; // 삭제 이미지
+    const updateSelectedImg = selectedImage.filter((_, idx) => idx !== index);
+
+    // 수정화면 시 스토리지에서 삭제
+    if (editImages?.includes(deleteItem)) {
+      void deleteImageStorage(deleteItem);
+    }
+    // 부모 컴포넌트에 업데이트된 postImg 전달
+    if (onDeleteImage) {
+      onDeleteImage(deleteImage);
+    }
     setPostImg(deleteImage);
+
+    setSelectedImage(updateSelectedImg);
   };
+
   return (
     <Wrap>
       <input

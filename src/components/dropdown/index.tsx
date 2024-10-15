@@ -20,6 +20,8 @@ interface Option {
 // 옵션 타입 정의
 interface IPropsSelect {
   //   isMain: boolean;
+  editRegion?: string;
+  editSubRegion?: string;
   className?: string;
   onChangeSearch?: (region: string, subRegion: string | null) => void;
 }
@@ -107,7 +109,12 @@ const RegionSelect = styled.div<IPropsSelect>`
   }
 `;
 
-export default function DropDown({ className, onChangeSearch }: IPropsSelect) {
+export default function DropDown({
+  className,
+  onChangeSearch,
+  editRegion,
+  editSubRegion,
+}: IPropsSelect) {
   // 광역시
   const [selectedRegion, setSelectedRegion] = useState<SingleValue<Option>>({
     value: "전체",
@@ -159,33 +166,49 @@ export default function DropDown({ className, onChangeSearch }: IPropsSelect) {
 
   // query가 있을 때는 셀렉트박스에 값 넣어주기
   useEffect(() => {
-    const initialRegion = query.region ? (query.region as string) : "전체";
-    const initialSubRegion = query.subRegion
+    const editRegion = query.region ? (query.region as string) : "전체";
+    const editSubRegion = query.subRegion
       ? (query.subRegion as string)
       : "전체";
 
-    const initialRegionOption = createOptions(AREA0).find(
-      (option) => option.value === initialRegion,
+    const editRegionOption = createOptions(AREA0).find(
+      (option) => option.value === editRegion,
     );
-    setSelectedRegion(initialRegionOption ?? { value: "전체", label: "전체" });
+    setSelectedRegion(editRegionOption ?? { value: "전체", label: "전체" });
 
-    if (initialRegion !== "전체" && initialRegionOption) {
-      const subAreas =
-        regionMapping[initialRegion as keyof typeof regionMapping];
+    if (editRegion !== "전체" && editRegionOption) {
+      const subAreas = regionMapping[editRegion as keyof typeof regionMapping];
       setSubRegions(createOptions(subAreas));
       setSubDisabled(false);
 
-      if (initialSubRegion) {
-        const initialSubRegionOption = createOptions(subAreas).find(
-          (option) => option.value === initialSubRegion,
+      if (editSubRegion) {
+        const editSubRegionOption = createOptions(subAreas).find(
+          (option) => option.value === editSubRegion,
         );
         // 하위지역 셀렉트박스에 값 넣어주기
         setSubRegionReset(
-          initialSubRegionOption ?? { value: "전체", label: "전체" },
+          editSubRegionOption ?? { value: "전체", label: "전체" },
         );
       }
     }
   }, [query]);
+
+  // 수정화면 기본 값
+  useEffect(() => {
+    if (!editRegion) return;
+    const subAreas = regionMapping[editRegion as keyof typeof regionMapping];
+    setSelectedRegion({
+      value: `${editRegion}`,
+      label: `${editRegion}`,
+    });
+
+    setSubRegions(createOptions(subAreas));
+    setSubRegionReset({
+      value: `${editSubRegion}`,
+      label: `${editSubRegion}`,
+    });
+    setSubDisabled(false);
+  }, [editRegion, editSubRegion]);
 
   const customStyle = customSelect();
   return (

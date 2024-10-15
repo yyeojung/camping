@@ -1,14 +1,19 @@
+import SubContents from "@/commons/layout/subContents";
+import { commonBtnStyle } from "@/commons/styles/common";
 import { responsive } from "@/commons/styles/globalStyles";
 import { type IReviewType } from "@/commons/type/commonType";
 import Button from "@/components/button";
+import Loading from "@/components/Loading";
+import { Modal } from "@/components/modal";
 import ReviewForm from "@/components/reviewForm/reviewForm";
 import { useAuth } from "@/contexts/authContext";
-import { getReview } from "@/firebase/review";
+import { getReview, removeReview } from "@/firebase/review";
+import { useModal } from "@/hooks/useModal";
 import styled from "@emotion/styled";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
+import { AiOutlineLink } from "react-icons/ai";
 const Wrap = styled.div`
   margin-top: 8rem;
 
@@ -20,6 +25,10 @@ const Wrap = styled.div`
       color: #8d8c8c;
       border-color: #8d8c8c;
       background: #fff;
+    }
+
+    .edit {
+      ${commonBtnStyle}
     }
 
     .user_btn {
@@ -35,7 +44,7 @@ const TitleWrap = styled.div`
   position: relative;
 
   .title {
-    max-width: calc(100% - 20rem);
+    max-width: calc(100% - 23rem);
 
     @media ${responsive.mobile} {
       max-width: none;
@@ -70,7 +79,20 @@ const TitleWrap = styled.div`
     border-radius: 0.8rem;
     padding: 0.8rem 1rem;
     background: #dae3ca;
-    max-width: 20rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    p {
+      max-width: 18rem;
+      word-break: break-all;
+    }
+
+    svg {
+      fill: #545151;
+      width: 2rem;
+      height: 2.4rem;
+    }
 
     @media ${responsive.mobile} {
       top: -2rem;
@@ -97,8 +119,9 @@ export default function index() {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectReview, setSelectReview] = useState<IReviewType[]>([]);
   const router = useRouter();
-  const docId = router.query.id;
+  const docId = router.query.id as string; // docId는 string이라고 명시
   const { user } = useAuth();
+  const { currentModal, openModal, closeModal } = useModal();
 
   const fetchItem = async () => {
     setLoading(true);
@@ -118,10 +141,25 @@ export default function index() {
     void fetchItem();
   }, [docId]);
 
+  // 게시글 삭제
+  const onClickRemovePost = () => {
+    if (!docId) return;
+    openModal("deleteReview");
+  };
+
+  const onConfirmCheck = async () => {
+    // 컨펌 확인일 때 삭제
+    await removeReview(docId);
+    void router.push("/campingReview");
+    document.body.style.overflow = "auto";
+  };
+
   return (
     <>
       {loading ? (
-        <p>헷 롣딩중</p>
+        <SubContents>
+          <Loading />
+        </SubContents>
       ) : (
         <>
           {selectReview.map((item, index) => (
@@ -134,11 +172,11 @@ export default function index() {
                 </Link>
                 {user?.uid === item.userId && ( // 글 작성 유저만 수정, 삭제 버튼
                   <div className="user_btn">
-                    <Button className="gray">삭제</Button>
-                    <Link href="/campingReview" passHref>
-                      <a>
-                        <Button className="edit">수정</Button>
-                      </a>
+                    <Button className="gray" onClick={onClickRemovePost}>
+                      삭제
+                    </Button>
+                    <Link href={`/reviewRegister/${item.docId}`} passHref>
+                      <a className="edit">수정</a>
                     </Link>
                   </div>
                 )}
@@ -152,14 +190,22 @@ export default function index() {
                       <span>{item.createdAt}</span>
                     </p>
                   </div>
-                  <p className="campsite">{item.facltNm}</p>
+                  <Link
+                    href={`/campingDetail?contentId=${item.contentId}`}
+                    passHref
+                  >
+                    <a className="campsite">
+                      <AiOutlineLink />
+                      <p>{item.facltNm}</p>
+                    </a>
+                  </Link>
                 </TitleWrap>
                 <Contents>
                   {item.images && (
                     <ul>
                       {item.images?.map((img, index) => (
                         <li key={index}>
-                          <img src={img} alt="" />
+                          <img src={img} alt={item.facltNm} />
                         </li>
                       ))}
                     </ul>
@@ -167,6 +213,19 @@ export default function index() {
                   <p>{item.contents}</p>
                 </Contents>
               </ReviewForm>
+
+              {/* 게시글 삭제 alert */}
+              {currentModal === "deleteReview" && (
+                <Modal
+                  type="confirm"
+                  currentModal={currentModal}
+                  confirmBtn1="취소"
+                  confirmBtn2="확인"
+                  hide={closeModal}
+                  onConfirmCheck={onConfirmCheck}
+                  message="삭제하시겠습니까?"
+                />
+              )}
             </Wrap>
           ))}
         </>

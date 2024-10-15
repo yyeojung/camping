@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import {
   FiChevronLeft,
@@ -54,6 +55,7 @@ export default function Pagination({
   const [start, setStart] = useState<number>(1); // 시작 페이지
   const noPrev = currentPage === 1; // 이전 페이지가 없는 경우
   const noNext = currentPage === totalPages; // 다음 페이지가 없는 경우
+  const router = useRouter();
 
   useEffect(() => {
     if (currentPage >= start + pageCount) {
@@ -79,6 +81,27 @@ export default function Pagination({
       onClick(totalPages);
     }
   };
+
+  // 페이지 넘버 클릭 이벤트
+  const onClickNumber = (pageNumber: number) => {
+    onClick(pageNumber);
+    if (pageNumber !== 1) {
+      void router.push({
+        pathname: router.pathname,
+        query: { ...router.query, page: pageNumber },
+      });
+    } else {
+      // page 1일 때는 쿼리 삭제
+      const newQuery = { ...router.query };
+      delete newQuery.page;
+
+      void router.push({
+        pathname: router.pathname,
+        query: newQuery,
+      });
+    }
+  };
+
   //   const onClickPrev = () => {
   //     if (!noPrev) {
   //       onClick(currentPage - 1);
@@ -115,7 +138,7 @@ export default function Pagination({
             <li
               className={`${currentPage === pageNumber ? "select" : ""}`}
               onClick={() => {
-                onClick(pageNumber);
+                onClickNumber(pageNumber);
               }}
               key={pageNumber}
             >

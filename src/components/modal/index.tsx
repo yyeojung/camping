@@ -44,8 +44,23 @@ const ModalInner = styled.div<{
     ${({ mobileStyle }) => mobileStyle && { ...mobileStyle }}
   }
 
-  p {
+  .message {
     margin-top: 1rem;
+  }
+
+  .confirm_btn {
+    display: flex;
+    gap: 2rem;
+
+    button {
+      width: 10rem;
+    }
+
+    .cancel {
+      background: #fff;
+      border-color: #8d8c8c;
+      color: #8d8c8c;
+    }
   }
 
   .info {
@@ -67,21 +82,27 @@ const AlertIcon = styled(IoAlertCircleOutline)`
 interface IPropsModal {
   currentModal: string | null;
   hide: () => void;
+  onConfirmCheck?: () => Promise<void>;
   message?: string;
   subMessage?: string;
-  type?: "default" | "info" | "modal";
+  type?: "default" | "info" | "modal" | "confirm";
   children?: ReactNode;
   customStyle?: React.CSSProperties;
   mobileStyle?: React.CSSProperties;
+  confirmBtn1?: string;
+  confirmBtn2?: string;
 }
 
 export function Modal({
   currentModal,
   hide,
+  onConfirmCheck,
   message,
   subMessage,
   type = "default",
   children,
+  confirmBtn1,
+  confirmBtn2,
   customStyle,
   mobileStyle,
 }: IPropsModal) {
@@ -110,7 +131,7 @@ export function Modal({
               <>
                 <div>
                   <AlertIcon />
-                  <p>{message}</p>
+                  <p className="message">{message}</p>
                 </div>
                 <Button onClick={hide}>닫기</Button>
               </>
@@ -118,8 +139,8 @@ export function Modal({
             {type === "info" && message && (
               <>
                 <div className="info">
-                  <p>{message}</p>
-                  {subMessage && <p>{subMessage}</p>}
+                  <p className="message">{message}</p>
+                  {subMessage && <p className="message">{subMessage}</p>}
                 </div>
                 <Button onClick={hide}>닫기</Button>
               </>
@@ -128,6 +149,20 @@ export function Modal({
               <>
                 <ModalClose onClick={hide} />
                 {children}
+              </>
+            )}
+            {type === "confirm" && (
+              <>
+                <div>
+                  <AlertIcon />
+                  <p className="message">{message}</p>
+                </div>
+                <div className="confirm_btn">
+                  <Button className="cancel" onClick={hide}>
+                    {confirmBtn1}
+                  </Button>
+                  <Button onClick={onConfirmCheck}>{confirmBtn2}</Button>
+                </div>
               </>
             )}
             {/* {message ? ( 모달 타입별로 관리하려고 삭제

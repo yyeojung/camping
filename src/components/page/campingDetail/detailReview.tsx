@@ -1,6 +1,6 @@
 import { type IReviewType } from "@/commons/type/commonType";
 import { useAuth } from "@/contexts/authContext";
-import { getReview } from "@/firebase/review";
+import { getReview, removeReview } from "@/firebase/review";
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { FaRegTrashAlt } from "react-icons/fa";
@@ -26,8 +26,8 @@ const Wrap = styled.div`
 
       .review_list {
         background: #fff;
-        color: #000;
-        border-color: #000;
+        color: #8d8c8c;
+        border-color: #8d8c8c;
       }
     }
   }
@@ -45,7 +45,6 @@ const Wrap = styled.div`
 
 const ReviewUl = styled.ul`
   li {
-    display: flex;
     position: relative;
     border-bottom: 0.1rem solid #ccc;
     min-height: 15rem;
@@ -53,6 +52,10 @@ const ReviewUl = styled.ul`
 
     &:first-of-type {
       border-top: 0.1rem solid #ccc;
+    }
+
+    .reviewLink {
+      display: flex;
     }
   }
 
@@ -114,6 +117,7 @@ const ReviewUl = styled.ul`
     display: flex;
     gap: 1rem;
 
+    a,
     button {
       width: 2rem;
       height: 2rem;
@@ -133,11 +137,18 @@ export default function DetailReview({
 }) {
   const [review, setReview] = useState<IReviewType[]>([]);
   const { user } = useAuth();
-  const { currentModal, openModal } = useModal();
+  const { currentModal, openModal, closeModal } = useModal();
   const router = useRouter();
   const [pageList, setPageList] = useState<IReviewType[]>([]); // 페이지 리스트당 캠핑장후기 데이터
   const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 번호
 
+  // 쿼리에서 페이지 번호 가져오기
+  useEffect(() => {
+    const pageQuery = router.query.page ? Number(router.query.page) : 1;
+    setCurrentPage(pageQuery);
+  }, [router.query.page]);
+
+  // 리뷰 데이터 가져오기
   useEffect(() => {
     let isMounted = true;
 
@@ -169,7 +180,16 @@ export default function DetailReview({
     return () => {
       isMounted = false; // 컴포넌트가 언마운트될 때 상태 변경
     };
-  }, [currentPage, contentId]);
+  }, [contentId]);
+
+  // pageList 업데이트
+  useEffect(() => {
+    const paginatedItems = review.slice(
+      (currentPage - 1) * PER_PAGE,
+      currentPage * PER_PAGE,
+    );
+    setPageList(paginatedItems);
+  }, [review, currentPage]); // review가 변경될 때마다 pageList 업데이트
 
   // 글쓰기 버튼 모달 닫기
   const closeRegisterModal = () => {
@@ -186,6 +206,32 @@ export default function DetailReview({
 
   const onClickPage = (selected: number) => {
     setCurrentPage(selected);
+  };
+
+  // 게시글 삭제
+  const onClickRemovePost = (docId?: string) => {
+    if (!docId) return;
+    openModal("deleteReview");
+  };
+
+  const onConfirmCheck = async (docId?: string) => {
+    if (!docId) return;
+
+    // 컨펌 확인일 때 삭제
+    await removeReview(docId);
+
+    // 리뷰 데이터를 다시 가져오도록 설정
+    const items = await getReview();
+    const filteredReview = items.filter((item) => item.contentId === contentId);
+    setReview(filteredReview);
+
+    // contentId가 undefined일 경우 처리
+    const contentId = Array.isArray(router.query.contentId)
+      ? router.query.contentId[0] // 배열일 경우 첫 번째 값 사용
+      : router.query.contentId;
+
+    void router.replace(`/campingDetail?contentId=${contentId}`);
+    document.body.style.overflow = "auto";
   };
 
   return (
@@ -222,41 +268,66 @@ export default function DetailReview({
               (item, index) =>
                 contentId === item.contentId && (
                   <li key={index}>
-                    {item.images && item.images.length > 0 && (
-                      <div className="image_box">
-                        <img src={item.images[0]} alt={item.facltNm} />
-                      </div>
-                    )}
-                    <div className="contents_wrap">
-                      <strong>{item.title}</strong>
-                      <p className="info">
-                        <span>{item.writer}</span>
-                        <span>{item.createdAt}</span>
-                      </p>
-                      <p className="contents" key={index}>
-                        {item.contents.split("\n").map(
-                          (
-                            item,
-                            index, // 줄바꿈 유지
-                          ) => (
-                            <React.Fragment key={index}>
-                              {item}
-                              <br />
-                            </React.Fragment>
-                          ),
+                    <Link href={`/reviewBoard/${item.docId}`} passHref>
+                      <a className="reviewLink">
+                        {item.images && item.images.length > 0 && (
+                          <div className="image_box">
+                            <img src={item.images[0]} alt={item.facltNm} />
+                          </div>
                         )}
-                      </p>
-                    </div>
+                        <div className="contents_wrap">
+                          <strong>{item.title}</strong>
+                          <p className="info">
+                            <span>{item.writer}</span>
+                            <span>{item.createdAt}</span>
+                          </p>
+                          <p className="contents" key={index}>
+                            {item.contents.split("\n").map(
+                              (
+                                item,
+                                index, // 줄바꿈 유지
+                              ) => (
+                                <React.Fragment key={index}>
+                                  {item}
+                                  <br />
+                                </React.Fragment>
+                              ),
+                            )}
+                          </p>
+                        </div>
+                      </a>
+                    </Link>
                     {user?.uid === item.userId && (
                       <div className="user_btn">
-                        <button>
-                          <MdOutlineModeEditOutline />
-                          <span className="sr_only">수정</span>
-                        </button>
-                        <button>
+                        <Link href={`/reviewRegister/${item.docId}`} passHref>
+                          <a className="edit">
+                            <MdOutlineModeEditOutline />
+                            <span className="sr_only">수정</span>
+                          </a>
+                        </Link>
+                        <button
+                          onClick={() => {
+                            onClickRemovePost(item.docId);
+                          }}
+                        >
                           <FaRegTrashAlt />
                           <span className="sr_only">삭제</span>
                         </button>
+
+                        {/* 게시글 삭제 alert */}
+                        {currentModal === "deleteReview" && (
+                          <Modal
+                            type="confirm"
+                            currentModal={currentModal}
+                            confirmBtn1="취소"
+                            confirmBtn2="확인"
+                            hide={closeModal}
+                            onConfirmCheck={async () => {
+                              await onConfirmCheck(item.docId);
+                            }}
+                            message="삭제하시겠습니까?"
+                          />
+                        )}
                       </div>
                     )}
                   </li>

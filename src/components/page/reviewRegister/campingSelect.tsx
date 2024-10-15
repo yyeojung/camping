@@ -92,12 +92,23 @@ interface IPropsSelectCamping {
     contentId: string;
     facltNm: string;
   }) => void;
+  onSelectRegion: (region: string) => void;
+  onSelectSubRegion: (region: string) => void;
+  editRegion?: string;
+  editSubRegion?: string;
+  editCampingName?: string;
 }
 
 export default function CampingSelect({
   onSelectCamping,
+  onSelectRegion,
+  onSelectSubRegion,
+  editRegion,
+  editSubRegion,
+  editCampingName,
 }: IPropsSelectCamping) {
-  const { region, subRegion, onChangeSearch } = useSearch();
+  const { region, setRegion, subRegion, setSubRegion, onChangeSearch } =
+    useSearch();
   const [campingDisabled, setCampingDisabled] = useState(true);
   const [selectCampingName, setSelectCampingName] =
     useState<SingleValue<Option>>(null); // 캠핑장 이름
@@ -119,8 +130,12 @@ export default function CampingSelect({
 
   // 캠핑장 이름 비활성화 및 리셋
   useEffect(() => {
-    region !== "전체" ? setCampingDisabled(false) : setCampingDisabled(true);
-    setSelectCampingName(null);
+    if (region === "전체") {
+      setCampingDisabled(true);
+      setSelectCampingName(null);
+    } else {
+      setCampingDisabled(false);
+    }
   }, [region, subRegion]);
 
   // 캠핑장 이름 select option
@@ -141,12 +156,39 @@ export default function CampingSelect({
     }
   };
 
+  // 등록할 지역 값 전달
+  useEffect(() => {
+    if (region && subRegion) {
+      onSelectRegion(region);
+      onSelectSubRegion(subRegion);
+    }
+  }, [region, subRegion]);
+
+  // 수정화면 데이터
+  useEffect(() => {
+    if (editRegion && editSubRegion && editCampingName) {
+      setRegion(editRegion);
+      setSubRegion(editSubRegion);
+      setSelectCampingName({
+        value: `${editCampingName}`,
+        label: `${editCampingName}`,
+      });
+      setCampingDisabled(false);
+    }
+  }, [editCampingName]);
+
   // 셀렉트 스타일
   const customStyle = customSelect();
+
   return (
     <Wrap>
       <div className="row">
-        <DropDown className="review_select" onChangeSearch={onChangeSearch} />
+        <DropDown
+          className="review_select"
+          onChangeSearch={onChangeSearch}
+          editRegion={editRegion}
+          editSubRegion={editSubRegion}
+        />
         <Select
           className="camping_name"
           styles={customStyle}

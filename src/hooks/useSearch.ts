@@ -52,7 +52,9 @@ export function useSearch() {
   return {
     // showAlert,
     region,
+    setRegion,
     subRegion,
+    setSubRegion,
     onCloseSearchAlret,
     onChangeSearch,
     onClickSearch,

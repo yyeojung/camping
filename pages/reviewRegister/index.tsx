@@ -1,6 +1,6 @@
 import SubContents from "@/commons/layout/subContents";
 import SubTitle from "@/commons/layout/subTitle";
-import { responsive } from "@/commons/styles/globalStyles";
+import { Row, Wrap } from "@/commons/styles/reviewForm/reviewForm";
 import Button from "@/components/button";
 import Loading from "@/components/Loading";
 import { Modal } from "@/components/modal";
@@ -12,89 +12,11 @@ import { useAuth } from "@/contexts/authContext";
 import { storage } from "@/firebase/firebase";
 import { addReview } from "@/firebase/review";
 import { useModal } from "@/hooks/useModal";
-import styled from "@emotion/styled";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useRouter } from "next/router";
 import { type ChangeEvent, useState } from "react";
 
-const Wrap = styled.div`
-  h2 {
-    text-align: center;
-  }
-
-  .loading_wrap {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    z-index: 10;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-  }
-`;
-
-const Row = styled.div`
-  display: flex;
-  gap: 2.4rem;
-
-  &:not(:first-of-type) {
-    margin-top: 1.6rem;
-  }
-
-  &:last-of-type {
-    justify-content: flex-end;
-    gap: 1rem;
-
-    .cancel_btn {
-      background: #f2f2f2;
-      color: #8d8d8d;
-      border-color: #8d8d8d;
-    }
-  }
-
-  .form_title {
-    min-width: 12rem;
-    line-height: 4rem;
-    text-align: center;
-  }
-
-  textarea {
-    width: calc(100% - 18.4rem);
-    background: #f2f2f2;
-    border: 0.1rem solid #ccc;
-    border-radius: 1rem;
-    height: 30rem;
-
-    &:focus {
-      border: 0.1rem solid #67794a;
-    }
-  }
-
-  textarea.title {
-    height: 4rem;
-    overflow: hidden;
-    min-height: 4rem;
-  }
-
-  @media ${responsive.mobile} {
-    flex-direction: column;
-    min-width: 10rem;
-    gap: 0;
-
-    .form_title {
-      text-align: left;
-    }
-
-    input,
-    textarea {
-      width: 100%;
-    }
-  }
-`;
-
-export default function ReviewResigter() {
+export default function ReviewRegister() {
   const { user } = useAuth();
   const [title, setTitle] = useState<string>("");
   const [contents, setContents] = useState<string>("");
@@ -104,11 +26,13 @@ export default function ReviewResigter() {
   const router = useRouter();
   const { currentModal, openModal, closeModal } = useModal();
   const [loading, setLoading] = useState(false);
+  const [selectedRegion, setSelectedRegion] = useState<string>("");
+  const [selectedSubRegion, setSelectedSubRegion] = useState<string>("");
 
   // 스토리지에 저장될 이미지
-  const onStorageImage = (files: File[]) => {
-    setSelectedImage((prev) => [...prev, ...files]);
-  };
+  //   const onStorageImage = (files: File[]) => {
+  //     setSelectedImage((prev) => [...prev, ...files]);
+  //   };
 
   // 리뷰 등록 submit
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -125,7 +49,8 @@ export default function ReviewResigter() {
       const uploadedUrls: string[] = [];
 
       for (const image of selectedImage) {
-        const imageRef = ref(storage, `review/${image.name}`);
+        const imageName = `${image.name}${Date.now()}`; // 타임스탬프를 이용한 고유 이름
+        const imageRef = ref(storage, `review/${imageName}`);
         const snapshot = await uploadBytes(imageRef, image);
         const url = await getDownloadURL(snapshot.ref);
         uploadedUrls.push(url);
@@ -143,6 +68,8 @@ export default function ReviewResigter() {
       const reviewItem = {
         title,
         contents,
+        region: selectedRegion,
+        subRegion: selectedSubRegion,
         contentId: dbContentId,
         facltNm: dbFacltNm,
         userId: user.uid,
@@ -177,6 +104,14 @@ export default function ReviewResigter() {
     }
   };
 
+  //   캠핑장 지역 이름 받기
+  const onSelectRegion = (region: string) => {
+    setSelectedRegion(region);
+  };
+  const onSelectSubRegion = (subRegion: string) => {
+    setSelectedSubRegion(subRegion);
+  };
+
   return (
     <Wrap>
       <SubTitle>
@@ -203,7 +138,11 @@ export default function ReviewResigter() {
                 <p className="form_title">
                   캠핑장<span className="required">*</span>
                 </p>
-                <CampingSelect onSelectCamping={selectCamping} />
+                <CampingSelect
+                  onSelectCamping={selectCamping}
+                  onSelectRegion={onSelectRegion}
+                  onSelectSubRegion={onSelectSubRegion}
+                />
               </Row>
               <Row>
                 <p className="form_title">
@@ -220,7 +159,10 @@ export default function ReviewResigter() {
               </Row>
               <Row>
                 <p className="form_title">사진 첨부</p>
-                <UploadImage onImageSelected={onStorageImage} />
+                <UploadImage
+                  selectedImage={selectedImage}
+                  setSelectedImage={setSelectedImage}
+                />
               </Row>
               <Row>
                 <Button

@@ -41,6 +41,12 @@ export default function CampingCardList({ className }: IPropsList) {
   const { query } = router;
   const { database, loading } = useCampingData();
 
+  // 쿼리에서 페이지 번호 가져오기
+  useEffect(() => {
+    const pageQuery = router.query.page ? Number(router.query.page) : 1;
+    setCurrentPage(pageQuery);
+  }, [router.query.page]);
+
   // 데이터 불러오기
   useEffect(() => {
     if (!query.region || !database) return; // 지역 값이 유효할 때만

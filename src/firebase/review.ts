@@ -8,7 +8,8 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-import { db } from "./firebase";
+import { db, storage } from "./firebase";
+import { deleteObject, ref } from "firebase/storage";
 
 const reviewDb = collection(db, "review");
 
@@ -34,6 +35,16 @@ export const removeReview = async (docId: string) => {
   }
 };
 
+// 캠핑장 후기 수정 이미지 삭제
+export const deleteImageStorage = async (imageUrl: string) => {
+  try {
+    const imageRef = ref(storage, imageUrl);
+    await deleteObject(imageRef);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // 캠핑장 후기 목록
 export const getReview = async () => {
   try {
@@ -54,6 +65,8 @@ export const getReview = async () => {
         docId,
         contentId: data.contentId,
         facltNm: data.facltNm,
+        region: data.region,
+        subRegion: data.subRegion,
         contents: data.contents,
         createdAt: `${year}.${month}.${days}`, // 날짜 포맷팅
         images: data.images,
