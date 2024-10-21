@@ -60,7 +60,7 @@ const Table = styled.table`
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        max-width: 69rem;
+        max-width: 65%;
       }
 
       .icon_image {
